@@ -161,3 +161,11 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 1rem); }
   .brand { font-size: .85rem; }
 }
 .card__media img.contain { object-fit: contain; image-rendering: auto; }
+
+/* SAPIENTIA teaser video */
+.feature { display: grid; gap: var(--s4); align-items: center; }
+.feature::after { z-index: 0; }
+.feature__note { margin: var(--s3) 0 0; color: var(--text-muted); font-size: .95rem; }
+.feature__media { position: relative; z-index: 1; margin: 0; justify-self: center; width: min(100%, 22rem); border: 3px solid var(--orange); box-shadow: 6px 6px 0 var(--navy-deep), 0 0 32px rgba(255,140,26,.35); background: #000; }
+.feature__video { display: block; width: 100%; height: auto; aspect-ratio: 540 / 676; object-fit: cover; }
+@media (min-width: 900px) { .feature { grid-template-columns: 1.2fr 1fr; } }

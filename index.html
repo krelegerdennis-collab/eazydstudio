@@ -120,10 +120,17 @@
           <h2 id="sapientia-title" class="feature__title">SAPIENTIA</h2>
           <p class="feature__text">A cosmic 16-bit style JRPG, built solo in Godot&nbsp;4. Follow along for devlogs, WIP shots, and release news.</p>
           <div class="hero__actions hero__actions--left">
-            <a class="btn btn--primary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Follow devlogs on Discord</a>
-            <a class="btn btn--secondary" href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer">Updates on X</a>
+            <a class="btn btn--primary" href="https://x.com/EazyDstudio/status/2116260172175695915" target="_blank" rel="noopener noreferrer">Watch teaser on X</a>
+            <a class="btn btn--secondary" href="https://youtube.com/shorts/LQTdJgvWLTM" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
           </div>
+          <p class="feature__note">Devlogs &amp; WIP shots on <a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
         </div>
+        <figure class="feature__media">
+          <video class="feature__video" muted loop playsinline preload="metadata" poster="img/sapientia-poster.webp" width="540" height="676" aria-label="SAPIENTIA gameplay teaser: the party explores a pixel-art dungeon">
+            <source src="img/sapientia.webm" type="video/webm" />
+            <source src="img/sapientia.mp4" type="video/mp4" />
+          </video>
+        </figure>
       </section>
 
       <section id="extensions" class="section" aria-labelledby="extensions-title">
@@ -181,6 +188,19 @@
         <a href="https://krelegerdennis-collab.github.io/eazydstudio-privacy" target="_blank" rel="noopener noreferrer">Privacy policy</a>
       </p>
     </footer>
-    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    <script>
+      document.getElementById("year").textContent = new Date().getFullYear();
+      (function () {
+        var v = document.querySelector(".feature__video");
+        if (!v) return;
+        var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+        function sync() {
+          if (mq.matches) { v.pause(); v.removeAttribute("autoplay"); }
+          else { v.setAttribute("autoplay", ""); var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+        }
+        sync();
+        if (mq.addEventListener) mq.addEventListener("change", sync);
+      })();
+    </script>
   </body>
 </html>
