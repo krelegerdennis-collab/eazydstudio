@@ -144,6 +144,7 @@
             <a class="btn btn--primary" href="https://x.com/EazyDstudio/status/2116260172175695915" target="_blank" rel="noopener noreferrer">Watch teaser on X</a>
             <a class="btn btn--secondary" href="https://youtube.com/shorts/LQTdJgvWLTM" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
           </div>
+          <div id="sapientia-demo" class="sapientia-demo" hidden></div>
           <p class="feature__note">Devlogs &amp; WIP shots on <a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
         </div>
       </section>
@@ -242,6 +243,8 @@
         </ul>
       </section>
     </main>
+    <button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="false"><span class="sound-toggle__icon" aria-hidden="true">♪</span><span class="sound-toggle__label">Sound off</span></button>
+    <div id="egg-toast" class="egg-toast" role="status" aria-live="polite" hidden><strong>Hyperdrive engaged!</strong> You found a secret. Thanks for exploring the EazyD universe — see you among the stars.</div>
 
     <footer class="site-footer">
       <div class="site-footer__cols">
@@ -388,5 +391,6 @@
         if (document.readyState === "complete") idle(); else window.addEventListener("load", idle);
       })();
     </script>
+    <script src="js/interactive.js" defer></script>
   </body>
 </html>

@@ -72,7 +72,13 @@ export function start(hero){
   resize();addEventListener('resize',resize);
   // parallax
   let tx=0,ty=0,px=0,py=0,sc=0;
-  addEventListener('pointermove',e=>{tx=(e.clientX/innerWidth-.5);ty=(e.clientY/innerHeight-.5);},{passive:true});
+  let drag=0,dv=0,dragging=false,lx=0,ly=0,sx=0,sy=0,axis=0;
+  hero.style.touchAction='pan-y';
+  hero.addEventListener('pointerdown',e=>{dragging=true;axis=0;lx=sx=e.clientX;ly=sy=e.clientY;dv=0;if(vis)loop();},{passive:true});
+  addEventListener('pointermove',e=>{if(!dragging)return;if(!axis){const ax=Math.abs(e.clientX-sx),ay=Math.abs(e.clientY-sy);if(ax+ay<6)return;axis=ax>ay?1:2;if(axis==1)try{hero.setPointerCapture(e.pointerId)}catch(_){}}
+    if(axis!==1)return;const d=(e.clientX-lx)*.012;drag+=d;dv=d;lx=e.clientX;},{passive:true});
+  const end=()=>{dragging=false;};addEventListener('pointerup',end);addEventListener('pointercancel',end);
+  addEventListener('pointermove',e=>{if(dragging)return;tx=(e.clientX/innerWidth-.5);ty=(e.clientY/innerHeight-.5);},{passive:true});
   addEventListener('scroll',()=>{sc=Math.min(scrollY/innerHeight,1);if(vis)loop();},{passive:true});
   let vis=true,last=0,t0=performance.now(),tIntro=0,raf=0;
   new IntersectionObserver(([e])=>{vis=e.isIntersecting;if(vis)loop();}).observe(hero);
@@ -83,7 +89,7 @@ export function start(hero){
     PU.o.value=fade;r1.material.uniforms.o.value=ease((k-.5)/.9);r2.material.uniforms.o.value=ease((k-.7)/.9);r3.material.uniforms.o.value=ease((k-.9)/.9)*.8;
     halo.material.opacity=fade*(.85+.15*Math.sin(t*1.7));warm.material.opacity=fade*(.7+.3*Math.sin(t*1.1+1));
     px+=(tx-px)*.06;py+=(ty-py)*.06;
-    root.rotation.y=px*.35+Math.sin(t*.5)*.08;root.rotation.x=py*.2;
+    if(!dragging){drag+=dv;dv*=.92;if(Math.abs(dv)<.002)drag*=.94;}root.rotation.y=px*.35+Math.sin(t*.5)*.08+drag;root.rotation.x=py*.2;
     logo.rotation.y=ghost.rotation.y=Math.sin(t*.55)*.22;logo.position.y=ghost.position.y=Math.sin(t*1.1)*.05;
     pts.rotation.y=-px*.25;
     r1.rotation.z=t*.55;r2.rotation.z=-t*.38;r3.rotation.z=t*.9;
