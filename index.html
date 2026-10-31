@@ -172,24 +172,6 @@
           </div>
           <p class="feature__note">Devlogs &amp; WIP shots on <a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
         </div>
-        <div id="sapientia-demo" class="sapientia-demo">
-          <div class="demo__head">
-            <h3 class="demo__title">Play the SAPIENTIA demo</h3>
-            <p class="demo__text">An early action co-op teaser build, right in your browser. Keyboard, mouse or touch.</p>
-          </div>
-          <div class="demo__frame" id="demo-frame">
-            <img class="demo__poster" src="img/demo-preview.webp" srcset="img/demo-preview-400.webp 400w, img/demo-preview.webp 800w" sizes="(min-width: 900px) 800px, 92vw" alt="SAPIENTIA demo gameplay preview: a party in a stone library dungeon" width="800" height="450" loading="lazy" decoding="async" />
-            <div class="demo__overlay">
-              <button type="button" class="btn btn--primary btn--lg demo__play" id="demo-play">▶ Play the demo</button>
-              <p class="demo__note">First load can take 10–30 s (~50 MB download).</p>
-              <p class="demo__rotate">Tip: rotate your phone to landscape for the best view.</p>
-            </div>
-          </div>
-          <div class="demo__bar">
-            <button type="button" class="btn btn--secondary demo__fs" id="demo-fs" disabled>⛶ Fullscreen</button>
-            <a class="demo__open" href="play/index.html" target="_blank" rel="noopener">Open in a new tab</a>
-          </div>
-        </div>
       </section>
 
       <section id="packs" class="section" aria-labelledby="packs-title">
@@ -438,7 +420,6 @@
     <script src="js/interactive.js" defer></script>
     <script>
       (function () {
-        var play = document.getElementById("demo-play"), frame = document.getElementById("demo-frame"), fs = document.getElementById("demo-fs");
         var flip = document.getElementById("hero-flip"), back = document.getElementById("flip-back"), screenEl = document.getElementById("flip-screen");
         var prompt = document.getElementById("flip-prompt"), loading = document.getElementById("flip-loading"), bar = document.getElementById("flip-bar"), pct = document.getElementById("flip-pct");
         var hfs = document.getElementById("flip-fs"), front = flip && flip.querySelector(".flip__front");
@@ -494,23 +475,6 @@
           };
           if (document.readyState === "complete") start(); else window.addEventListener("load", start);
         }
-        if (!play || !frame) return;
-        play.addEventListener("click", function () {
-          if (flip) { /* single player: use the hero card so the game never loads twice */
-            touched = true; loadHero(); setFlip(true);
-            flip.scrollIntoView({ behavior: RM ? "auto" : "smooth", block: "center" });
-            return;
-          }
-          if (frame.querySelector("iframe")) return;
-          var f = document.createElement("iframe");
-          f.src = "play/index.html"; f.title = "SAPIENTIA playable demo"; f.allow = "fullscreen; autoplay; gamepad"; f.setAttribute("allowfullscreen", "");
-          frame.classList.add("is-playing"); frame.appendChild(f); fs.disabled = false;
-          setTimeout(function () { try { f.focus(); } catch (e) {} }, 300);
-        });
-        fs.addEventListener("click", function () {
-          if (heroF) { fullscreen(heroF); return; }
-          fullscreen(frame.querySelector("iframe") || frame);
-        });
       })();
     </script>
   </body>
