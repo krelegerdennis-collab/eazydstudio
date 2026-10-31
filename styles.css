@@ -222,6 +222,7 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 1rem); }
 .godot-banner .btn--ghost { margin-top: 0; }
 
 /* Cards polish */
+.card__link { display: inline; min-height: 0; padding: .7rem 0; line-height: 1.6; }
 .card__link::after { content: "→"; display: inline-block; margin-left: .35em; transition: transform .15s; }
 .card:hover .card__link::after, .card__link:focus-visible::after { transform: translateX(4px); }
 .card:focus-within { border-color: var(--orange); }
@@ -248,4 +249,6 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 1rem); }
 .site-footer__copy { max-width: var(--max); margin: var(--s4) auto 0 !important; padding-top: var(--s3); border-top: 2px solid var(--border); text-align: center; font-size: .9rem; }
 @media (min-width: 760px) { .site-footer__cols { grid-template-columns: 1.5fr 1fr 1fr 1fr; } .site-footer__brand { grid-column: auto; } }
 @media (prefers-reduced-motion: reduce) { .js-reveal main .section { opacity: 1; transform: none; } }
-.feature::after { opacity: .4; } .card__link { flex-wrap: wrap; }
+.feature::after { opacity: .4; }
+.card__link::after { display: inline; content: "\00a0→"; margin-left: 0; transition: padding .15s; }
+.card:hover .card__link::after, .card__link:focus-visible::after { transform: none; padding-left: 4px; }
