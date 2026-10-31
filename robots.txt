@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://krelegerdennis-collab.github.io/eazydstudio/sitemap.xml
+Sitemap: https://eazydstudio.com/sitemap.xml
