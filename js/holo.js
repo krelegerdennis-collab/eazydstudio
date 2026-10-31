@@ -4,11 +4,11 @@ function glowTex(stops){const c=document.createElement('canvas');c.width=c.heigh
 export function start(hero){
   let r;try{r=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});}catch(e){return false;}
   r.domElement.setAttribute('aria-hidden','true');r.domElement.className='holo-canvas';
-  r.setPixelRatio(Math.min(devicePixelRatio,1.5));hero.prepend(r.domElement);
+  const DPR=Math.min(devicePixelRatio||1,2);r.setPixelRatio(DPR);hero.prepend(r.domElement);
   const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,100);cam.position.set(0,-.35,6);
   const mobile=innerWidth<700, root=new THREE.Group();scene.add(root);
   const tex=new THREE.TextureLoader().load(new URL('../img/logo-holo-tex.webp',import.meta.url).href,()=>{hero.classList.add('gl');tIntro=performance.now();loop();});
-  tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=4;
+  tex.colorSpace=THREE.SRGBColorSpace;tex.anisotropy=Math.min(8,r.capabilities.getMaxAnisotropy());tex.generateMipmaps=true;tex.minFilter=THREE.LinearMipmapLinearFilter;tex.magFilter=THREE.LinearFilter;
   const add=THREE.AdditiveBlending;
   // back glow layers (cheap "bloom")
   const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:glowTex([[0,'rgba(80,220,255,.28)'],[.3,'rgba(40,120,255,.12)'],[1,'rgba(0,0,0,0)']]),blending:add,depthWrite:false,transparent:true}));
@@ -19,12 +19,12 @@ export function start(hero){
   const U={t:{value:0},map:{value:tex},lt:{value:lt},intro:{value:0},boost:{value:1}};
   const frag=`uniform sampler2D map,lt;uniform float t,intro,boost;varying vec2 vUv;varying vec3 vN,vV;
     float m(vec2 u){vec4 c=texture2D(map,u);float lum=max(c.r,max(c.g,c.b));return c.a*smoothstep(.45,.6,lum);}
-    void main(){float band=step(.985,fract(vUv.y*6.-t*.35));float g=band*.03*sin(t*50.);vec2 uv=vUv+vec2(g,0.);
+    void main(){vec2 uv=vUv;
     float build=1.-smoothstep(intro-.08,intro,1.-vUv.y);float edge=smoothstep(.06,0.,abs((1.-vUv.y)-intro))*step(intro,1.02);
     vec4 c=texture2D(map,uv);float a=m(uv);
     float d=.014,h=0.;for(int i=0;i<8;i++){float an=float(i)*.785;h+=m(uv+vec2(cos(an),sin(an))*d);}h/=8.;
     float rim=clamp(h-a,0.,1.);float ab=m(uv+vec2(.005,0)),ar=m(uv-vec2(.005,0));
-    float scan=.8+.2*sin(vUv.y*300.-t*5.);float fres=pow(1.-abs(dot(vN,vV)),2.);
+    float scan=.9+.1*sin(vUv.y*300.-t*5.);float fres=pow(1.-abs(dot(vN,vV)),2.);
     vec3 col=c.rgb*1.15*scan*a+vec3(.3,.9,1.)*(.1+fres*.6)*a+vec3(.3,.9,1.)*rim*1.8*boost+vec3(1.,.55,.1)*max(ar-a,0.)+vec3(.2,.55,1.)*max(ab-a,0.);
     float fl=.95+.05*sin(t*31.)*sin(t*11.);float al=max(a*(.9+.1*scan),rim*.95+max(ab,ar)*(1.-a)*.6);
     float L=texture2D(lt,uv).r;vec3 fill=mix(vec3(.02,.08,.25),vec3(.1,.75,1.),smoothstep(.75,.25,vUv.y)*.55+.25*sin(vUv.y*300.-t*5.)*.2+fres*.4);fill+=vec3(.3,.9,1.)*.25*sin(vUv.x*8.-t*1.5)*sin(vUv.y*6.+t)*L;col=mix(col,fill*scan,L);al=max(al,L*.93);a=max(a,L);
@@ -34,7 +34,7 @@ export function start(hero){
   root.add(logo);
   // ghost echo layer (additive, slightly larger, low opacity) = bloom feel
   const ghost=new THREE.Mesh(logo.geometry,new THREE.ShaderMaterial({uniforms:{...U,boost:{value:2.2}},transparent:true,depthWrite:false,blending:add,vertexShader:vert,fragmentShader:frag.replace('gl_FragColor=vec4(col*fl,al*fl)','gl_FragColor=vec4(col*fl*.35,al*fl*.35)')}));
-  ghost.scale.setScalar(1.04);ghost.position.z=-.05;root.add(ghost);
+  ghost.scale.setScalar(1.015);ghost.position.z=-.05;root.add(ghost);
   // rings
   const ringG=new THREE.Group();ringG.rotation.x=1.18;root.add(ringG);
   const ringMat=(c1,c2)=>new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:add,uniforms:{t:U.t,c1:{value:new THREE.Color(c1)},c2:{value:new THREE.Color(c2)},o:{value:0}},
@@ -52,7 +52,7 @@ export function start(hero){
   for(let i=0;i<N;i++){const swarm=i<N*.45;seed.set([Math.random()*6.283,swarm?1.6+Math.random()*.55:1.2+Math.random()*3.6,swarm?(Math.random()-.5)*.25:(Math.random()-.5)*5,swarm?1:0],i*4);
     const cc=Math.random();(cc<.22?O:cc<.6?B:C).toArray(col,i*3);}
   const pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(pos,3));pg.setAttribute('seed',new THREE.BufferAttribute(seed,4));pg.setAttribute('color',new THREE.BufferAttribute(col,3));
-  const PU={t:U.t,px:{value:Math.min(devicePixelRatio,1.5)},o:{value:0}};
+  const PU={t:U.t,px:{value:DPR},o:{value:0}};
   const pts=new THREE.Points(pg,new THREE.ShaderMaterial({uniforms:PU,transparent:true,depthWrite:false,blending:add,vertexColors:true,
     vertexShader:`attribute vec4 seed;uniform float t,px;varying vec3 vC;varying float vA;
       void main(){float sp=seed.w>.5?.35/seed.y:.04;float a=seed.x+t*sp;vec3 p;
