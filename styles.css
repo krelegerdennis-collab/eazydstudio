@@ -396,3 +396,41 @@ body { overflow-x: clip; }
 .demo__fs[disabled] { opacity: .5; cursor: not-allowed; }
 .demo__open { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
 .feature.proj > * { min-width: 0; } .sapientia-demo { width: 100%; }
+
+/* ---- hero flip card: logo <-> playable demo ---- */
+.flip { position: relative; perspective: 1600px; height: clamp(340px, 58vh, 560px); margin: 0 auto var(--s3); }
+.flip .holo-stage { margin: 0; height: 100%; }
+.flip__face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  transition: transform .9s cubic-bezier(.6,.05,.25,1), opacity .9s, visibility 0s .45s; }
+.flip__front { transform: rotateY(0deg); }
+.flip__back { transform: rotateY(180deg); visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 0 var(--s2, 12px); }
+.flip.is-flipped .flip__front { transform: rotateY(-180deg); visibility: hidden; }
+.flip.is-flipped .flip__back { transform: rotateY(0deg); visibility: visible; }
+.flip--fade .flip__face { transform: none !important; transition: opacity .5s, visibility 0s .25s; }
+.flip--fade .flip__back { opacity: 0; } .flip--fade.is-flipped .flip__back { opacity: 1; } .flip--fade.is-flipped .flip__front { opacity: 0; }
+.flip__screen { position: relative; width: min(100%, calc((clamp(340px, 58vh, 560px) - 56px) * 16 / 9)); aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #16306e 0%, var(--navy) 45%, #040b20 100%);
+  border: 1px solid rgba(255,140,26,.55); box-shadow: 0 0 0 1px rgba(62,230,255,.15), 0 0 40px rgba(255,140,26,.25), 0 0 90px rgba(79,140,255,.18); }
+.flip__screen::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: radial-gradient(1px 1px at 12% 22%, #fff, transparent), radial-gradient(1px 1px at 68% 14%, #cfe9ff, transparent), radial-gradient(1.5px 1.5px at 84% 62%, #ffd2a1, transparent), radial-gradient(1px 1px at 32% 78%, #fff, transparent), radial-gradient(1px 1px at 50% 45%, #9fdcff, transparent); }
+.flip__screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; opacity: 0; transition: opacity .6s; background: #000; }
+.flip__screen.is-ready iframe { opacity: 1; }
+.flip__prompt, .flip__loading { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 12px; text-align: center; }
+.flip__prompt[hidden], .flip__loading[hidden] { display: none; }
+.flip__q { margin: 0; font-family: var(--font-head); font-size: clamp(1rem, 3.6vw, 1.5rem); color: #fff; }
+.flip__q strong { color: var(--orange); }
+.flip__note { margin: 0 0 6px; font-size: .85rem; color: var(--text-muted, #b9c4e0); }
+.flip__actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.flip__actions .btn { min-height: 44px; padding: 0 18px; }
+.flip__loading p { margin: 0; font-family: var(--font-head); font-size: .9rem; letter-spacing: .05em; color: var(--cyan); }
+.flip__spin { width: 38px; height: 38px; border-radius: 50%; border: 3px solid rgba(62,230,255,.2); border-top-color: var(--orange); animation: flipspin .9s linear infinite; }
+@keyframes flipspin { to { transform: rotate(360deg); } }
+.flip__bar { width: min(70%, 320px); height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
+.flip__bar i { display: block; height: 100%; width: 4%; background: linear-gradient(90deg, var(--orange), var(--cyan)); transition: width .3s; }
+.flip__tools { display: flex; gap: 8px; }
+.flip__btn { min-height: 36px; padding: 0 14px; border-radius: 999px; font: 600 .82rem/1 var(--font-body, Inter, sans-serif); cursor: pointer;
+  color: #fff; background: rgba(10,30,74,.75); border: 1px solid rgba(255,140,26,.6); backdrop-filter: blur(6px); }
+.flip__btn:hover:not(:disabled) { background: var(--orange); color: var(--navy); }
+.flip__btn:disabled { opacity: .45; cursor: default; }
+.flip__btn--play { position: absolute; z-index: 3; left: 50%; bottom: 6px; transform: translateX(-50%); }
+@media (prefers-reduced-motion: reduce) { .flip__spin { animation-duration: 3s; } }

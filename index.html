@@ -94,6 +94,9 @@
 
     <main id="main">
       <section id="top" class="hero" aria-labelledby="hero-title">
+        <div class="flip" id="hero-flip">
+        <div class="flip__face flip__front">
+        <button type="button" class="flip__btn flip__btn--play" id="flip-to-demo" aria-controls="flip-back">▶ Play demo</button>
         <div class="holo-stage" id="holo-stage">
         <div class="holo">
           <div class="holo__img">
@@ -101,6 +104,29 @@
           </div>
           <span class="holo__cone" aria-hidden="true"></span>
           <span class="holo__base" aria-hidden="true"></span>
+        </div>
+        </div>
+        </div>
+        <div class="flip__face flip__back" id="flip-back" aria-hidden="true">
+          <div class="flip__screen" id="flip-screen">
+            <div class="flip__prompt" id="flip-prompt" hidden>
+              <p class="flip__q">Play the <strong>SAPIENTIA</strong> demo?</p>
+              <p class="flip__note">~50 MB download · best in landscape</p>
+              <div class="flip__actions">
+                <button type="button" class="btn btn--primary" id="flip-load">Load demo</button>
+                <button type="button" class="btn btn--secondary" id="flip-no">Not now</button>
+              </div>
+            </div>
+            <div class="flip__loading" id="flip-loading" hidden>
+              <span class="flip__spin" aria-hidden="true"></span>
+              <p>Loading SAPIENTIA… <span id="flip-pct"></span></p>
+              <div class="flip__bar"><i id="flip-bar"></i></div>
+            </div>
+          </div>
+          <div class="flip__tools">
+            <button type="button" class="flip__btn" id="flip-to-logo">↺ Flip back</button>
+            <button type="button" class="flip__btn" id="flip-fs" disabled>⛶ Fullscreen</button>
+          </div>
         </div>
         </div>
         <h1 id="hero-title" class="hero__title" data-text="EazyD Studio">EazyD Studio</h1>
@@ -413,8 +439,68 @@
     <script>
       (function () {
         var play = document.getElementById("demo-play"), frame = document.getElementById("demo-frame"), fs = document.getElementById("demo-fs");
+        var flip = document.getElementById("hero-flip"), back = document.getElementById("flip-back"), screenEl = document.getElementById("flip-screen");
+        var prompt = document.getElementById("flip-prompt"), loading = document.getElementById("flip-loading"), bar = document.getElementById("flip-bar"), pct = document.getElementById("flip-pct");
+        var hfs = document.getElementById("flip-fs"), front = flip && flip.querySelector(".flip__front");
+        var DESK = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 900px)").matches;
+        var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        var heroF = null, touched = false, poll = 0;
+        if (RM && flip) flip.classList.add("flip--fade");
+        function setFlip(on) {
+          if (!flip) return;
+          flip.classList.toggle("is-flipped", on);
+          back.setAttribute("aria-hidden", on ? "false" : "true");
+          if (front) front.setAttribute("aria-hidden", on ? "true" : "false");
+          if (on && heroF && heroF.dataset.ready) setTimeout(function () { try { heroF.focus(); } catch (e) {} }, 400);
+        }
+        function readyCheck() {
+          try {
+            var d = heroF.contentDocument, st = d && d.getElementById("status"), pr = d && d.getElementById("status-progress");
+            if (pr && pr.max && pr.value) { var v = Math.round(pr.value / pr.max * 100); bar.style.width = v + "%"; pct.textContent = v + "%"; }
+            var nt = d && d.getElementById("status-notice");
+            if (nt && nt.textContent.trim() && st && st.isConnected && getComputedStyle(st).visibility !== "hidden") return done(); /* show Godot's own error */
+            if (d && d.readyState === "complete" && d.querySelector("canvas") && (!st || getComputedStyle(st).display === "none" || getComputedStyle(st).visibility === "hidden" || !st.isConnected)) return done();
+          } catch (e) { return; }
+          poll = setTimeout(readyCheck, 250);
+        }
+        function done() {
+          heroF.dataset.ready = "1"; loading.hidden = true; screenEl.classList.add("is-ready"); bar.style.width = "100%";
+          if (flip.classList.contains("is-flipped")) try { heroF.focus(); } catch (e) {}
+        }
+        function loadHero() {
+          if (heroF || !screenEl) return;
+          prompt.hidden = true; loading.hidden = false;
+          heroF = document.createElement("iframe");
+          heroF.src = "play/index.html"; heroF.title = "SAPIENTIA playable demo"; heroF.allow = "fullscreen; autoplay; gamepad"; heroF.setAttribute("allowfullscreen", "");
+          heroF.addEventListener("load", function () { clearTimeout(poll); readyCheck(); });
+          screenEl.appendChild(heroF); hfs.disabled = false;
+          setTimeout(function () { if (heroF && !heroF.dataset.ready) done(); }, 90000);
+        }
+        function fullscreen(el) {
+          var rq = el.requestFullscreen || el.webkitRequestFullscreen;
+          if (rq) { var r = rq.call(el); if (r && r.catch) r.catch(function () {}); }
+          if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {});
+        }
+        if (flip) {
+          if (!DESK) prompt.hidden = false;
+          document.getElementById("flip-to-demo").addEventListener("click", function (e) { e.stopPropagation(); touched = true; setFlip(true); });
+          document.getElementById("flip-to-logo").addEventListener("click", function (e) { e.stopPropagation(); touched = true; setFlip(false); });
+          document.getElementById("flip-no").addEventListener("click", function (e) { e.stopPropagation(); touched = true; setFlip(false); });
+          document.getElementById("flip-load").addEventListener("click", function (e) { e.stopPropagation(); touched = true; loadHero(); });
+          hfs.addEventListener("click", function (e) { e.stopPropagation(); if (heroF) fullscreen(heroF); });
+          var start = function () {
+            if (DESK) requestAnimationFrame(function () { setTimeout(loadHero, 50); });
+            setTimeout(function () { if (!touched) setFlip(true); }, 3000);
+          };
+          if (document.readyState === "complete") start(); else window.addEventListener("load", start);
+        }
         if (!play || !frame) return;
         play.addEventListener("click", function () {
+          if (flip) { /* single player: use the hero card so the game never loads twice */
+            touched = true; loadHero(); setFlip(true);
+            flip.scrollIntoView({ behavior: RM ? "auto" : "smooth", block: "center" });
+            return;
+          }
           if (frame.querySelector("iframe")) return;
           var f = document.createElement("iframe");
           f.src = "play/index.html"; f.title = "SAPIENTIA playable demo"; f.allow = "fullscreen; autoplay; gamepad"; f.setAttribute("allowfullscreen", "");
@@ -422,9 +508,8 @@
           setTimeout(function () { try { f.focus(); } catch (e) {} }, 300);
         });
         fs.addEventListener("click", function () {
-          var el = frame.querySelector("iframe") || frame, rq = el.requestFullscreen || el.webkitRequestFullscreen;
-          if (rq) { var r = rq.call(el); if (r && r.catch) r.catch(function () {}); }
-          if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(function () {});
+          if (heroF) { fullscreen(heroF); return; }
+          fullscreen(frame.querySelector("iframe") || frame);
         });
       })();
     </script>
