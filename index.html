@@ -76,6 +76,7 @@
     <a class="skip-link" href="#main">Skip to main content</a>
     <div class="starfield" aria-hidden="true"></div>
     <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="nebula" aria-hidden="true"><span class="nebula__l n1" data-depth="0.08"></span><span class="nebula__l n2" data-depth="0.18"></span><span class="nebula__l n3" data-depth="0.3"></span></div>
 
     <header class="site-header">
       <a class="brand" href="#top" aria-label="EazyD Studio home">
@@ -100,7 +101,7 @@
           <span class="holo__cone" aria-hidden="true"></span>
           <span class="holo__base" aria-hidden="true"></span>
         </div>
-        <h1 id="hero-title" class="hero__title">EazyD Studio</h1>
+        <h1 id="hero-title" class="hero__title" data-text="EazyD Studio">EazyD Studio</h1>
         <p class="hero__tagline">
           Indie solo dev crafting Godot-ready pixel art packs, handy tools, and
           <strong>SAPIENTIA</strong> — a 16-bit style JRPG in Godot&nbsp;4.
@@ -312,6 +313,33 @@
           if (!raf) raf = requestAnimationFrame(function () { g.style.transform = "translate3d(" + x + "px," + y + "px,0)"; g.classList.add("on"); raf = 0; });
         }, { passive: true });
         document.addEventListener("pointerleave", function () { g.classList.remove("on"); });
+      })();
+      (function () {
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+        if (reduce.matches) return;
+        var root = document.documentElement;
+        root.classList.add("motion");
+        /* glitch intro */
+        var t = document.querySelector(".hero__title");
+        if (t) { t.classList.add("glitch-in"); setTimeout(function () { t.classList.remove("glitch-in"); }, 1600); }
+        /* parallax nebula */
+        var layers = [].slice.call(document.querySelectorAll(".nebula__l")), ticking = false;
+        function para() { var y = window.scrollY; layers.forEach(function (l) { l.style.transform = "translate3d(0," + (-y * l.dataset.depth).toFixed(1) + "px,0)"; }); ticking = false; }
+        window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(para); } }, { passive: true });
+        /* section sweep */
+        document.querySelectorAll("main .section").forEach(function (s) { var b = document.createElement("span"); b.className = "sweep"; b.setAttribute("aria-hidden", "true"); s.appendChild(b); s.style.setProperty("--sweep-h", s.offsetHeight + "px"); });
+        /* tilt cards (fine pointer only) */
+        if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+        document.querySelectorAll(".card, .social a").forEach(function (c) {
+          var g = document.createElement("span"); g.className = "glare"; g.setAttribute("aria-hidden", "true"); c.appendChild(g);
+          var raf = 0, ev;
+          c.addEventListener("pointermove", function (e) { ev = e; if (!raf) raf = requestAnimationFrame(function () {
+            var r = c.getBoundingClientRect(), x = (ev.clientX - r.left) / r.width, y = (ev.clientY - r.top) / r.height;
+            c.style.setProperty("--rx", ((0.5 - y) * 10).toFixed(2) + "deg"); c.style.setProperty("--ry", ((x - 0.5) * 12).toFixed(2) + "deg");
+            c.style.setProperty("--mx", (x * 100).toFixed(1) + "%"); c.style.setProperty("--my", (y * 100).toFixed(1) + "%");
+            c.classList.add("tilting"); raf = 0; }); });
+          c.addEventListener("pointerleave", function () { c.classList.remove("tilting"); c.style.setProperty("--rx", "0deg"); c.style.setProperty("--ry", "0deg"); });
+        });
       })();
     </script>
   </body>
