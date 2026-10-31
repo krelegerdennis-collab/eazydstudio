@@ -22,10 +22,10 @@
     <meta name="twitter:image" content="https://krelegerdennis-collab.github.io/eazydstudio/img/og.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" /></noscript>
-    <link rel="preload" as="image" href="img/logo-hero.webp" type="image/webp" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
+    <link rel="preload" as="image" href="img/holo-logo.webp" imagesrcset="img/holo-logo-280.webp 280w, img/holo-logo.webp 440w" imagesizes="(min-width: 640px) 280px, 64vw" type="image/webp" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="favicon.png" sizes="64x64" />
@@ -75,6 +75,7 @@
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
     <div class="starfield" aria-hidden="true"></div>
+    <div class="cursor-glow" aria-hidden="true"></div>
 
     <header class="site-header">
       <a class="brand" href="#top" aria-label="EazyD Studio home">
@@ -92,12 +93,12 @@
 
     <main id="main">
       <section id="top" class="hero" aria-labelledby="hero-title">
-        <div class="hero__deco" aria-hidden="true">
-          <span class="deco deco--star d1"></span><span class="deco deco--star d2"></span><span class="deco deco--star d3"></span>
-          <span class="deco deco--planet p1"></span><span class="deco deco--planet p2"></span>
-        </div>
-        <div class="hero__logo">
-          <img src="img/logo-hero.webp" srcset="img/logo-hero-280.webp 280w, img/logo-hero.webp 440w" sizes="(min-width: 640px) 280px, 64vw" alt="EazyD Studio logo" width="440" height="440" fetchpriority="high" />
+        <div class="holo">
+          <div class="holo__img">
+            <img src="img/holo-logo.webp" srcset="img/holo-logo-280.webp 280w, img/holo-logo.webp 440w" sizes="(min-width: 640px) 280px, 64vw" alt="EazyD Studio logo" width="440" height="440" fetchpriority="high" />
+          </div>
+          <span class="holo__cone" aria-hidden="true"></span>
+          <span class="holo__base" aria-hidden="true"></span>
         </div>
         <h1 id="hero-title" class="hero__title">EazyD Studio</h1>
         <p class="hero__tagline">
@@ -301,6 +302,16 @@
           });
         }, { rootMargin: "-45% 0px -50% 0px" });
         document.querySelectorAll("main section[id]").forEach(function (s) { nio.observe(s); });
+      })();
+      (function () {
+        var g = document.querySelector(".cursor-glow");
+        if (!g || !window.matchMedia("(hover: hover) and (pointer: fine)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+        var x = 0, y = 0, raf = 0;
+        window.addEventListener("pointermove", function (e) {
+          x = e.clientX; y = e.clientY;
+          if (!raf) raf = requestAnimationFrame(function () { g.style.transform = "translate3d(" + x + "px," + y + "px,0)"; g.classList.add("on"); raf = 0; });
+        }, { passive: true });
+        document.addEventListener("pointerleave", function () { g.classList.remove("on"); });
       })();
     </script>
   </body>
