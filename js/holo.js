@@ -30,7 +30,7 @@ export function start(hero){
     float L=texture2D(lt,uv).r;vec3 fill=mix(vec3(.02,.08,.25),vec3(.1,.75,1.),smoothstep(.75,.25,vUv.y)*.55+.25*sin(vUv.y*300.-t*5.)*.2+fres*.4);fill+=vec3(.3,.9,1.)*.25*sin(vUv.x*8.-t*1.5)*sin(vUv.y*6.+t)*L;col=mix(col,fill*scan,L);al=max(al,L*.93);a=max(a,L);
     col+=vec3(.5,1.,1.)*edge*a*2.;al*=build;if(al<.02)discard;gl_FragColor=vec4(col*fl,al*fl);}`;
   const vert=`varying vec2 vUv;varying vec3 vN,vV;void main(){vUv=uv;vec4 mv=modelViewMatrix*vec4(position,1.);vN=normalize(normalMatrix*normal);vV=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`;
-  const logo=new THREE.Mesh(new THREE.PlaneGeometry(2.4,2.4),new THREE.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,vertexShader:vert,fragmentShader:frag}));
+  const logo=new THREE.Mesh(new THREE.PlaneGeometry(2.9,2.9),new THREE.ShaderMaterial({uniforms:U,transparent:true,depthWrite:false,vertexShader:vert,fragmentShader:frag}));
   root.add(logo);
   // ghost echo layer (additive, slightly larger, low opacity) = bloom feel
   const ghost=new THREE.Mesh(logo.geometry,new THREE.ShaderMaterial({uniforms:{...U,boost:{value:2.2}},transparent:true,depthWrite:false,blending:add,vertexShader:vert,fragmentShader:frag.replace('gl_FragColor=vec4(col*fl,al*fl)','gl_FragColor=vec4(col*fl*.35,al*fl*.35)')}));
