@@ -370,3 +370,7 @@ body { overflow-x: clip; }
 @keyframes warp-shake { 50% { transform: translate(1px, -1px); } }
 @media (prefers-reduced-motion: reduce) { .card__inner { transition: none; } }
 @media (max-width: 639px) { .sound-toggle { padding: 0; width: 44px; justify-content: center; } .sound-toggle__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
+/* flip button below the card faces, not over the image */
+.card__flip { position: relative; top: auto; right: auto; align-self: flex-end; margin: .6rem .25rem 0 0; min-height: 36px; }
+.card.flippable .card__body, .card__face--back { padding-bottom: 3.6rem; }
+.card__flip { position: absolute; top: auto; right: auto; left: var(--s3); bottom: 14px; margin: 0; align-self: auto; }
