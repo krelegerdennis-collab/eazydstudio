@@ -25,7 +25,7 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
-    <link rel="preload" as="image" href="img/holo-logo.webp" imagesrcset="img/holo-logo-280.webp 280w, img/holo-logo.webp 440w" imagesizes="(min-width: 640px) 280px, 64vw" type="image/webp" />
+    <link rel="preload" as="image" href="img/logo-holo-440.webp" imagesrcset="img/logo-holo-280.webp 280w, img/logo-holo-440.webp 440w" imagesizes="(min-width: 640px) 280px, 64vw" type="image/webp" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" href="favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="favicon.png" sizes="64x64" />
@@ -94,12 +94,14 @@
 
     <main id="main">
       <section id="top" class="hero" aria-labelledby="hero-title">
+        <div class="holo-stage" id="holo-stage">
         <div class="holo">
           <div class="holo__img">
-            <img src="img/holo-logo.webp" srcset="img/holo-logo-280.webp 280w, img/holo-logo.webp 440w" sizes="(min-width: 640px) 280px, 64vw" alt="EazyD Studio logo" width="440" height="440" fetchpriority="high" />
+            <img src="img/logo-holo-440.webp" srcset="img/logo-holo-280.webp 280w, img/logo-holo-440.webp 440w" sizes="(min-width: 640px) 280px, 64vw" alt="EazyD Studio logo" width="440" height="440" fetchpriority="high" />
           </div>
           <span class="holo__cone" aria-hidden="true"></span>
           <span class="holo__base" aria-hidden="true"></span>
+        </div>
         </div>
         <h1 id="hero-title" class="hero__title" data-text="EazyD Studio">EazyD Studio</h1>
         <p class="hero__tagline">
@@ -163,16 +165,22 @@
         </p>
       </section>
 
-      <section id="sapientia" class="section feature" aria-labelledby="sapientia-title">
+      <section id="sapientia" class="section feature proj" aria-labelledby="sapientia-title">
         <div class="feature__head">
           <p class="feature__kicker">In development</p>
-          <h2 id="sapientia-title" class="feature__title">SAPIENTIA</h2>
+          <h2 id="sapientia-title" class="feature__title glitch" data-t="SAPIENTIA">SAPIENTIA</h2>
         </div>
         <figure class="feature__media">
-          <video class="feature__video" muted loop playsinline preload="metadata" poster="img/sapientia-poster.webp" width="540" height="676" aria-label="SAPIENTIA gameplay teaser: action co-op combat in a pixel-art dungeon">
+          <span class="proj__beam" aria-hidden="true"><span class="proj__core"></span><span class="proj__dust"></span></span>
+          <span class="proj__emitter" aria-hidden="true"></span>
+          <div class="proj__screen">
+            <video class="feature__video" muted loop playsinline preload="metadata" poster="img/sapientia-poster.webp" width="540" height="676" aria-label="SAPIENTIA gameplay teaser: action co-op combat in a pixel-art dungeon">
             <source src="img/sapientia.webm" type="video/webm" />
             <source src="img/sapientia.mp4" type="video/mp4" />
           </video>
+            <span class="proj__line" aria-hidden="true"></span><span class="proj__bars" aria-hidden="true"></span>
+            <b class="proj__corner c1" aria-hidden="true"></b><b class="proj__corner c2" aria-hidden="true"></b><b class="proj__corner c3" aria-hidden="true"></b><b class="proj__corner c4" aria-hidden="true"></b>
+          </div>
         </figure>
         <div class="feature__body">
           <p class="feature__text">A cosmic 16-bit style JRPG, built solo in Godot&nbsp;4. Follow along for devlogs, WIP shots, and release news.</p>
@@ -344,6 +352,40 @@
         }
         var go = function () { (window.requestIdleCallback || setTimeout)(init, { timeout: 1500 }); };
         if (document.readyState === "complete") go(); else window.addEventListener("load", go);
+      })();
+      (function () {
+        var sap = document.getElementById("sapientia"), stage = document.getElementById("holo-stage");
+        var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (sap) {
+          if (RM || !("IntersectionObserver" in window)) sap.classList.add("on");
+          else {
+            var dust = sap.querySelector(".proj__dust"), nd = innerWidth < 600 ? 16 : 32, i, e, x;
+            for (i = 0; i < nd; i++) { e = document.createElement("i"); x = 50 + (Math.random() - .5) * (30 + Math.random() * 50);
+              e.style.cssText = "left:" + x + "%;--s:" + (1 + Math.random() * 2.5).toFixed(1) + "px;--d:" + (4 + Math.random() * 5).toFixed(1) + "s;--dl:" + (-Math.random() * 8).toFixed(1) + "s;--dx:" + ((x - 50) * 4).toFixed(0) + "px;--h:" + ((300 + Math.random() * 400) | 0) + "px;--o:" + (.3 + Math.random() * .6).toFixed(2); dust.appendChild(e); }
+            var bars = sap.querySelector(".proj__bars");
+            for (i = 0; i < 12; i++) { e = document.createElement("i"); e.style.cssText = "top:" + ((i * 37) % 100) + "%;height:" + (1 + (i % 3)) + "px;--fx:" + (i % 2 ? "-60%" : "60%") + ";animation-delay:" + (.4 + i * .06).toFixed(2) + "s"; bars.appendChild(e); }
+            var so = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { sap.classList.add("on"); so.disconnect(); } }); }, { threshold: .25 });
+            so.observe(sap);
+          }
+        }
+        if (RM || !stage) return;
+        function hasGL() {
+          try {
+            var c = document.createElement("canvas"), g = window.WebGLRenderingContext && (c.getContext("webgl2") || c.getContext("webgl"));
+            if (!g) return false;
+            if (/[?&]gl=force/.test(location.search)) return true;
+            /* skip CPU-emulated WebGL (SwiftShader/llvmpipe): far too slow, keep the static hologram */
+            var info = g.getExtension("WEBGL_debug_renderer_info"), rn = info ? g.getParameter(info.UNMASKED_RENDERER_WEBGL) : "";
+            var lose = g.getExtension("WEBGL_lose_context"); if (lose) lose.loseContext();
+            return !/swiftshader|llvmpipe|software|basic render/i.test(rn);
+          } catch (err) { return false; }
+        }
+        function go() {
+          if (!hasGL()) return;
+          import("./js/holo.js").then(function (m) { if (m.start(stage)) stage.classList.add("gl-ready"); }).catch(function () {});
+        }
+        function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 600); })(go, { timeout: 2500 }); }
+        if (document.readyState === "complete") idle(); else window.addEventListener("load", idle);
       })();
     </script>
   </body>
