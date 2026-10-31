@@ -319,15 +319,16 @@
         if (reduce.matches) return;
         var root = document.documentElement;
         root.classList.add("motion");
-        /* glitch intro */
         var t = document.querySelector(".hero__title");
         if (t) { t.classList.add("glitch-in"); setTimeout(function () { t.classList.remove("glitch-in"); }, 1600); }
+        function init() {
         /* parallax nebula */
         var layers = [].slice.call(document.querySelectorAll(".nebula__l")), ticking = false;
         function para() { var y = window.scrollY; layers.forEach(function (l) { l.style.transform = "translate3d(0," + (-y * l.dataset.depth).toFixed(1) + "px,0)"; }); ticking = false; }
         window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(para); } }, { passive: true });
         /* section sweep */
-        document.querySelectorAll("main .section").forEach(function (s) { var b = document.createElement("span"); b.className = "sweep"; b.setAttribute("aria-hidden", "true"); s.appendChild(b); s.style.setProperty("--sweep-h", s.offsetHeight + "px"); });
+        document.querySelectorAll("main .section").forEach(function (s) { var b = document.createElement("span"); b.className = "sweep"; b.setAttribute("aria-hidden", "true"); s.appendChild(b); });
+        document.querySelectorAll("main .section").forEach(function (s) { s.style.setProperty("--sweep-h", s.offsetHeight + "px"); });
         /* tilt cards (fine pointer only) */
         if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
         document.querySelectorAll(".card, .social a").forEach(function (c) {
@@ -340,6 +341,9 @@
             c.classList.add("tilting"); raf = 0; }); });
           c.addEventListener("pointerleave", function () { c.classList.remove("tilting"); c.style.setProperty("--rx", "0deg"); c.style.setProperty("--ry", "0deg"); });
         });
+        }
+        var go = function () { (window.requestIdleCallback || setTimeout)(init, { timeout: 1500 }); };
+        if (document.readyState === "complete") go(); else window.addEventListener("load", go);
       })();
     </script>
   </body>
