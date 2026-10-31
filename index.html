@@ -3,31 +3,45 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="EazyD Studio — Godot-ready pixel art packs, tools, Chrome extensions, and SAPIENTIA, a 16-bit style JRPG built in Godot 4."
-    />
     <title>EazyD Studio — Pixel art, tools &amp; games</title>
+    <meta name="description" content="EazyD Studio — Godot-ready pixel art packs, tools, Chrome extensions, and SAPIENTIA, a 16-bit style JRPG built in Godot 4." />
+    <link rel="canonical" href="https://krelegerdennis-collab.github.io/eazydstudio/" />
+    <meta name="theme-color" content="#0a1e4a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EazyD Studio" />
+    <meta property="og:title" content="EazyD Studio — Pixel art, tools &amp; games" />
+    <meta property="og:description" content="Godot-ready pixel art packs, handy tools, and SAPIENTIA — a 16-bit style JRPG in Godot 4." />
+    <meta property="og:url" content="https://krelegerdennis-collab.github.io/eazydstudio/" />
+    <meta property="og:image" content="https://krelegerdennis-collab.github.io/eazydstudio/img/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@EazyDstudio" />
+    <meta name="twitter:title" content="EazyD Studio — Pixel art, tools &amp; games" />
+    <meta name="twitter:description" content="Godot-ready pixel art packs, handy tools, and SAPIENTIA — a 16-bit style JRPG in Godot 4." />
+    <meta name="twitter:image" content="https://krelegerdennis-collab.github.io/eazydstudio/img/og.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Sans:wght@400;600&display=swap" /></noscript>
+    <link rel="preload" as="image" href="img/logo-hero.webp" type="image/webp" />
     <link rel="stylesheet" href="styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-    <meta property="og:image" content="https://krelegerdennis-collab.github.io/eazydstudio/logo.png" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to main content</a>
-
-    <div class="scanlines" aria-hidden="true"></div>
+    <div class="starfield" aria-hidden="true"></div>
 
     <header class="site-header">
-      <p class="site-header__brand"><img src="logo.png" alt="" width="32" height="32" style="vertical-align:middle;margin-right:8px;border-radius:50%" />EazyD Studio</p>
-      <nav class="site-header__nav" aria-label="Primary">
+      <a class="brand" href="#top" aria-label="EazyD Studio home">
+        <img src="img/logo-64.webp" alt="" width="32" height="32" />
+        <span>EazyD Studio</span>
+      </a>
+      <nav class="nav" aria-label="Primary">
         <a href="#packs">Packs</a>
+        <a href="#sapientia">SAPIENTIA</a>
         <a href="#extensions">Extensions</a>
         <a href="#godot">Godot</a>
         <a href="#community">Community</a>
@@ -35,9 +49,9 @@
     </header>
 
     <main id="main">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero__badge" role="img" aria-label="16-bit pixel sprite accent">
-          <span class="pixel-orb"></span>
+      <section id="top" class="hero" aria-labelledby="hero-title">
+        <div class="hero__logo">
+          <img src="img/logo-hero.webp" alt="EazyD Studio logo" width="440" height="440" fetchpriority="high" />
         </div>
         <h1 id="hero-title" class="hero__title">EazyD Studio</h1>
         <p class="hero__tagline">
@@ -45,200 +59,128 @@
           <strong>SAPIENTIA</strong> — a 16-bit style JRPG in Godot&nbsp;4.
         </p>
         <div class="hero__actions">
-          <a
-            class="btn btn--primary"
-            href="https://eazydstudio.itch.io"
-            rel="noopener noreferrer"
-          >
-            Browse on itch.io
-          </a>
-          <a
-            class="btn btn--secondary"
-            href="https://discord.gg/VTkpUGW4gw"
-            rel="noopener noreferrer"
-          >
-            Join Discord
-          </a>
+          <a class="btn btn--primary" href="https://eazydstudio.itch.io" target="_blank" rel="noopener noreferrer">Browse on itch.io</a>
+          <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join Discord</a>
         </div>
       </section>
 
       <section id="packs" class="section" aria-labelledby="packs-title">
-        <h2 id="packs-title" class="section__title">Asset packs on itch.io</h2>
-        <p class="section__lead">
-          Drop-in pixel art and UI for your next Godot project. Fixed prices on
-          itch.io — no surprises at checkout.
-        </p>
-        <ul class="card-grid">
+        <h2 id="packs-title" class="section__title">Asset packs</h2>
+        <p class="section__lead">Drop-in pixel art and UI for your next Godot project. Fixed prices on itch.io — no surprises at checkout.</p>
+        <ul class="card-grid card-grid--four">
           <li class="card">
-            <h3 class="card__title">Forest Village</h3>
-            <p class="card__text">
-              Cozy village tiles, props, and ambience for top-down adventures.
-            </p>
-            <a
-              class="card__link"
-              href="https://eazydstudio.itch.io"
-              rel="noopener noreferrer"
-            >
-              View on itch.io
+            <a class="card__media" href="https://eazydstudio.itch.io/forest-village-tileset" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img src="img/fv.webp" alt="" width="315" height="250" loading="lazy" decoding="async" />
             </a>
+            <div class="card__body">
+              <h3 class="card__title">Forest Village</h3>
+              <p class="card__text">Cozy village tiles, props, and ambience for top-down adventures.</p>
+              <a class="card__link" href="https://eazydstudio.itch.io/forest-village-tileset" target="_blank" rel="noopener noreferrer">View Forest Village on itch.io</a>
+            </div>
           </li>
           <li class="card">
-            <h3 class="card__title">UI Theme</h3>
-            <p class="card__text">
-              Crisp menus, panels, and controls tuned for retro JRPG flows.
-            </p>
-            <a
-              class="card__link"
-              href="https://eazydstudio.itch.io"
-              rel="noopener noreferrer"
-            >
-              View on itch.io
+            <a class="card__media" href="https://eazydstudio.itch.io/retro-jrpg-ui-theme-for-godot-4" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img src="img/ui.webp" alt="" width="315" height="250" loading="lazy" decoding="async" />
             </a>
+            <div class="card__body">
+              <h3 class="card__title">Retro JRPG UI Theme</h3>
+              <p class="card__text">Crisp menus, panels, and controls tuned for retro JRPG flows.</p>
+              <a class="card__link" href="https://eazydstudio.itch.io/retro-jrpg-ui-theme-for-godot-4" target="_blank" rel="noopener noreferrer">View UI Theme on itch.io</a>
+            </div>
           </li>
           <li class="card">
-            <h3 class="card__title">Slice &amp; Swatch</h3>
-            <p class="card__text">
-              Modular slices and color swatches for rapid prototyping in-engine.
-            </p>
-            <a
-              class="card__link"
-              href="https://eazydstudio.itch.io"
-              rel="noopener noreferrer"
-            >
-              View on itch.io
+            <a class="card__media" href="https://eazydstudio.itch.io/slice-and-swatch" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img src="img/ss.webp" alt="" width="315" height="250" loading="lazy" decoding="async" />
             </a>
+            <div class="card__body">
+              <h3 class="card__title">Slice &amp; Swatch</h3>
+              <p class="card__text">Modular slices and color swatches for rapid prototyping in-engine.</p>
+              <a class="card__link" href="https://eazydstudio.itch.io/slice-and-swatch" target="_blank" rel="noopener noreferrer">View Slice &amp; Swatch on itch.io</a>
+            </div>
           </li>
           <li class="card">
-            <h3 class="card__title">VRChat assets on Jinxxy</h3>
-            <p class="card__text">
-              Pixel menu icons and furry pixel pins for VRChat, free and Premium versions.
-            </p>
-            <a
-              class="card__link"
-              href="https://jinxxy.com/EazyDStudio"
-              rel="noopener noreferrer"
-            >
-              Visit the Jinxxy store
+            <a class="card__media" href="https://jinxxy.com/EazyDStudio" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true">
+              <img class="contain" src="img/jx.webp" alt="" width="400" height="225" loading="lazy" decoding="async" />
             </a>
+            <div class="card__body">
+              <h3 class="card__title">VRChat assets on Jinxxy</h3>
+              <p class="card__text">VRChat accessories like PhysBone shoulder pets, masks, and headphones — free and premium versions.</p>
+              <a class="card__link" href="https://jinxxy.com/EazyDStudio" target="_blank" rel="noopener noreferrer">Visit the Jinxxy store</a>
+            </div>
           </li>
         </ul>
         <p class="section__note">
-          <a href="https://eazydstudio.itch.io" rel="noopener noreferrer"
-            >eazydstudio.itch.io</a
-          >
-          — full catalog and bundle details.
+          <a href="https://eazydstudio.itch.io" target="_blank" rel="noopener noreferrer">eazydstudio.itch.io</a> — full catalog and bundle details.
         </p>
+      </section>
+
+      <section id="sapientia" class="section feature" aria-labelledby="sapientia-title">
+        <div class="feature__inner">
+          <p class="feature__kicker">In development</p>
+          <h2 id="sapientia-title" class="feature__title">SAPIENTIA</h2>
+          <p class="feature__text">A cosmic 16-bit style JRPG, built solo in Godot&nbsp;4. Follow along for devlogs, WIP shots, and release news.</p>
+          <div class="hero__actions hero__actions--left">
+            <a class="btn btn--primary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Follow devlogs on Discord</a>
+            <a class="btn btn--secondary" href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer">Updates on X</a>
+          </div>
+        </div>
       </section>
 
       <section id="extensions" class="section" aria-labelledby="extensions-title">
         <h2 id="extensions-title" class="section__title">Chrome extensions</h2>
-        <p class="section__lead">
-          Small quality-of-life browser tools from the same pixel-pushing desk.
-        </p>
+        <p class="section__lead">Small quality-of-life browser tools from the same pixel-pushing desk.</p>
         <ul class="card-grid card-grid--two">
-          <li class="card">
-            <div class="card__header">
+          <li class="card card--row">
+            <img class="card__icon" src="img/tt.webp" alt="" width="64" height="64" loading="lazy" decoding="async" />
+            <div class="card__body">
               <h3 class="card__title">Tab Tidy</h3>
-              <span class="pill">Available on Chrome Web Store</span>
+              <span class="pill">Chrome Web Store</span>
+              <p class="card__text">Wrangle tab overload with a lightweight, keyboard-friendly tidy flow.</p>
+              <a class="card__link" href="https://chromewebstore.google.com/detail/tab-tidy/clkihpegkcofoobggpkljlicambaeflo" target="_blank" rel="noopener noreferrer">Add Tab Tidy to Chrome</a>
             </div>
-            <p class="card__text">
-              Wrangle tab overload with a lightweight, keyboard-friendly tidy
-              flow.
-            </p>
-            <a class="card__link" href="https://chromewebstore.google.com/detail/tab-tidy/clkihpegkcofoobggpkljlicambaeflo" target="_blank" rel="noopener">Add to Chrome</a>
           </li>
-          <li class="card">
-            <div class="card__header">
+          <li class="card card--row">
+            <img class="card__icon" src="img/it.webp" alt="" width="64" height="64" loading="lazy" decoding="async" />
+            <div class="card__body">
               <h3 class="card__title">Image Toolbar Plus</h3>
-              <span class="pill">Available on Chrome Web Store</span>
+              <span class="pill">Chrome Web Store</span>
+              <p class="card__text">Quick image actions from the page — save steps without leaving your tab.</p>
+              <a class="card__link" href="https://chromewebstore.google.com/detail/ncfkapjdcbdlbdolhafalmkoomabiokg" target="_blank" rel="noopener noreferrer">Add Image Toolbar Plus to Chrome</a>
             </div>
-            <p class="card__text">
-              Quick image actions from the page — save steps without leaving your
-              tab.
-            </p>
-            <a class="card__link" href="https://chromewebstore.google.com/detail/ncfkapjdcbdlbdolhafalmkoomabiokg" target="_blank" rel="noopener">Add to Chrome</a>
           </li>
         </ul>
       </section>
 
       <section id="godot" class="section" aria-labelledby="godot-title">
-        <h2 id="godot-title" class="section__title">Godot Asset Store</h2>
-        <p class="section__lead">
-          Find EazyD Studio packs on the official Godot Asset Library under
-          publisher <strong>EazyDStudio</strong>.
-        </p>
+        <h2 id="godot-title" class="section__title">Godot Asset Library</h2>
         <div class="callout">
-          <p>
-            Search for <strong>EazyDStudio</strong> in the Asset Library to grab
-            Godot-native imports alongside itch.io releases.
-          </p>
-          <a
-            class="btn btn--ghost"
-            href="https://godotengine.org/asset-library/asset?user=EazyDStudio"
-            rel="noopener noreferrer"
-          >
-            Open Asset Library
-          </a>
+          <p>Find EazyD Studio packs on the official Godot Asset Library under publisher <strong>EazyDStudio</strong> — Godot-native imports alongside the itch.io releases.</p>
+          <a class="btn btn--ghost" href="https://godotengine.org/asset-library/asset?user=EazyDStudio" target="_blank" rel="noopener noreferrer">Open Asset Library</a>
         </div>
       </section>
 
       <section id="community" class="section" aria-labelledby="community-title">
-        <h2 id="community-title" class="section__title">Community</h2>
-        <p class="section__lead">
-          Share WIP shots, get pack updates, and follow SAPIENTIA devlogs.
-        </p>
-        <ul class="link-list">
-          <li>
-            <a href="https://discord.gg/VTkpUGW4gw" rel="noopener noreferrer"
-              >Discord</a
-            >
-            <span class="link-list__hint">dev chat &amp; support</span>
-          </li>
-          <li>
-            <a href="https://x.com/EazyDstudio" rel="noopener noreferrer">X</a>
-            <span class="link-list__hint">announcements</span>
-          </li>
-          <li>
-            <a
-              href="https://www.reddit.com/user/EazyDStudio"
-              rel="noopener noreferrer"
-              >Reddit</a
-            >
-            <span class="link-list__hint">u/EazyDStudio</span>
-          </li>
+        <h2 id="community-title" class="section__title">Community &amp; support</h2>
+        <p class="section__lead">Share WIP shots, get pack updates, and follow SAPIENTIA devlogs.</p>
+        <ul class="social">
+          <li><a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer"><strong>Discord</strong><span>Dev chat &amp; support</span></a></li>
+          <li><a href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer"><strong>X (@EazyDstudio)</strong><span>Announcements</span></a></li>
+          <li><a href="https://www.reddit.com/user/EazyDStudio" target="_blank" rel="noopener noreferrer"><strong>Reddit</strong><span>u/EazyDStudio</span></a></li>
+          <li><a href="mailto:eazydstudio@mail.grokbot.com"><strong>Email</strong><span>Licensing, collabs &amp; press</span></a></li>
         </ul>
-      </section>
-
-      <section id="support" class="section section--support" aria-labelledby="support-title">
-        <h2 id="support-title" class="section__title">Support</h2>
-        <p class="section__lead">
-          Licensing, collaborations, or press — reach out directly.
-        </p>
-        <p class="support-email">
-          <a href="mailto:eazydstudio@mail.grokbot.com"
-            >eazydstudio@mail.grokbot.com</a
-          >
-        </p>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p>&copy; <span id="year"></span> EazyD Studio. Made with pixels and patience.</p>
-      <p>
-        <a
-          href="https://krelegerdennis-collab.github.io/eazydstudio-privacy"
-          rel="noopener noreferrer"
-          >Privacy policy</a
-        >
-        &middot;
-        <a href="https://jinxxy.com/EazyDStudio" rel="noopener noreferrer"
-          >Jinxxy</a
-        >
+      <p>&copy; <span id="year">2026</span> EazyD Studio. Made with pixels and patience.</p>
+      <p class="site-footer__links">
+        <a href="https://eazydstudio.itch.io" target="_blank" rel="noopener noreferrer">itch.io</a>
+        <a href="https://jinxxy.com/EazyDStudio" target="_blank" rel="noopener noreferrer">Jinxxy</a>
+        <a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a>
+        <a href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://krelegerdennis-collab.github.io/eazydstudio-privacy" target="_blank" rel="noopener noreferrer">Privacy policy</a>
       </p>
     </footer>
-
-    <script>
-      document.getElementById("year").textContent = new Date().getFullYear();
-    </script>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
   </body>
 </html>
