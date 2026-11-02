@@ -497,3 +497,11 @@ body { overflow-x: clip; }
 .games__dot[aria-current]::before { background: var(--orange); transform: scale(1.15); }
 .games__dot:focus-visible { outline: 2px solid var(--orange); outline-offset: -6px; border-radius: 50%; }
 @media (prefers-reduced-motion: reduce) { .games__viewport { scroll-behavior: auto; } .games__dot::before, .games__arrow { transition: none; } }
+
+/* In development slider */
+.devs { max-width: none; }
+.dev-slide { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; display: flex; }
+.dev-slide > .feature { flex: 1; min-width: 0; }
+.feature__media--tall { width: min(100%, 18rem); }
+.feature__video--tall { aspect-ratio: 9 / 16; object-fit: contain; background: #000; }
+.hh__trailer video { display: block; width: min(100%, 22rem); height: auto; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 14px; background: #000; }
