@@ -96,8 +96,8 @@
 
       <section class="hh__trailer" id="trailer" aria-labelledby="trailer-title">
         <h2 id="trailer-title">Watch the trailer</h2>
-        <video controls playsinline preload="none" poster="img/trailer-poster.webp" width="720" height="1280" aria-label="Hoshimi Haven trailer: star-pets defend a floating star village">
-          <source src="img/trailer.mp4" type="video/mp4" />
+        <video id="hh-trailer-video" muted loop playsinline preload="none" poster="img/trailer-poster.webp" width="720" height="1280" aria-label="Hoshimi Haven trailer: star-pets defend a floating star village">
+          <source data-src="img/trailer.mp4" type="video/mp4" />
         </video>
       </section>
 
@@ -170,6 +170,19 @@
       <p class="site-footer__copy">&copy; <span id="year">2026</span> EazyD Studio. Made with pixels and patience.</p>
     </footer>
     <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    <script>
+      (function () {
+        var v = document.getElementById("hh-trailer-video"); if (!v) return;
+        var mq = window.matchMedia("(prefers-reduced-motion: reduce)"), loaded = false, vis = false;
+        function load() { if (loaded) return; loaded = true; v.querySelectorAll("source[data-src]").forEach(function (s) { s.src = s.getAttribute("data-src"); s.removeAttribute("data-src"); }); v.preload = "auto"; v.load(); }
+        function sync() { v.muted = true; if (vis && !mq.matches) { load(); var p = v.play(); if (p && p.catch) p.catch(function () {}); } else if (!v.paused) v.pause(); }
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) load(); }); }, { rootMargin: "300px" }).observe(v);
+          new IntersectionObserver(function (es) { es.forEach(function (e) { vis = e.isIntersecting; sync(); }); }, { threshold: 0.1 }).observe(v);
+        } else { vis = true; sync(); }
+        if (mq.addEventListener) mq.addEventListener("change", sync);
+      })();
+    </script>
     <script>
       (function () {
         var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");

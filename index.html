@@ -234,8 +234,8 @@
           <h2 id="hh-trailer-title" class="feature__title">Hoshimi Haven</h2>
         </div>
         <figure class="feature__media feature__media--tall">
-          <video class="feature__video feature__video--tall" id="hh-trailer-video" controls playsinline preload="none" poster="hoshimi-haven/img/trailer-poster.webp" width="720" height="1280" aria-label="Hoshimi Haven trailer: star-pets defend a floating star village">
-            <source src="hoshimi-haven/img/trailer.mp4" type="video/mp4" />
+          <video class="feature__video feature__video--tall" id="hh-trailer-video" muted loop playsinline preload="none" poster="hoshimi-haven/img/trailer-poster.webp" width="720" height="1280" aria-label="Hoshimi Haven trailer: star-pets defend a floating star village">
+            <source data-src="hoshimi-haven/img/trailer.mp4" type="video/mp4" />
           </video>
         </figure>
         <div class="feature__body">
@@ -247,7 +247,7 @@
             <li>Solo dev</li>
           </ul>
           <div class="hero__actions hero__actions--left">
-            <button type="button" class="btn btn--primary" data-play="hh-trailer-video">Watch the trailer</button>
+            <a class="btn btn--primary" href="hoshimi-haven/#trailer">Watch the trailer</a>
             <a class="btn btn--secondary" href="hoshimi-haven/">Explore Hoshimi Haven</a>
           </div>
           <p class="feature__note">Devlogs &amp; WIP shots on <a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a>.</p>
@@ -623,11 +623,15 @@
       slider("games-track", ".games-slide", ".games__dot:not(.dev-dot)", "games-prev", "games-next");
       var dev = slider("dev-track", ".dev-slide", ".dev-dot", "dev-prev", "dev-next");
       (function () {
-        var hv = document.getElementById("hh-trailer-video");
-        document.querySelectorAll("[data-play]").forEach(function (b) { b.addEventListener("click", function () {
-          var v = document.getElementById(b.getAttribute("data-play")); if (!v) return; v.muted = false; var p = v.play(); if (p && p.catch) p.catch(function () {}); }); });
-        var vp = document.getElementById("dev-track"), t;
-        if (vp && hv) vp.addEventListener("scroll", function () { clearTimeout(t); t = setTimeout(function () { if (dev && dev.cur() !== 1 && !hv.paused) hv.pause(); }, 120); }, { passive: true });
+        var v = document.getElementById("hh-trailer-video"); if (!v) return;
+        var mq = window.matchMedia("(prefers-reduced-motion: reduce)"), loaded = false, vis = false;
+        function load() { if (loaded) return; loaded = true; v.querySelectorAll("source[data-src]").forEach(function (s) { s.src = s.getAttribute("data-src"); s.removeAttribute("data-src"); }); v.preload = "auto"; v.load(); }
+        function sync() { v.muted = true; if (vis && !mq.matches) { load(); var p = v.play(); if (p && p.catch) p.catch(function () {}); } else if (!v.paused) v.pause(); }
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) load(); }); }, { rootMargin: "300px" }).observe(v);
+          new IntersectionObserver(function (es) { es.forEach(function (e) { vis = e.isIntersecting; sync(); }); }, { threshold: 0.1 }).observe(v);
+        } else { vis = true; sync(); }
+        if (mq.addEventListener) mq.addEventListener("change", sync);
       })();
     </script>
   </body>
