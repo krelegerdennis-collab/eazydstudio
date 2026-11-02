@@ -32,6 +32,16 @@
         <img src="../img/logo-holo-v4-64.webp" alt="" width="32" height="32" />
         <span>EazyD Studio</span>
       </a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav"><span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="vh">Menu</span></button>
+      <nav class="nav" id="primary-nav" aria-label="Primary">
+        <a href="../">Home</a>
+        <a href="../sapientia/">Sapientia</a>
+        <a href="../hoshimi-haven/">Hoshimi Haven</a>
+        <a href="../#packs">Packs</a>
+        <a href="../#extensions">Extensions</a>
+        <a href="../#godot">Godot</a>
+        <a href="../#community">Community</a>
+      </nav>
     </header>
     <main id="main" class="legal">
       <h1>Privacy policies</h1>
@@ -141,5 +151,25 @@ Tab Tidy does not send tab information, sessions, or usage analytics to EazyD St
     <footer class="site-footer">
       <p class="site-footer__copy">&copy; 2026 EazyD Studio · <a href="../">Back to eazydstudio.com</a> · <a href="mailto:hello@eazydstudio.com">hello@eazydstudio.com</a></p>
     </footer>
+    <script>
+      (function () {
+        var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
+        if (!btn || !nav) return;
+        var mq = window.matchMedia("(max-width: 639px)");
+        function set(open, focusBtn) {
+          hdr.classList.toggle("nav-open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.querySelector(".vh").textContent = open ? "Close menu" : "Menu";
+          if (mq.matches) { if (open) nav.removeAttribute("inert"); else nav.setAttribute("inert", ""); }
+          if (open) { var f = nav.querySelector("a"); if (f) f.focus(); } else if (focusBtn) btn.focus();
+        }
+        function sync() { if (mq.matches) { if (!hdr.classList.contains("nav-open")) nav.setAttribute("inert", ""); } else { hdr.classList.remove("nav-open"); btn.setAttribute("aria-expanded", "false"); nav.removeAttribute("inert"); } }
+        sync(); if (mq.addEventListener) mq.addEventListener("change", sync);
+        btn.addEventListener("click", function (e) { e.stopPropagation(); set(btn.getAttribute("aria-expanded") !== "true", false); });
+        nav.addEventListener("click", function (e) { if (e.target.closest("a") && mq.matches) set(false, false); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape" && hdr.classList.contains("nav-open")) set(false, true); });
+        document.addEventListener("click", function (e) { if (hdr.classList.contains("nav-open") && !hdr.contains(e.target)) set(false, false); });
+      })();
+    </script>
   </body>
 </html>

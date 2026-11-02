@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sapientia — 16-bit style action co-op RPG | EazyD Studio</title>
+    <meta name="description" content="Sapientia is a cosmic 16-bit style action co-op RPG by EazyD Studio, a solo dev game studio, built solo in Godot 4. Play the free browser demo." />
+    <link rel="canonical" href="https://eazydstudio.com/sapientia/" />
+    <meta name="theme-color" content="#0a1e4a" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EazyD Studio" />
+    <meta property="og:title" content="Sapientia — 16-bit style action co-op RPG" />
+    <meta property="og:description" content="Sapientia is a cosmic 16-bit style action co-op RPG by EazyD Studio, a solo dev game studio, built solo in Godot 4. Play the free browser demo." />
+    <meta property="og:url" content="https://eazydstudio.com/sapientia/" />
+    <meta property="og:image" content="https://eazydstudio.com/sapientia/img/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Sapientia key art with the EazyD Studio holo logo: Dax, Vesper and Seren battle moss creatures" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@EazyDstudio" />
+    <meta name="twitter:title" content="Sapientia — 16-bit style action co-op RPG" />
+    <meta name="twitter:description" content="Sapientia is a cosmic 16-bit style action co-op RPG by EazyD Studio, a solo dev game studio, built solo in Godot 4. Play the free browser demo." />
+    <meta name="twitter:image" content="https://eazydstudio.com/sapientia/img/og.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
+    <link rel="preload" as="image" href="../img/sapientia-poster.webp" type="image/webp" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="icon" href="../favicon-v2.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="../favicon-v2.png" sizes="64x64" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon-v2.png" />
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"VideoGame","name":"Sapientia","url":"https://eazydstudio.com/sapientia/","description":"A cosmic 16-bit style action co-op RPG, built solo in Godot 4.","genre":["Action RPG","Co-op"],"image":"https://eazydstudio.com/sapientia/img/og.jpg","author":{"@type":"Organization","name":"EazyD Studio","url":"https://eazydstudio.com/"}}
+    </script>
+    <style>
+      .hh { max-width: 68rem; margin: 0 auto; padding: var(--s4) var(--s3) var(--s5); }
+      .hh__hero { text-align: center; }
+      .hh__art { margin: 0 0 var(--s4); border-radius: 18px; overflow: hidden; border: 1px solid rgba(62,230,255,.35); box-shadow: 0 0 40px rgba(62,230,255,.18), 0 18px 50px rgba(0,0,0,.45); }
+      .hh__art img { display: block; width: 100%; height: auto; aspect-ratio: 1344 / 768; object-fit: cover; }
+      .hh__kicker { margin: 0 0 var(--s1); color: var(--orange-hi); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .85rem; }
+      .hh h1 { font-family: var(--font-head); font-weight: 800; font-size: clamp(2rem, 7vw, 3.4rem); line-height: 1.1; margin: 0 0 var(--s2); color: var(--orange); }
+      .hh__lead { max-width: 40rem; margin: 0 auto var(--s3); font-size: 1.15rem; }
+      .hh .hero__actions { justify-content: center; }
+      .hh__features { list-style: none; padding: 0; margin: var(--s5) 0; display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+      .hh__features li { padding: var(--s3); border-radius: 16px; background: rgba(10,30,74,.75); border: 1px solid rgba(62,230,255,.25); }
+      .hh__features h2 { font-family: var(--font-head); color: var(--orange); font-size: 1.05rem; margin: 0 0 var(--s1); }
+      .hh__features p { margin: 0; }
+      .hh h2.section__title { text-align: center; }
+      .hh .section__lead { text-align: center; margin-left: auto; margin-right: auto; }
+      .pets { list-style: none; padding: 0; margin: var(--s3) 0 var(--s5); display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s2); }
+      .pet img, .gloom img { display: block; width: 128px; height: 128px; border-radius: 22px; border: 2px solid rgba(255,140,26,.6); box-shadow: 0 0 18px rgba(255,140,26,.25); background: #fff; }
+      .pet img { width: min(128px, 26vw); height: auto; aspect-ratio: 1; }
+      .gloom { display: flex; align-items: center; gap: var(--s3); max-width: 44rem; margin: 0 auto var(--s5); padding: var(--s3); border-radius: 18px; background: rgba(10,30,74,.75); border: 1px solid rgba(160,110,255,.45); }
+      .gloom img { flex-shrink: 0; border-color: rgba(160,110,255,.7); box-shadow: 0 0 18px rgba(160,110,255,.35); }
+      .gloom h2 { font-family: var(--font-head); color: var(--orange); font-size: 1.2rem; margin: 0 0 var(--s1); }
+      .gloom p { margin: 0; }
+      .hh__cta { text-align: center; padding: var(--s4) var(--s3); border-radius: 18px; border: 1px solid rgba(255,140,26,.55); background: rgba(10,30,74,.8); }
+      .hh__cta p { max-width: 34rem; margin: 0 auto var(--s3); }
+      @media (max-width: 520px) { .gloom { flex-direction: column; text-align: center; } .gloom img { width: 104px; height: 104px; } }
+      .hh__art--sap { max-width: 30rem; margin-left: auto; margin-right: auto; }
+      .hh__art--sap img { aspect-ratio: 540 / 676; }
+      .pets img.px { image-rendering: pixelated; background: radial-gradient(circle at 50% 60%, #16306e, #0a1e4a); width: min(120px, 26vw); height: auto; aspect-ratio: auto; }
+      .strip__label { text-align: center; font-family: var(--font-head); color: var(--orange-hi); font-size: .95rem; margin: var(--s3) 0 0; }
+      .pets { margin-bottom: var(--s3); }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div class="starfield" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="EazyD Studio home">
+        <img src="../img/logo-holo-v4-64.webp" alt="" width="32" height="32" />
+        <span>EazyD Studio</span>
+      </a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav"><span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="vh">Menu</span></button>
+      <nav class="nav" id="primary-nav" aria-label="Primary">
+        <a href="../">Home</a>
+        <a href="../sapientia/" aria-current="page">Sapientia</a>
+        <a href="../hoshimi-haven/">Hoshimi Haven</a>
+        <a href="../#packs">Packs</a>
+        <a href="../#extensions">Extensions</a>
+        <a href="../#godot">Godot</a>
+        <a href="../#community">Community</a>
+      </nav>
+    </header>
+    <main id="main" class="hh">
+      <section class="hh__hero" aria-labelledby="sap-title">
+        <figure class="hh__art hh__art--sap">
+          <img src="../img/sapientia-poster.webp" alt="Sapientia battle scene: Dax, Vesper and Seren fight moss creatures in a pixel-art library" width="540" height="676" fetchpriority="high" decoding="async" />
+        </figure>
+        <p class="hh__kicker">In development · EazyD Studio</p>
+        <h1 id="sap-title">Sapientia</h1>
+        <p class="hh__lead">16-bit style action co-op RPG. A cosmic adventure, built solo in Godot&nbsp;4.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="../#top">▶ Play the demo</a>
+          <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join the Discord</a>
+        </div>
+      </section>
+
+      <ul class="hh__features" aria-label="Highlights">
+        <li><h2>Action co-op combat</h2><p>An action co-op RPG: team up and fight side by side through pixel-art dungeons.</p></li>
+        <li><h2>16-bit style pixel art</h2><p>Hand-made 16-bit style pixel art for every hero, monster and dungeon.</p></li>
+        <li><h2>Built in Godot 4</h2><p>Made with Godot&nbsp;4 by a solo dev game studio, the same desk behind our Godot-ready pixel art packs.</p></li>
+        <li><h2>Playable demo</h2><p>Try the free demo right in your browser, straight from the EazyD Studio homepage.</p></li>
+      </ul>
+
+      <section aria-labelledby="cast-title">
+        <h2 id="cast-title" class="section__title">Heroes &amp; monsters</h2>
+        <p class="section__lead">A few of the faces you will meet in Sapientia.</p>
+        <p class="strip__label">Heroes</p>
+        <ul class="pets">
+          <li class="pet"><img class="px" src="img/kael.webp" alt="Kael, a silver-haired hero with a glowing blue blade" width="120" height="160" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/dax.webp" alt="Dax, a dark-haired swordsman in a black cloak" width="120" height="160" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/seren.webp" alt="Seren, a blonde healer in a white robe with a staff" width="120" height="160" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/vesper.webp" alt="Vesper, a mage with a purple orb staff" width="120" height="160" loading="lazy" decoding="async" /></li>
+        </ul>
+        <p class="strip__label">Monsters</p>
+        <ul class="pets">
+          <li class="pet"><img class="px" src="img/golem.webp" alt="Stone golem with a glowing pink core" width="120" height="120" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/moskonijn.webp" alt="Green moss creature with a mushroom on its head" width="120" height="120" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/scanline-wolf.webp" alt="Purple glitching scanline wolf" width="120" height="120" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/mimic.webp" alt="Dark blue treasure chest mimic" width="120" height="120" loading="lazy" decoding="async" /></li>
+          <li class="pet"><img class="px" src="img/papiergeest.webp" alt="Pale paper ghost" width="120" height="120" loading="lazy" decoding="async" /></li>
+        </ul>
+      </section>
+
+      <section class="hh__cta" aria-labelledby="demo-title" style="margin-bottom:var(--s4)">
+        <h2 id="demo-title" class="section__title">Play the demo</h2>
+        <p>The Sapientia demo runs in your browser on the EazyD Studio homepage. Jump in and give it a try.</p>
+        <a class="btn btn--primary" href="../#top">▶ Play the demo</a>
+      </section>
+
+      <section class="hh__cta" aria-labelledby="dc-title">
+        <h2 id="dc-title" class="section__title">Follow the journey</h2>
+        <p>Devlogs, WIP shots and news land first on Discord. Come say hi.</p>
+        <a class="btn btn--primary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join the Discord</a>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="site-footer__cols">
+        <div class="site-footer__brand">
+          <img src="../img/logo-holo-v4-64.webp" alt="" width="40" height="40" loading="lazy" />
+          <p>Games, pixel art packs &amp; tools from a solo dev game studio.</p>
+        </div>
+        <nav aria-label="Products">
+          <h2>Products</h2>
+          <ul>
+            <li><a href="https://eazydstudio.itch.io" target="_blank" rel="noopener noreferrer">itch.io packs</a></li>
+            <li><a href="https://jinxxy.com/EazyDStudio" target="_blank" rel="noopener noreferrer">Jinxxy (VRChat)</a></li>
+            <li><a href="https://godotengine.org/asset-library/asset?user=EazyDStudio" target="_blank" rel="noopener noreferrer">Godot Asset Library</a></li>
+            <li><a href="../#extensions">Chrome extensions</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Community">
+          <h2>Community</h2>
+          <ul>
+            <li><a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a></li>
+            <li><a href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer">X</a></li>
+            <li><a href="https://www.reddit.com/user/EazyDStudio" target="_blank" rel="noopener noreferrer">Reddit</a></li>
+            <li><a href="https://youtube.com/shorts/LQTdJgvWLTM" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="https://eazydstudio.com/privacy/">Privacy policy</a></li>
+            <li><a href="mailto:hello@eazydstudio.com">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="site-footer__copy">&copy; <span id="year">2026</span> EazyD Studio. Made with pixels and patience.</p>
+    </footer>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    <script>
+      (function () {
+        var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
+        if (!btn || !nav) return;
+        var mq = window.matchMedia("(max-width: 639px)");
+        function set(open, focusBtn) {
+          hdr.classList.toggle("nav-open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.querySelector(".vh").textContent = open ? "Close menu" : "Menu";
+          if (mq.matches) { if (open) nav.removeAttribute("inert"); else nav.setAttribute("inert", ""); }
+          if (open) { var f = nav.querySelector("a"); if (f) f.focus(); } else if (focusBtn) btn.focus();
+        }
+        function sync() { if (mq.matches) { if (!hdr.classList.contains("nav-open")) nav.setAttribute("inert", ""); } else { hdr.classList.remove("nav-open"); btn.setAttribute("aria-expanded", "false"); nav.removeAttribute("inert"); } }
+        sync(); if (mq.addEventListener) mq.addEventListener("change", sync);
+        btn.addEventListener("click", function (e) { e.stopPropagation(); set(btn.getAttribute("aria-expanded") !== "true", false); });
+        nav.addEventListener("click", function (e) { if (e.target.closest("a") && mq.matches) set(false, false); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape" && hdr.classList.contains("nav-open")) set(false, true); });
+        document.addEventListener("click", function (e) { if (hdr.classList.contains("nav-open") && !hdr.contains(e.target)) set(false, false); });
+      })();
+    </script>
+  </body>
+</html>
