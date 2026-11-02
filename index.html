@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
     <link rel="preload" as="image" href="img/logo-holo-440.webp" imagesrcset="img/logo-holo-280.webp 280w, img/logo-holo-440.webp 440w, img/logo-holo-880.webp 880w" imagesizes="(min-width: 640px) 280px, 64vw" type="image/webp" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=7b8d0345" />
     <link rel="icon" href="favicon-v2.ico" sizes="any" />
     <link rel="icon" type="image/png" href="favicon-v2.png" sizes="64x64" />
     <link rel="manifest" href="site.webmanifest" />
@@ -503,13 +503,13 @@
         }
         function go() {
           if (!hasGL()) return;
-          import("./js/holo.js").then(function (m) { if (m.start(stage)) stage.classList.add("gl-ready"); }).catch(function () {});
+          import("./js/holo.js?v=ef8b3c83").then(function (m) { if (m.start(stage)) stage.classList.add("gl-ready"); }).catch(function () {});
         }
         function idle() { (window.requestIdleCallback || function (f) { setTimeout(f, 600); })(go, { timeout: 2500 }); }
         if (document.readyState === "complete") idle(); else window.addEventListener("load", idle);
       })();
     </script>
-    <script src="js/interactive.js" defer></script>
+    <script src="js/interactive.js?v=7d6223ad" defer></script>
     <script>
       (function () {
         var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
