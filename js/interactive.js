@@ -127,18 +127,19 @@
     var inner = document.createElement("div"); inner.className = "card__inner";
     var front = document.createElement("div"); front.className = "card__face card__face--front";
     while (card.firstChild) front.appendChild(card.firstChild);
-    var back = document.createElement("div"); back.className = "card__face card__face--back"; back.id = "card-back-" + i; back.setAttribute("aria-hidden", "true");
+    var back = document.createElement("div"); back.className = "card__face card__face--back"; back.id = "card-back-" + i; back.setAttribute("aria-hidden", "true"); back.inert = true;
     var h = document.createElement("p"); h.className = "card__back-title"; h.textContent = title.textContent;
     var p = document.createElement("p"); p.className = "card__text"; p.textContent = BLURB[title.textContent.trim()] || card.querySelector(".card__text").textContent;
     var a = link.cloneNode(true); a.tabIndex = -1;
     back.appendChild(h); back.appendChild(p); back.appendChild(a);
     var b = document.createElement("button"); b.type = "button"; b.className = "card__flip"; b.setAttribute("aria-expanded", "false"); b.setAttribute("aria-controls", back.id);
-    b.innerHTML = '<span aria-hidden="true">⟲</span> <span class="vh">Show details for </span><span class="card__flip-label">Details</span><span class="vh"> ' + title.textContent + "</span>";
+    b.setAttribute("aria-label", "Show details for " + title.textContent.trim());
+    b.innerHTML = '<span aria-hidden="true">⟲</span> <span class="card__flip-label" aria-hidden="true">Details</span>';
     inner.appendChild(front); inner.appendChild(back); card.appendChild(inner); card.appendChild(b); card.classList.add("flippable");
     function flip(v) {
       var on = v == null ? !card.classList.contains("flipped") : v;
       card.classList.toggle("flipped", on); b.setAttribute("aria-expanded", on ? "true" : "false"); b.querySelector(".card__flip-label").textContent = on ? "Back" : "Details";
-      back.setAttribute("aria-hidden", on ? "false" : "true"); front.setAttribute("aria-hidden", on ? "true" : "false");
+      back.setAttribute("aria-hidden", on ? "false" : "true"); front.setAttribute("aria-hidden", on ? "true" : "false"); back.inert = !on; front.inert = on;
       a.tabIndex = on ? 0 : -1; front.querySelectorAll("a").forEach(function (x) { if (!x.classList.contains("card__media")) x.tabIndex = on ? -1 : 0; });
       Snd.blip(on ? 620 : 480, .09);
     }
