@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b0a24">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://eazydstudio.com/scrap-rider/">
+<link rel="icon" href="../../favicon-v2.ico" sizes="any">
+<title>Scrap Rider</title>
+<style>
+/* Full-bleed game canvas; single dark look (game screen), status overlay on top */
+:root {
+  --bg: #0b0a24;
+  --fg: #f4f1ff;
+  --muted: #b3aee0;
+  --accent: #ff4fa3;
+  --track: #2b1a5e;
+  --font: "Trebuchet MS", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; overflow: hidden; background: var(--bg); color: var(--fg); font-family: var(--font); }
+body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+#canvas { display: block; position: fixed; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; }
+#status {
+  position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px;
+  background: var(--bg); text-align: center;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 16px;
+}
+#status h1 { margin: 0; font-size: clamp(32px, 8vw, 56px); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+#status p { margin: 0; color: var(--muted); max-width: 32ch; line-height: 1.5; }
+.bar { width: min(320px, 80vw); height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; }
+.bar > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+#rotate {
+  position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  background: var(--bg); text-align: center; z-index: 20; padding: 16px max(16px, env(safe-area-inset-right, 0px)) 16px max(16px, env(safe-area-inset-left, 0px));
+}
+#rotate .phone { width: 46px; height: 80px; border: 4px solid var(--accent); border-radius: 10px; animation: turn 1.8s ease-in-out infinite; }
+@keyframes turn { 0%,30% { transform: rotate(0) } 60%,100% { transform: rotate(-90deg) } }
+@media (orientation: portrait) and (max-width: 900px) { #rotate { display: flex; } }
+@media (prefers-reduced-motion: reduce) { #rotate .phone { animation: none; transform: rotate(-90deg); } }
+</style>
+</head>
+<body>
+
+<canvas id="canvas" tabindex="0">Your browser does not support canvas.</canvas>
+
+<div id="status">
+  <h1>Scrap Rider</h1>
+  <div class="bar" id="bar"><div id="fill"></div></div>
+  <p id="msg">Loading… (about 11 MB)</p>
+</div>
+
+<div id="rotate">
+  <div class="phone" aria-hidden="true"></div>
+  <p>Rotate your phone to landscape</p>
+</div>
+
+<script>
+// The wasm is shipped gzip-compressed (hosting limit per file); unpack it on the fly.
+(function () {
+  const realFetch = window.fetch.bind(window);
+  // Hosting only serves known file types, so the pack and the gzipped engine
+  // are stored under .wasm names and mapped back here.
+  window.fetch = function (input, init) {
+    const url = typeof input === 'string' ? input : input.url;
+    if (/index\.wasm(\?|$)/.test(url)) {
+      return realFetch(url.replace('index.wasm', 'engine-gz.wasm'), init).then((res) => {
+        if (!res.ok) throw new Error('Could not load the game (' + res.status + ')');
+        const body = res.body.pipeThrough(new DecompressionStream('gzip'));
+        return new Response(body, { status: 200, headers: { 'Content-Type': 'application/wasm' } });
+      });
+    }
+    if (/index\.pck(\?|$)/.test(url)) {
+      return realFetch(url.replace('index.pck', 'data-pck.wasm'), init);
+    }
+    return realFetch(input, init);
+  };
+})();
+</script>
+<script src="index.js"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":3804336,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const engine = new Engine(GODOT_CONFIG);
+const status = document.getElementById('status');
+const fill = document.getElementById('fill');
+const msg = document.getElementById('msg');
+
+const missing = Engine.getMissingFeatures({ threads: false });
+if (missing.length) {
+  msg.textContent = 'This browser is missing: ' + missing.join(', ') + '. Try Chrome.';
+} else {
+  engine.startGame({
+    onProgress: (cur, total) => {
+      if (total > 0) fill.style.width = Math.round(cur / total * 100) + '%';
+    },
+  }).then(() => {
+    status.remove();
+  }).catch((err) => {
+    console.error(err);
+    msg.textContent = 'Could not start: ' + (err && err.message ? err.message : err);
+  });
+}
+</script>
+</body>
+</html>
