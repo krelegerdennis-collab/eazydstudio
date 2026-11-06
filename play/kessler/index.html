@@ -4,21 +4,36 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>KESSLER slice</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c1018">
 <style>
-html,body{margin:0;height:100%;background:#0c1018;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
-#unity-canvas{width:100vw;height:100vh;display:block;background:#0c1018}
+html,body{margin:0;height:100%;background:#0c1018;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;overscroll-behavior:none}
+#unity-canvas{position:fixed;inset:0;width:100%;height:100%;display:block;background:#0c1018}
+#fs{position:fixed;top:max(8px,env(safe-area-inset-top));right:max(8px,env(safe-area-inset-right));z-index:5;background:rgba(94,211,230,.9);color:#0c1018;border:0;border-radius:6px;font:700 13px system-ui,sans-serif;padding:8px 10px;letter-spacing:.06em}
+#fs.off{display:none}
 #load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:#5ed3e6;font:600 16px system-ui,sans-serif;letter-spacing:.1em}
 #bar{width:220px;height:4px;background:#243043}#fill{height:100%;width:0;background:#5ed3e6}
 </style>
 </head>
 <body>
 <canvas id="unity-canvas" tabindex="-1"></canvas>
+<button id="fs" type="button">VOL SCHERM</button>
 <div id="load"><div>KESSLER</div><div id="bar"><div id="fill"></div></div><div id="msg">laden</div></div>
 <script src="Build/web.loader.js"></script>
 <script>
 var canvas=document.querySelector("#unity-canvas");
-function fit(){var r=window.devicePixelRatio||1;canvas.width=Math.floor(innerWidth*Math.min(r,2));canvas.height=Math.floor(innerHeight*Math.min(r,2));}
-fit();addEventListener("resize",fit);
+function fit(){var r=Math.min(window.devicePixelRatio||1,2);var w=document.documentElement.clientWidth,h=document.documentElement.clientHeight;canvas.width=Math.floor(w*r);canvas.height=Math.floor(h*r);}
+fit();addEventListener("resize",fit);addEventListener("orientationchange",function(){setTimeout(fit,300)});
+var fsBtn=document.getElementById("fs");
+function goFull(){var el=document.documentElement;var p=(el.requestFullscreen||el.webkitRequestFullscreen||function(){return Promise.reject()}).call(el);
+  if(p&&p.then){p.then(function(){try{screen.orientation.lock("landscape").catch(function(){})}catch(e){}}).catch(function(){});}
+  setTimeout(fit,300);}
+fsBtn.addEventListener("click",goFull);
+document.addEventListener("fullscreenchange",function(){fsBtn.classList.toggle("off",!!document.fullscreenElement);setTimeout(fit,300);});
+if(window.matchMedia("(display-mode: fullscreen), (display-mode: standalone)").matches)fsBtn.classList.add("off");
 createUnityInstance(canvas,{
   dataUrl:"Build/web.data",frameworkUrl:"Build/web.framework.js",codeUrl:"Build/web.wasm",
   streamingAssetsUrl:"StreamingAssets",companyName:"Dennis Kreleger",productName:"KESSLER slice",productVersion:"1.0",
