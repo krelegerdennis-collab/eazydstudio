@@ -25,7 +25,7 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
-    <link rel="stylesheet" href="styles.css?v=f83cd6cf" />
+    <link rel="stylesheet" href="styles.css?v=9d6f9578" />
     <link rel="icon" href="favicon-v2.ico" sizes="any" />
     <link rel="icon" type="image/png" href="favicon-v2.png" sizes="64x64" />
     <link rel="manifest" href="site.webmanifest" />
@@ -96,7 +96,7 @@
       </nav>
     </header>
 
-    <main id="main" class="portal-main">
+    <main id="main" class="portal-main" data-portal-lite>
       <!-- Playable titles: add a <li> with play URL, cover image, title, optional badge -->
       <section id="play" class="portal section" aria-labelledby="portal-title">
         <div class="portal__intro">
@@ -109,9 +109,10 @@
         <h2 class="vh">Play in your browser</h2>
         <ul class="play-grid">
           <li>
-            <a class="play-card glass" href="play/" aria-label="Play SAPIENTIA: The Forgotten Archives early version in your browser">
+            <a class="play-card glass" href="play/" aria-label="Play SAPIENTIA: The Forgotten Archives — Early version in your browser">
               <span class="play-card__cover">
-                <img style="object-position:50% 40%" src="img/sapientia-poster.webp" alt="SAPIENTIA: The Forgotten Archives key art" width="540" height="366" loading="lazy" decoding="async" />
+                <img src="img/demo-preview.webp" alt="SAPIENTIA: The Forgotten Archives gameplay in a pixel library dungeon" width="800" height="450" loading="lazy" decoding="async" />
+                <span class="play-card__play" aria-hidden="true"><span class="play-card__play-icon">▶</span></span>
               </span>
               <span class="play-card__meta">
                 <span class="play-card__name">SAPIENTIA: The Forgotten Archives</span>
@@ -120,9 +121,10 @@
             </a>
           </li>
           <li>
-            <a class="play-card glass" href="play/hoshimi-haven/" aria-label="Play Hoshimi Haven in your browser">
+            <a class="play-card glass" href="play/hoshimi-haven/" aria-label="Play Hoshimi Haven — Early version in your browser">
               <span class="play-card__cover">
-                <img src="hoshimi-haven/img/keyart-640.webp" srcset="hoshimi-haven/img/keyart-640.webp 640w, hoshimi-haven/img/keyart-1344.webp 1344w" sizes="(max-width: 639px) 45vw, 280px" alt="Hoshimi Haven" width="640" height="366" loading="lazy" decoding="async" />
+                <img style="object-position:50% 42%" src="hoshimi-haven/img/keyart-640.webp" srcset="hoshimi-haven/img/keyart-640.webp 640w, hoshimi-haven/img/keyart-1344.webp 1344w" sizes="(max-width: 639px) 45vw, 280px" alt="Hoshimi Haven key art" width="640" height="366" loading="lazy" decoding="async" />
+                <span class="play-card__play" aria-hidden="true"><span class="play-card__play-icon">▶</span></span>
               </span>
               <span class="play-card__meta">
                 <span class="play-card__name">Hoshimi Haven</span>
@@ -131,9 +133,10 @@
             </a>
           </li>
           <li>
-            <a class="play-card glass" href="scrap-rider/play/" aria-label="Play Scrap Rider in your browser">
+            <a class="play-card glass" href="scrap-rider/play/" aria-label="Play Scrap Rider — Early version in your browser">
               <span class="play-card__cover">
-                <img src="scrap-rider/img/hero-640.webp" srcset="scrap-rider/img/hero-640.webp 640w, scrap-rider/img/hero-1344.webp 1344w" sizes="(max-width: 639px) 45vw, 280px" alt="Scrap Rider" width="640" height="328" loading="lazy" decoding="async" />
+                <img src="scrap-rider/img/hero-640.webp" srcset="scrap-rider/img/hero-640.webp 640w, scrap-rider/img/hero-1344.webp 1344w" sizes="(max-width: 639px) 45vw, 280px" alt="Scrap Rider key art" width="640" height="328" loading="lazy" decoding="async" />
+                <span class="play-card__play" aria-hidden="true"><span class="play-card__play-icon">▶</span></span>
               </span>
               <span class="play-card__meta">
                 <span class="play-card__name">Scrap Rider</span>
@@ -145,9 +148,9 @@
       </section>
       <!-- When a game has no browser build, add <section id="coming-soon"> with compact cards here. -->
 
-      <section id="studio" class="section section--compact" aria-labelledby="studio-title">
-        <h2 id="studio-title" class="section__title">Game pages &amp; packs</h2>
-        <p class="section__lead">Trailers, devlogs, and Godot-ready pixel art packs from the same solo dev game studio.</p>
+      <section id="about-games" class="section section--compact" aria-labelledby="about-games-title">
+        <h2 id="about-games-title" class="section__title">About the games</h2>
+        <p class="section__lead">Trailers, devlogs, and updates for each title — separate from the asset packs below.</p>
         <ul class="studio-links" aria-label="Dedicated game pages">
           <li><a href="sapientia/">Sapientia</a></li>
           <li><a href="hoshimi-haven/">Hoshimi Haven</a></li>
@@ -250,7 +253,6 @@
         </ul>
       </section>
     </main>
-    <button id="sound-toggle" class="sound-toggle" type="button" aria-pressed="false"><span class="sound-toggle__icon" aria-hidden="true">♪</span><span class="sound-toggle__label">Sound off</span></button>
     <div id="egg-toast" class="egg-toast" role="status" aria-live="polite" hidden><strong>Hyperdrive engaged!</strong> You found a secret. Thanks for exploring the EazyD universe — see you among the stars.</div>
 
     <footer class="site-footer">
@@ -332,11 +334,11 @@
         function para() { var y = window.scrollY; layers.forEach(function (l) { l.style.transform = "translate3d(0," + (-y * l.dataset.depth).toFixed(1) + "px,0)"; }); ticking = false; }
         window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(para); } }, { passive: true });
         /* section sweep */
-        document.querySelectorAll("main .section").forEach(function (s) { var b = document.createElement("span"); b.className = "sweep"; b.setAttribute("aria-hidden", "true"); s.appendChild(b); });
-        document.querySelectorAll("main .section").forEach(function (s) { s.style.setProperty("--sweep-h", s.offsetHeight + "px"); });
-        /* tilt cards (fine pointer only) */
+        document.querySelectorAll("main .section:not(#play)").forEach(function (s) { var b = document.createElement("span"); b.className = "sweep"; b.setAttribute("aria-hidden", "true"); s.appendChild(b); });
+        document.querySelectorAll("main .section:not(#play)").forEach(function (s) { s.style.setProperty("--sweep-h", s.offsetHeight + "px"); });
+        /* tilt cards (fine pointer only); play cards stay flat for clarity */
         if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-        document.querySelectorAll(".card, .social a, .play-card").forEach(function (c) {
+        document.querySelectorAll(".card, .social a").forEach(function (c) {
           var g = document.createElement("span"); g.className = "glare"; g.setAttribute("aria-hidden", "true"); c.appendChild(g);
           var raf = 0, ev;
           c.addEventListener("pointermove", function (e) { ev = e; if (!raf) raf = requestAnimationFrame(function () {
@@ -351,7 +353,7 @@
         if (document.readyState === "complete") go(); else window.addEventListener("load", go);
       })();
     </script>
-    <script src="js/interactive.js?v=7d6223ad" defer></script>
+    <script src="js/interactive.js?v=31eff3db" defer></script>
     <script>
       (function () {
         var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
