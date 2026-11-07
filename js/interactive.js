@@ -3,6 +3,7 @@
   "use strict";
   var RM = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var FINE = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  var portalLite = !!document.querySelector("main.portal-main[data-portal-lite]");
   var W = 0, H = 0, mobile = innerWidth < 700;
 
   /* ---------- Sound (WebAudio, default off) ---------- */
@@ -54,10 +55,12 @@
     if (Snd.on) { var arm = function () { Snd.set(true); removeEventListener("pointerdown", arm); removeEventListener("keydown", arm); }; addEventListener("pointerdown", arm); addEventListener("keydown", arm); }
   }
 
-  /* ---------- Interactive starfield (2D canvas, 30fps) ---------- */
+  /* ---------- Interactive starfield (2D canvas, 30fps) — skipped on lite portal homepage ---------- */
+  var warpT = 0, start = function () {}, stop = function () {};
+  if (!portalLite) {
   var cv = document.createElement("canvas"); cv.className = "starfield-fx"; cv.setAttribute("aria-hidden", "true");
   document.body.insertBefore(cv, document.body.firstChild);
-  var g = cv.getContext("2d"), stars = [], fx = [], warpT = 0, mx = 0, my = 0, pmx = 0, pmy = 0, running = false, last = 0, raf = 0;
+  var g = cv.getContext("2d"), stars = [], fx = [], mx = 0, my = 0, pmx = 0, pmy = 0, running = false, last = 0, raf = 0;
   var COLORS = ["#ffffff", "#cfe0ff", "#3ee6ff", "#ffc98f", "#9fc2ff"];
   function resize() {
     W = cv.width = innerWidth; H = cv.height = innerHeight; cv.style.width = W + "px"; cv.style.height = H + "px";
@@ -114,13 +117,15 @@
     if (e.target.closest("a, button, input, video, .card, .holo-stage, [role=button], label, summary")) return;
     burst(e.clientX, e.clientY);
   });
+  }
 
   /* ---------- Card flips ---------- */
   var BLURB = {
-    "Forest Village": "Top-down village tileset: houses, props and ambience. Godot-ready import.",
-    "Retro JRPG UI Theme": "Menus, panels and controls themed for retro JRPG flows in Godot 4.",
-    "Slice & Swatch": "Modular 9-slice pieces and color swatches for fast in-engine prototyping.",
-    "VRChat assets on Jinxxy": "PhysBone shoulder pets, masks and headphones. Free and premium versions."
+    "Halloween Shoulder Ghost — FREE": "Free VRChat PhysBone pet — PC and Quest meshes, setup README included.",
+    "Puffy Fish Plush": "Free BOOTH plush accessory sized for Kipfel-style avatars; Quest-compatible.",
+    "Fantasy RPG Item Icons v1.5": "240 cohesive loot icons with Godot 4 AtlasTexture files.",
+    "Hollowdeep Dungeon — Free Sample": "Dungeon floors, props, and loot from the Hollowdeep tileset.",
+    "Halloween Combat VFX Free": "Six animated combat strips for Halloween-flavoured Godot games."
   };
   document.querySelectorAll("#packs .card").forEach(function (card, i) {
     var title = card.querySelector(".card__title"), link = card.querySelector(".card__link"); if (!title || !link) return;
@@ -153,7 +158,7 @@
     if (toast) { toast.hidden = false; toast.classList.remove("show"); void toast.offsetWidth; toast.classList.add("show"); clearTimeout(toast._t); toast._t = setTimeout(function () { toast.classList.remove("show"); toast.hidden = true; }, 5200); }
     document.documentElement.classList.add("warping"); setTimeout(function () { document.documentElement.classList.remove("warping"); }, 2600);
     if (RM) return;
-    warpT = performance.now() + 2600; Snd.whoosh(); start();
+    warpT = performance.now() + 2600; Snd.whoosh(); if (!portalLite) start();
   }
   window.addEventListener("ed:hyperdrive", hyperdrive);
   var K = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"], ki = 0;
