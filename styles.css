@@ -50,13 +50,13 @@ a:hover { color: #ffc98f; }
 .skip-link:focus { top: var(--s2); }
 
 /* Glass + holo border utility */
-.glass, .card, .feature, .godot-banner, .social a {
+.glass, .card, .feature, .godot-banner, .social a, .play-card {
   position: relative; background: linear-gradient(160deg, var(--glass-hi), var(--glass));
   -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%);
   border: 1px solid transparent; border-radius: var(--r);
   box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
 }
-.card::before, .feature::before, .godot-banner::before, .social a::before {
+.card::before, .feature::before, .godot-banner::before, .social a::before, .play-card::before {
   content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none;
   background: var(--holo); background-size: 300% 100%; opacity: .65;
   -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
@@ -64,7 +64,7 @@ a:hover { color: #ffc98f; }
 }
 @keyframes holo-shift { to { background-position: 300% 0; } }
 /* sheen */
-.card::after, .feature::after, .godot-banner::after {
+.card::after, .feature::after, .godot-banner::after, .play-card::after {
   content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; overflow: hidden;
   background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.07) 45%, rgba(62,230,255,.08) 50%, transparent 60%) -150% 0 / 250% 100% no-repeat;
   animation: sheen 9s ease-in-out infinite;
@@ -505,3 +505,35 @@ body { overflow-x: clip; }
 .feature__media--tall { width: min(100%, 18rem); }
 .feature__video--tall { aspect-ratio: 9 / 16; object-fit: contain; background: #000; }
 .hh__trailer video { display: block; width: min(100%, 22rem); height: auto; aspect-ratio: 9 / 16; margin: 0 auto; border-radius: 14px; background: #000; }
+
+/* Games-first portal (homepage) */
+.portal { margin-bottom: var(--s4); }
+.portal__intro { display: flex; align-items: center; gap: var(--s2); margin: 0 0 var(--s3); }
+.portal__logo { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; box-shadow: 0 0 14px rgba(255,140,26,.45); }
+.portal__title { margin: 0; font-family: var(--font-head); font-weight: 800; font-size: clamp(1.35rem, 4.5vw, 1.85rem); letter-spacing: .03em; color: var(--orange); line-height: 1.15; }
+.portal__tagline { margin: .25rem 0 0; font-size: .95rem; color: var(--text-muted); }
+.play-grid { list-style: none; margin: 0; padding: 0; display: grid; gap: .65rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.play-card { display: flex; flex-direction: column; text-decoration: none; color: var(--text); overflow: hidden; transition: transform .2s, box-shadow .2s; }
+.play-card:hover, .play-card:focus-visible { transform: translateY(-3px); color: var(--text); box-shadow: 0 14px 40px rgba(0,0,0,.4), 0 0 20px rgba(62,230,255,.12); }
+.play-card:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.play-card__cover { display: block; margin: 5px 5px 0; border-radius: calc(var(--r) - 8px); overflow: hidden; aspect-ratio: 16 / 10; background: var(--navy-deep); }
+.play-card__cover img { width: 100%; height: 100%; object-fit: cover; }
+.play-card__meta { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .35rem; min-height: 3.25rem; padding: .55rem .4rem .7rem; text-align: center; }
+.play-card__name { font-family: var(--font-head); font-size: clamp(.85rem, 2.8vw, .95rem); font-weight: 600; line-height: 1.2; }
+.play-card .pill { margin: 0; padding: .15rem .55rem; font-size: .68rem; }
+.section--compact { margin-bottom: var(--s4); }
+.section--compact .section__title { font-size: clamp(1.15rem, 3.5vw, 1.5rem); }
+.section--compact .section__lead { margin-bottom: var(--s2); font-size: 1rem; }
+.studio-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem var(--s2); }
+.studio-links a { display: inline-flex; align-items: center; min-height: 44px; padding: .25rem .35rem; font-weight: 600; text-decoration: none; }
+.studio-links a:hover { text-decoration: underline; }
+@media (min-width: 640px) {
+  .play-grid { gap: var(--s2); grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1024px) {
+  .play-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  main.portal-main { padding-top: var(--s2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .play-card { transition: none; }
+}
