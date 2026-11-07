@@ -221,14 +221,14 @@ section[id] { scroll-margin-top: calc(var(--header-h) + 1rem); }
   .feature { grid-template-columns: 1.15fr 1fr; grid-template-areas: "head media" "body media"; column-gap: var(--s5); align-content: center; }
   .feature__head { align-self: end; }
   .feature__media { justify-self: end; }
-  .card-grid--five.card-grid--top-downloads { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card-grid--five.card-grid--featured-packs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (min-width: 1100px) {
   main { padding-left: var(--s4); padding-right: var(--s4); }
   .card-grid--four, .social { grid-template-columns: repeat(4, 1fr); }
 }
 @media (min-width: 1280px) {
-  .card-grid--five.card-grid--top-downloads { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s3); }
+  .card-grid--five.card-grid--featured-packs { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s3); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

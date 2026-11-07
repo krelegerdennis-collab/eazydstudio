@@ -121,10 +121,11 @@
 
   /* ---------- Card flips ---------- */
   var BLURB = {
-    "Forest Village": "Top-down village tileset: houses, props and ambience. Godot-ready import.",
-    "Retro JRPG UI Theme": "Menus, panels and controls themed for retro JRPG flows in Godot 4.",
-    "Slice & Swatch": "Modular 9-slice pieces and color swatches for fast in-engine prototyping.",
-    "VRChat assets on Jinxxy": "PhysBone shoulder pets, masks and headphones. Free and premium versions."
+    "Halloween Shoulder Ghost — FREE": "Free VRChat PhysBone pet — PC and Quest meshes, setup README included.",
+    "Puffy Fish Plush": "Free BOOTH plush accessory sized for Kipfel-style avatars; Quest-compatible.",
+    "Fantasy RPG Item Icons v1.5": "240 cohesive loot icons with Godot 4 AtlasTexture files.",
+    "Hollowdeep Dungeon — Free Sample": "Dungeon floors, props, and loot from the Hollowdeep tileset.",
+    "Halloween Combat VFX Free": "Six animated combat strips for Halloween-flavoured Godot games."
   };
   document.querySelectorAll("#packs .card").forEach(function (card, i) {
     var title = card.querySelector(".card__title"), link = card.querySelector(".card__link"); if (!title || !link) return;
