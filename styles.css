@@ -372,6 +372,39 @@ body { overflow-x: clip; }
 .warping .nebula__l { filter: hue-rotate(40deg) brightness(1.4); transition: filter .4s; }
 .warping .holo-stage { animation: warp-shake .25s linear 8; }
 @keyframes warp-shake { 50% { transform: translate(1px, -1px); } }
+/* gravity switch easter egg */
+.gravity-planet { position: fixed; z-index: 52; right: 16px; bottom: 16px; width: 52px; height: 52px; padding: 0; border: none; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle at 35% 32%, #ffc06b, #ff8c1a 45%, #c45a00 100%);
+  box-shadow: 0 0 0 2px rgba(10, 30, 74, 0.9), 0 0 18px rgba(255, 140, 26, 0.55), inset 0 -4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.gravity-planet::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1px dashed rgba(62, 230, 255, 0.45); animation: gravity-orbit 12s linear infinite; pointer-events: none; }
+.gravity-planet:hover { transform: scale(1.06); box-shadow: 0 0 0 2px #0a1e4a, 0 0 24px rgba(255, 140, 26, 0.75); }
+.gravity-planet:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.gravity-planet[aria-pressed="true"] { transform: scale(0.94); background: radial-gradient(circle at 40% 35%, #fff2d6, #ff8c1a 50%, #8a4000); }
+@keyframes gravity-orbit { to { transform: rotate(360deg); } }
+.gravity-spacer { visibility: hidden; pointer-events: none; }
+.gravity-piece { pointer-events: auto; transition: box-shadow 0.2s; box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45); will-change: left, top, transform; }
+body.gravity-floating main a:not(.gravity-piece) { pointer-events: none; }
+body.gravity-floating .gravity-planet,
+body.gravity-floating .gravity-star { pointer-events: auto; }
+.gravity-star { position: fixed; z-index: 56; width: 28px; height: 28px; padding: 0; border: none; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle, #fff 0%, #bff6ff 35%, transparent 70%);
+  box-shadow: 0 0 16px #3ee6ff, 0 0 6px #fff; opacity: 0.85; animation: gravity-twinkle 1.2s ease-in-out infinite alternate; }
+.gravity-star.found { opacity: 0; transform: scale(2); transition: opacity 0.35s, transform 0.35s; }
+@keyframes gravity-twinkle { from { opacity: 0.55; transform: scale(0.92); } to { opacity: 1; transform: scale(1.08); } }
+.gravity-sparkle::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: linear-gradient(120deg, transparent 30%, rgba(255, 255, 255, 0.45) 50%, transparent 70%);
+  animation: gravity-glint 1.1s ease-out; }
+@keyframes gravity-glint { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+.play-card.gravity-sparkle, #packs .card.gravity-sparkle { position: relative; overflow: hidden; }
+@media (max-width: 639px) {
+  .gravity-planet { right: 12px; bottom: 72px; width: 48px; height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gravity-planet::after { animation: none; }
+  .gravity-star { animation: none; }
+}
+
 @media (prefers-reduced-motion: reduce) { .card__inner { transition: none; } }
 @media (max-width: 639px) { .sound-toggle { padding: 0; width: 44px; justify-content: center; } .sound-toggle__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); } }
 /* flip button below the card faces, not over the image */
