@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
@@ -22,11 +22,11 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
 </style>
 </head>
 <body>
-<canvas id="canvas" tabindex="0">Je browser ondersteunt geen canvas.</canvas>
+<canvas id="canvas" tabindex="0">Your browser does not support canvas.</canvas>
 <div id="status">
   <h1>Orbit Dash</h1>
   <div class="bar"><div id="fill"></div></div>
-  <p id="msg">Laden… (ongeveer 9 MB)</p>
+  <p id="msg">Loading… (about 9 MB)</p>
 </div>
 <script>
 // De engine staat gzip-gecomprimeerd op de server (limiet per bestand); hier wordt hij uitgepakt.
@@ -36,7 +36,7 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
     const url = typeof input === 'string' ? input : input.url;
     if (/index\.wasm(\?|$)/.test(url)) {
       return realFetch(url.replace('index.wasm', 'engine-gz.wasm'), init).then((res) => {
-        if (!res.ok) throw new Error('Kon het spel niet laden (' + res.status + ')');
+        if (!res.ok) throw new Error('Could not load the game (' + res.status + ')');
         const body = res.body.pipeThrough(new DecompressionStream('gzip'));
         return new Response(body, { status: 200, headers: { 'Content-Type': 'application/wasm' } });
       });
@@ -45,21 +45,21 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
   };
 })();
 </script>
-<script src="index.js?v=20261109155443"></script>
+<script src="index.js?v=20261109173213"></script>
 <script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":1119504,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":1126752,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const engine = new Engine(GODOT_CONFIG);
 const statusEl = document.getElementById('status');
 const fill = document.getElementById('fill');
 const msg = document.getElementById('msg');
 const missing = Engine.getMissingFeatures({ threads: false });
 if (missing.length) {
-  msg.textContent = 'Deze browser mist: ' + missing.join(', ') + '. Probeer Chrome.';
+  msg.textContent = 'This browser is missing: ' + missing.join(', ') + '. Try Chrome.';
 } else {
   engine.startGame({
     onProgress: (cur, total) => { if (total > 0) fill.style.width = Math.round(cur / total * 100) + '%'; },
   }).then(() => { statusEl.remove(); document.title = 'Orbit Dash'; })
-    .catch((err) => { console.error(err); msg.textContent = 'Starten lukt niet: ' + (err && err.message ? err.message : err); });
+    .catch((err) => { console.error(err); msg.textContent = 'Could not start: ' + (err && err.message ? err.message : err); });
 }
 </script>
 </body>
