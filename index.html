@@ -25,7 +25,7 @@
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
-    <link rel="stylesheet" href="styles.css?v=605741c3" />
+    <link rel="stylesheet" href="styles.css?v=a1c9e4b2" />
     <link rel="icon" href="favicon-v2.ico" sizes="any" />
     <link rel="icon" type="image/png" href="favicon-v2.png" sizes="64x64" />
     <link rel="manifest" href="site.webmanifest" />
@@ -283,6 +283,8 @@
         </ul>
       </section>
     </main>
+    <button type="button" id="gravity-toggle" class="gravity-planet" aria-pressed="false" aria-label="Toggle zero gravity"><span class="vh">Toggle zero gravity</span></button>
+    <div id="gravity-toast" class="egg-toast" role="status" aria-live="polite" hidden>You found the studio's lost gravity.</div>
     <div id="egg-toast" class="egg-toast" role="status" aria-live="polite" hidden><strong>Hyperdrive engaged!</strong> You found a secret. Thanks for exploring the EazyD universe. See you among the stars.</div>
 
     <footer class="site-footer">
@@ -384,6 +386,19 @@
       })();
     </script>
     <script src="js/interactive.js?v=f856f69a" defer></script>
+    <script>
+      (function () {
+        if (!document.querySelector("main.portal-main")) return;
+        function loadGravity() {
+          var s = document.createElement("script");
+          s.src = "js/gravity-switch.js?v=b3e7f1a0";
+          s.defer = true;
+          document.body.appendChild(s);
+        }
+        if ("requestIdleCallback" in window) requestIdleCallback(loadGravity, { timeout: 3500 });
+        else window.addEventListener("load", loadGravity, { once: true });
+      })();
+    </script>
     <script>
       (function () {
         var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
