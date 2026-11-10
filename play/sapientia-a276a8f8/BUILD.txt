@@ -1,7 +1,0 @@
-Sapientia-RPG web export (GitHub Actions artifact sapientia-web)
-Repository: https://github.com/krelegerdennis-collab/Sapientia-RPG
-Branch: main
-Commit: 0b30e5f152830106668d8da290782e0ce33fec5a
-Workflow run: build-web #41938809634 (2026-11-05)
-Godot: 4.3-stable (preset Web, thread_support=false)
-Content hash prefix: a276a8f8 (sha256 of index.pck+index.wasm+index.js+index.html)
