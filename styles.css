@@ -84,6 +84,7 @@ a:hover { color: #ffc98f; }
 .nav a[aria-current] { color: var(--orange); background: rgba(255,140,26,.12); }
 @media (max-width: 639px) { .brand span { display: none; } .site-header { padding: 0 var(--s2); } }
 @media (min-width: 900px) { .nav { -webkit-mask-image: none; mask-image: none; } }
+@media (min-width: 640px) and (max-width: 1399px) { .nav a { padding: 0 .55rem; font-size: .9rem; } }
 
 main { max-width: var(--max); margin: 0 auto; padding: var(--s3) var(--s3) var(--s5); }
 section[id] { scroll-margin-top: calc(var(--header-h) + 1rem); }
