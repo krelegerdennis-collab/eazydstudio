@@ -1,0 +1,12 @@
+Sapientia-RPG web export (verborgen dev-build)
+Repository: https://github.com/krelegerdennis-collab/Sapientia-RPG
+Branch: finish/wm1
+Commit: cb24e64fad2e27c08189006770814d3e808eefd2
+Godot: 4.3.stable.official (preset Web, thread_support=false)
+Built: agent cloud export (zelfde stappen als CI build-web import + --export-release Web)
+Content hash prefix: 7fda2f55 (sha256 van index.pck+index.wasm+index.js+index.html)
+Dev-pad: /dev-ab61133ab2a1/ (niet gelinkt, niet in sitemap)
+index.pck: 82791504 bytes
+index.wasm: 35376909 bytes
+index.js: 331495 bytes
+index.html: 7564 bytes
