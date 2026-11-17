@@ -65,9 +65,41 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
   sync();
 })();
 </script>
-<script src="index.js?v=20261117234901"></script>
 <script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":2472192,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+// Kantelsturing: window.pdTilt.steer = -1 (links) .. 1 (rechts), uit de zwaartekracht in schermrichting.
+// Het spel leest dit alleen als STUREN: KANTELEN aan staat. Android en iOS geven tegengestelde tekens.
+window.pdTilt = { steer: 0, ok: false };
+(function () {
+  const ios = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const FULL = 4.0;      // m/s2 zijwaarts = vol sturen (ongeveer 25 graden kantelen)
+  const DEAD = 0.6;      // rustig vasthouden stuurt niet
+  function onMotion(e) {
+    const g = e.accelerationIncludingGravity;
+    if (!g || g.x == null) return;
+    let gx = g.x, gy = g.y;
+    if (ios) { gx = -gx; gy = -gy; }
+    const angle = (screen.orientation && screen.orientation.angle) || window.orientation || 0;
+    // zwaartekracht langs de schermbreedte (rechts = +)
+    let sx = gx;
+    if (angle === 90) sx = -gy; else if (angle === -90 || angle === 270) sx = gy; else if (angle === 180) sx = -gx;
+    let v = -sx;
+    v = Math.abs(v) < DEAD ? 0 : (v - Math.sign(v) * DEAD) / (FULL - DEAD);
+    window.pdTilt.steer = Math.max(-1, Math.min(1, v));
+    window.pdTilt.ok = true;
+  }
+  // Altijd luisteren. iOS stuurt pas gegevens na toestemming, en die mag alleen na een tik gevraagd worden.
+  window.addEventListener('devicemotion', onMotion);
+  if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
+    window.addEventListener('touchend', function ask() {
+      DeviceMotionEvent.requestPermission().catch(() => {});
+      window.removeEventListener('touchend', ask);
+    });
+  }
+})();
+</script>
+<script src="index.js?v=20261118003145"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":2485920,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const engine = new Engine(GODOT_CONFIG);
 const statusEl = document.getElementById('status');
 const fill = document.getElementById('fill');
