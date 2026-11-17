@@ -8,6 +8,11 @@
 <link rel="canonical" href="https://eazydstudio.com/orbit-dash/">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="icon" href="index.icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Orbit Dash">
 <title>Orbit Dash</title>
 <style>
 :root { --bg: #05050f; --fg: #eaf6ff; --muted: #8fa3c8; --accent: #4de6ff; --track: #14183a; color-scheme: dark; }
@@ -26,7 +31,7 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
 <div id="status">
   <h1>Orbit Dash</h1>
   <div class="bar"><div id="fill"></div></div>
-  <p id="msg">Loading… (about 13 MB)</p>
+  <p id="msg">Loading… (about 11 MB)</p>
 </div>
 <script>
 // De engine staat gzip-gecomprimeerd op de server (limiet per bestand); hier wordt hij uitgepakt.
@@ -45,9 +50,9 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
   };
 })();
 </script>
-<script src="index.js?v=20261117225624"></script>
+<script src="index.js?v=20261117234346"></script>
 <script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":5034800,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":2970464,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const engine = new Engine(GODOT_CONFIG);
 const statusEl = document.getElementById('status');
 const fill = document.getElementById('fill');
@@ -60,6 +65,10 @@ if (missing.length) {
     onProgress: (cur, total) => { if (total > 0) fill.style.width = Math.round(cur / total * 100) + '%'; },
   }).then(() => { statusEl.remove(); document.title = 'Orbit Dash'; })
     .catch((err) => { console.error(err); msg.textContent = 'Could not start: ' + (err && err.message ? err.message : err); });
+}
+// installeerbaar (beginscherm) en sneller opnieuw starten; zonder service worker werkt alles gewoon
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch((err) => console.warn('service worker:', err));
 }
 </script>
 </body>
