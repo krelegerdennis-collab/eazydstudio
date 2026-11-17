@@ -19,10 +19,13 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
 #status p { margin: 0; color: var(--muted); max-width: 32ch; line-height: 1.5; }
 .bar { width: min(320px, 80vw); height: 10px; background: var(--track); border-radius: 5px; overflow: hidden; }
 .bar > div { height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+#fs { position: fixed; left: 50%; bottom: 10px; transform: translateX(-50%); display: none; padding: 8px 16px; border-radius: 999px;
+  border: 2px solid rgba(62,230,255,.6); background: rgba(10,30,74,.6); color: var(--fg); font: 600 14px system-ui, sans-serif; z-index: 5; }
 </style>
 </head>
 <body>
 <canvas id="canvas" tabindex="0">Your browser does not support canvas.</canvas>
+<button id="fs" type="button">⛶ Full screen</button>
 <div id="status">
   <h1>Pocket Drift</h1>
   <div class="bar"><div id="fill"></div></div>
@@ -46,9 +49,25 @@ body { touch-action: none; -webkit-user-select: none; user-select: none; -webkit
   };
 })();
 </script>
-<script src="index.js?v=20261109210125"></script>
 <script>
-const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":2309296,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+// Volledig scherm op telefoons (geen menu-balk van de browser) en op Android meteen liggend.
+(function () {
+  const fs = document.getElementById('fs');
+  const touch = matchMedia('(pointer: coarse)').matches;
+  const can = document.fullscreenEnabled;
+  const sync = () => { fs.style.display = touch && can && !document.fullscreenElement ? 'block' : 'none'; };
+  fs.addEventListener('click', () => {
+    document.documentElement.requestFullscreen({ navigationUI: 'hide' })
+      .then(() => screen.orientation && screen.orientation.lock ? screen.orientation.lock('landscape').catch(() => {}) : null)
+      .catch(() => {});
+  });
+  document.addEventListener('fullscreenchange', sync);
+  sync();
+})();
+</script>
+<script src="index.js?v=20261117234901"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":false,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":2472192,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
 const engine = new Engine(GODOT_CONFIG);
 const statusEl = document.getElementById('status');
 const fill = document.getElementById('fill');

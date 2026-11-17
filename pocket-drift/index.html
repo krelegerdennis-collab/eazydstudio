@@ -56,6 +56,13 @@
       .od__levels div { padding: var(--s2) var(--s3) var(--s3); }
       .od__levels h3 { font-family: var(--font-head); color: var(--orange); font-size: 1.05rem; margin: 0 0 .35rem; }
       .od__levels p { margin: 0; }
+      .od__art video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+      .pd__shots { list-style: none; padding: 0; margin: var(--s3) 0 var(--s5); display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); }
+      .pd__shots li { border-radius: 16px; overflow: hidden; background: rgba(10,30,74,.75); border: 1px solid rgba(62,230,255,.25); }
+      .pd__shots img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+      .pd__shots div { padding: var(--s2) var(--s3) var(--s3); }
+      .pd__shots h3 { font-family: var(--font-head); color: var(--orange); font-size: 1.05rem; margin: 0 0 .35rem; }
+      .pd__shots p { margin: 0; }
       .od__table { width: 100%; max-width: 40rem; margin: var(--s3) auto var(--s5); border-collapse: collapse; border-radius: 16px; overflow: hidden; background: rgba(10,30,74,.75); }
       .od__table th, .od__table td { padding: .7rem var(--s2); text-align: left; border-bottom: 1px solid rgba(62,230,255,.18); }
       .od__table tr:last-child td { border-bottom: 0; }
@@ -102,7 +109,7 @@
           <a class="btn btn--primary btn--lg" href="play/" data-goatcounter-click="play-pocket-drift" data-goatcounter-title="from pocket-drift">▶ Play now</a>
           <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join the Discord</a>
         </div>
-        <p class="od__note">Free in your browser, on phone and desktop. On a phone, play in landscape. The game is in English, with a Dutch option on the title screen.</p>
+        <p class="od__note">Free in your browser, on phone and desktop. On a phone, play in landscape (the full screen button helps). The game is in English, with a Dutch option on the title screen.</p>
       </section>
 
       <ul class="od__features" aria-label="Highlights">
@@ -110,13 +117,21 @@
         <li><h2>Boost</h2><p>Let go after the sparks for a BOOST, SUPER BOOST or MEGA BOOST, with a neon trail behind you.</p></li>
         <li><h2>Race your ghost</h2><p>Your best race comes back as a ghost car. After every lap you see if you are ahead or behind.</p></li>
         <li><h2>Beat the gold ghost</h2><p>A golden car shows the gold time on every track. Pass it and the gold medal is yours.</p></li>
-        <li><h2>Six tracks, four cars</h2><p>Medals open new tracks and new cars, from the Starter to the Nova. No shop, no payments.</p></li>
+        <li><h2>Twelve tracks, four cars</h2><p>Six tracks, and each one again in reverse once you have its gold. Medals open new cars and paint jobs. No shop, no payments.</p></li>
+        <li><h2>Daily challenge</h2><p>Every day one track and one car, the same for everyone. Race for the daily top 10.</p></li>
+        <li><h2>Online top 10</h2><p>A top 10 for every track under a made-up name such as "Turbo Fox 42". Joining is your choice.</p></li>
       </ul>
 
       <section aria-labelledby="tracks-title">
         <h2 id="tracks-title" class="section__title">Neon night tracks</h2>
         <p class="section__lead">A rooftop, a harbor, a desert ring, a neon tunnel, a rainy city and a mountain pass, each with its own lights and corners. Three laps per race.</p>
-        <figure class="od__art"><img src="img/track.webp" alt="A winding neon race track through a city at night, seen from above" width="960" height="549" loading="lazy" /></figure>
+        <figure class="od__art"><video src="img/drift.mp4" poster="img/shot-drift.webp" autoplay muted loop playsinline width="960" height="540" aria-label="A blue car drifts through a harbor corner, charges sparks and boosts away"></video></figure>
+        <ul class="pd__shots">
+          <li><img src="img/shot-boost.webp" alt="A pink car boosts out of a corner in the neon tunnel with a glowing trail" width="640" height="360" loading="lazy" /><div><h3>Drift, then boost</h3><p>The longer you slide, the bigger the boost.</p></div></li>
+          <li><img src="img/shot-ghost.webp" alt="An orange car racing next to a golden ghost car in the desert" width="640" height="360" loading="lazy" /><div><h3>The gold ghost</h3><p>Stay ahead of it and gold is yours.</p></div></li>
+          <li><img src="img/shot-rain.webp" alt="A blue car drifting through Rain City at night in the rain" width="640" height="360" loading="lazy" /><div><h3>Rain City</h3><p>Puddles, rain and right-angle corners.</p></div></li>
+          <li><img src="img/shot-tracks.webp" alt="The track menu with six tracks, medals and best times" width="640" height="360" loading="lazy" /><div><h3>Twelve tracks</h3><p>Every gold opens the same track in reverse.</p></div></li>
+        </ul>
       </section>
 
       <section aria-labelledby="controls-title">
@@ -140,7 +155,7 @@
           <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Share feedback on Discord</a>
         </div>
       </section>
-      <p class="od__note" style="text-align:center">The code was written with Claude (Anthropic) as an AI assistant. The key art and the music are AI-generated (Animagine XL 4, ACE-Step). Tracks, cars, effects and sound effects are drawn and synthesised in code.</p>
+      <p class="od__note" style="text-align:center">The code was written with Claude (Anthropic) as an AI assistant. The key art and the music are AI-generated (Animagine XL 4, ACE-Step). Tracks, cars, effects and sound effects are drawn and synthesised in code. The online top 10 stores a made-up name, the car and your time: see the <a href="../privacy/#pocket-drift">privacy policy</a>.</p>
     </main>
     <footer class="site-footer">
       <div class="site-footer__cols">
