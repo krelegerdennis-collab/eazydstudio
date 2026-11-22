@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Dead Avenue (dev)</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=0774c6d2">
+<link rel="stylesheet" href="style.css?v=da9f2f7a">
 <script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
 </head>
 <body>
@@ -35,6 +35,7 @@
     <div id="slots"></div>
   </div>
   <div id="kills">0 KILLS</div>
+  <div id="bossBar" class="hidden"><span>THE STARGAZER</span><div class="bar"><i id="bossFill"></i></div></div>
   <div id="abilities">
     <div id="abDash" class="ab"><i id="dashFill"></i><svg viewBox="0 0 24 24"><path d="M3 12h10M6 7h9M6 17h9M14 5l7 7-7 7"/></svg><span class="abk">SPACE</span><span id="dashPips" class="abp"></span></div>
     <div id="abRoar" class="ab roar"><i id="roarFill"></i><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg><span class="abk">F · ROAR</span></div>
@@ -51,37 +52,53 @@
   <svg class="ed" viewBox="0 0 120 120"><defs><radialGradient id="pg" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#9ff4ff"/><stop offset="1" stop-color="#147a9a"/></radialGradient><clipPath id="fr"><rect x="-10" y="66" width="140" height="60" transform="rotate(-14 60 66)"/></clipPath></defs><ellipse cx="60" cy="66" rx="56" ry="15" transform="rotate(-14 60 66)" fill="none" stroke="#ffb347" stroke-width="6"/><circle cx="60" cy="60" r="36" fill="url(#pg)"/><ellipse cx="60" cy="66" rx="56" ry="15" transform="rotate(-14 60 66)" fill="none" stroke="#ffb347" stroke-width="6" clip-path="url(#fr)"/><text x="60" y="72" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Bahnschrift,Arial">ED</text><path d="M104 14l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ffb347"/></svg>
   <p class="runes">ᛖᚨᛉᛃᛞ · ᛋᛏᚨᚱᚠᚨᛚᛚ</p>
   <h1>DEAD<br>AVENUE</h1>
-  <p class="sub">CHAPTER 1 · <b>STARFALL</b></p>
-  <p class="brief">A meteor split the sky. The stardust turned the city into <b>Hollows</b>, but you are <b>Starborn</b>. Find <b>5 generator parts</b>, then reach the <b>evac van</b> before the clock runs out.</p>
+  <p class="sub">A <b>STARFALL</b> SHOOTER</p>
+  <p class="brief">A meteor split the sky. The stardust turned the city into <b>Hollows</b>, but you are <b>Starborn</b>. Pick your fighter, gear up in the armory and take the city back.</p>
   <div class="keys">
     <span><b>WASD</b> move</span><span><b>Mouse</b> aim</span><span><b>Click</b> shoot</span>
-    <span><b>Shift</b> sprint</span><span><b>Space</b> star dash</span><span><b>F</b> lion roar</span><span><b>R</b> reload</span><span><b>G</b> gravity grenade</span><span><b>1–4 / Q</b> weapon</span><span><b>Esc</b> pause</span>
+    <span><b>Shift</b> sprint</span><span><b>Space</b> star dash</span><span><b>F</b> lion roar</span><span><b>R</b> reload</span><span><b>G</b> gravity grenade</span><span><b>1–4 / Q</b> weapon</span><span><b>M</b> music</span><span><b>Esc</b> pause</span>
   </div>
   <p class="keys touchOnly">Left thumb: move · Right thumb: aim + fire</p>
-  <button id="startBtn" class="big">START MISSION</button>
+  <button id="startBtn" class="big">PLAY</button>
   <p class="credits">EazyD Studio · dev build · code written with AI (Claude) · Three.js (MIT)</p>
 </div>
 
+<div id="hub" class="screen hidden">
+  <div class="hubTop"><h2>STARFALL HUB</h2><div class="dustBox"><span>✦</span><b id="hubDust">0</b><small>stardust</small></div></div>
+  <h3 class="hsec">1 · FIGHTER</h3>
+  <div id="hubChars" class="hrow"></div>
+  <h3 class="hsec">2 · ARMORY <small>upgrades are permanent · equip one weapon to start with</small></h3>
+  <div id="hubArms"></div>
+  <h3 class="hsec">3 · MAP &amp; MODE</h3>
+  <div id="hubMaps" class="hrow"></div>
+  <div class="hubBottom"><button id="musicBtn">MUSIC ON</button><button id="hubGo" class="big">DEPLOY</button></div>
+  <p class="hint">Earn stardust ✦ from kills, objectives and wins. It is banked when a run ends.</p>
+</div>
+
 <div id="pause" class="screen hidden menu">
-  <p class="sub">CHAPTER 1</p>
+  <p class="sub">PAUSED</p>
   <h2>STARFALL</h2>
   <p class="runes">ᛖᚨᛉᛃᛞ</p>
   <button data-act="resume">Resume</button>
   <button data-act="retry">Retry Checkpoint</button>
-  <button data-act="restart">Restart Mission</button>
+  <button data-act="restart">Restart Run</button>
+  <button data-act="hub">Back to Hub</button>
 </div>
 
 <div id="dead" class="screen hidden menu">
   <h2 class="red" id="deadTitle">YOU DIED</h2>
   <p class="sub" id="deadSub"></p>
+  <p class="brief dust" id="deadDust"></p>
   <button data-act="retry">Retry Checkpoint</button>
-  <button data-act="restart">Restart Mission</button>
+  <button data-act="restart">Restart Run</button>
+  <button data-act="hub">Back to Hub</button>
 </div>
 
 <div id="win" class="screen hidden menu">
-  <p class="sub">CHAPTER 1 COMPLETE</p>
-  <h2 class="green">EVACUATED</h2>
+  <p class="sub" id="winSub">COMPLETE</p>
+  <h2 class="green" id="winTitle">EVACUATED</h2>
   <p class="brief" id="winStats"></p>
+  <button data-act="hub">Back to Hub</button>
   <button data-act="restart">Play Again</button>
 </div>
 
@@ -96,6 +113,6 @@
 
 <div id="sticks" class="hidden"><div id="stickL" class="stick"><i></i></div><div id="stickR" class="stick"><i></i></div></div>
 
-<script type="module" src="game.js?v=0774c6d2"></script>
+<script type="module" src="game.js?v=da9f2f7a"></script>
 </body>
 </html>
