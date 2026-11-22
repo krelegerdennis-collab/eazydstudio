@@ -75,6 +75,30 @@ export const MAPS = {
   },
 };
 
+// cosmetics: looks only, never power. `supporter: true` items unlock with a Supporter Pack code.
+export const JACKETS = {
+  standard: { name: 'STANDARD', text: "Your fighter's own colours." },
+  solar:    { name: 'SOLAR GOLD', text: 'Gold-trimmed lion jacket.', supporter: true, look: { shirt: 0xb8862a, pants: 0x241a08, streak: 0xffd27a, accent: 0xffc24a }, glow: 0xff9a1a },
+  voidweave: { name: 'VOID WEAVE', text: 'Deep violet with a nebula glow.', supporter: true, look: { shirt: 0x2a1050, pants: 0x120a22, streak: 0xc46bff, accent: 0xc46bff }, glow: 0x7a3aff },
+};
+export const TRAILS = {
+  none:   { name: 'NO TRAIL', text: 'Clean.' },
+  comet:  { name: 'COMET TRAIL', text: 'Cyan sparks behind your steps.', cost: 400, col: [0.3, 0.85, 1] },
+  solar:  { name: 'SOLAR TRAIL', text: 'Golden stardust behind your steps.', supporter: true, col: [1, 0.75, 0.3] },
+  nebula: { name: 'NEBULA TRAIL', text: 'Violet and pink stardust.', supporter: true, col: [0.85, 0.45, 1] },
+};
+// where the Supporter Pack is sold; empty = no "get it" link shown in the hub
+export const SUPPORTER_URL = '';
+// SHA-256 of valid codes (uppercase, dashes and spaces removed). The codes themselves are not in the source.
+const CODE_HASHES = ['783ff210cfce3181fc6a217a812c256fb6b6ec53e15dd638fffb5d2fd529827c'];
+export async function checkCode(code) {
+  const norm = String(code).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (norm.length < 8 || !(globalThis.crypto && crypto.subtle)) return false;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(norm));
+  const hex = [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+  return CODE_HASHES.includes(hex);
+}
+
 const KEY = 'deadavenue.save.v1';
 const fresh = () => ({
   dust: 0,
@@ -82,6 +106,7 @@ const fresh = () => ({
   weapons: { pistol: { own: true, lvl: 0 }, smg: { own: false, lvl: 0 }, shotgun: { own: false, lvl: 0 }, rail: { own: false, lvl: 0 } },
   sel: { char: 'leo', map: 'avenue', secondary: null },
   best: {}, wins: {}, runs: 0, music: true,
+  supporter: false, trails: { comet: false }, cos: { jacket: 'standard', trail: 'none' },
 });
 
 export function loadSave() {
@@ -93,11 +118,16 @@ export function loadSave() {
       s.chars = { ...fresh().chars, ...(raw.chars || {}) };
       s.weapons = { ...fresh().weapons, ...(raw.weapons || {}) };
       s.sel = { ...fresh().sel, ...(raw.sel || {}) };
+      s.trails = { ...fresh().trails, ...(raw.trails || {}) };
+      s.cos = { ...fresh().cos, ...(raw.cos || {}) };
     }
   } catch (e) { /* private mode or blocked storage: play without saving */ }
   if (!CHARS[s.sel.char] || !s.chars[s.sel.char]) s.sel.char = 'leo';
   if (!MAPS[s.sel.map]) s.sel.map = 'avenue';
   if (s.sel.secondary && !(s.weapons[s.sel.secondary] && s.weapons[s.sel.secondary].own)) s.sel.secondary = null;
+  const j = JACKETS[s.cos.jacket], t = TRAILS[s.cos.trail];
+  if (!j || (j.supporter && !s.supporter)) s.cos.jacket = 'standard';
+  if (!t || (t.supporter && !s.supporter) || (t.cost && !s.trails[s.cos.trail])) s.cos.trail = 'none';
   return s;
 }
 export function storeSave(s) {

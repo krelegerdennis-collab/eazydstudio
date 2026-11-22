@@ -5,7 +5,7 @@ import { RenderPass } from './lib/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from './lib/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from './lib/addons/postprocessing/OutputPass.js';
 import { CARD, LINES, drawCards, lineCount } from './cards.js?v=2';
-import { CHARS, ARMORY, MAPS, MAX_UP, upCost, upDmg, upMag, loadSave, storeSave } from './meta.js?v=1';
+import { CHARS, ARMORY, MAPS, MAX_UP, upCost, upDmg, upMag, loadSave, storeSave, JACKETS, TRAILS, SUPPORTER_URL, checkCode } from './meta.js?v=2';
 
 // ---------------------------------------------------------------- run config (character, map, loadout)
 const SAVE = loadSave();
@@ -14,9 +14,11 @@ const SAVE = loadSave();
   const ok = m && CHARS[m[1]] && MAPS[m[2]] && (SAVE.chars[m[1]] || /[?&]dev/.test(location.search)) && (!m[3] || (SAVE.weapons[m[3]] && (SAVE.weapons[m[3]].own || /[?&]dev/.test(location.search))));
   if (ok) SAVE.sel = { char: m[1], map: m[2], secondary: m[3] || null };
 }
-const LOADED_SEL = JSON.stringify(SAVE.sel);
+const selKey = () => JSON.stringify([SAVE.sel, SAVE.cos.jacket]);
+const LOADED_SEL = selKey();
 const MAP = MAPS[SAVE.sel.map], CHAR = CHARS[SAVE.sel.char], TH = MAP.theme, MODE = MAP.mode;
 const RIFT_GOAL = 6;
+const JACKET = JACKETS[SAVE.cos.jacket] || JACKETS.standard, LOOK = { ...CHAR.look, ...(JACKET.look || {}) };
 document.body.classList.add('mode-' + MODE);
 
 // ---------------------------------------------------------------- helpers
@@ -666,17 +668,18 @@ function disposeHumanoid(h) { scene.remove(h.root); h.mats.forEach(m => m.dispos
 
 // player
 const P = {};
-const pm = makeHumanoid({ skin: 0xc89f7d, shirt: CHAR.look.shirt, pants: CHAR.look.pants });
+const pm = makeHumanoid({ skin: 0xc89f7d, shirt: LOOK.shirt, pants: LOOK.pants });
+if (JACKET.glow) { pm.mats[1].emissive.setHex(JACKET.glow); pm.mats[1].emissiveIntensity = 0.35; pm.mats[1].metalness = 0.5; pm.mats[1].roughness = 0.45; }
 const gun = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.14, 0.55), mat(0x15161a, { metalness: 0.7, roughness: 0.4 }));
 gun.position.set(0.1, 0.6, 0.62); pm.torso.add(gun);
 const gunStrip = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.03, 0.4), new THREE.MeshBasicMaterial({ color: 0x3fd0ff })); gunStrip.position.set(0.1, 0.68, 0.6); pm.torso.add(gunStrip);
-const hair = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.31), mat(CHAR.look.hair)); hair.position.y = 0.3; pm.head.add(hair);
-const streakHair = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.11, 0.32), mat(CHAR.look.streak, { emissive: CHAR.look.streak, emissiveIntensity: 0.35 })); streakHair.position.set(0.09, 0.31, 0); pm.head.add(streakHair);
+const hair = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.1, 0.31), mat(LOOK.hair)); hair.position.y = 0.3; pm.head.add(hair);
+const streakHair = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.11, 0.32), mat(LOOK.streak, { emissive: LOOK.streak, emissiveIntensity: 0.35 })); streakHair.position.set(0.09, 0.31, 0); pm.head.add(streakHair);
 const emblem = new THREE.Mesh(new THREE.PlaneGeometry(0.38, 0.38), new THREE.MeshBasicMaterial({ map: emblemTex, transparent: true }));
 emblem.position.set(0, 0.42, -0.146); emblem.rotation.y = Math.PI; pm.torso.add(emblem);
 const goldMat = new THREE.MeshStandardMaterial({ color: 0xffb347, emissive: 0xff9a2a, emissiveIntensity: 0.8, metalness: 0.8, roughness: 0.3 });
 for (const sx of [-1, 1]) { const sh = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.04, 0.2), goldMat); sh.position.set(sx * 0.33, 0.69, 0); pm.torso.add(sh); }
-const marker = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: CHAR.look.accent, fog: false }));
+const marker = new THREE.Mesh(new THREE.OctahedronGeometry(0.16, 0), new THREE.MeshBasicMaterial({ color: LOOK.accent, fog: false }));
 marker.scale.y = 1.5; marker.position.y = 2.5; pm.root.add(marker);
 scene.add(pm.root);
 const flashlight = new THREE.SpotLight(0xe8f6ff, 160, 24, 0.5, 0.55, 1.6);
@@ -985,6 +988,7 @@ const keys = {};
 const mouse = { x: innerWidth / 2, y: innerHeight / 2, down: false };
 const touch = { on: false, move: null, aim: null };
 addEventListener('keydown', e => {
+  if (e.target && e.target.tagName === 'INPUT') return;
   keys[e.code] = true;
   if (G.state === 'play') {
     if (e.code === 'KeyR') startReload();
@@ -1874,7 +1878,32 @@ function renderHub() {
     return `<button class="hcard map${SAVE.sel.map === k ? ' sel' : ''}" data-map="${k}" style="--lc:${hex(m.theme.lampA)}"><em>${m.modeName}</em><b>${m.name}</b><p>${m.text}</p><span class="tag">${SAVE.wins[k] ? `CLEARED ×${SAVE.wins[k]}${b ? ` · BEST ${Math.floor(b / 60)}:${String(b % 60).padStart(2, '0')}` : ''}` : 'NOT CLEARED'}</span></button>`;
   }).join('');
   $('musicBtn').textContent = SAVE.music ? 'MUSIC ON' : 'MUSIC OFF';
+  const tagFor = (it, own, sel) => sel ? 'EQUIPPED' : own ? 'EQUIP' : it.supporter ? 'SUPPORTER PACK' : '✦ ' + it.cost;
+  $('hubStyle').innerHTML = Object.entries(JACKETS).map(([k, j]) => {
+    const own = !j.supporter || SAVE.supporter, sel = SAVE.cos.jacket === k;
+    return `<button class="hcard sm${sel ? ' sel' : ''}${own ? '' : ' locked'}" data-jacket="${k}" style="--lc:${hex((j.look || CHAR.look).accent)}"><em>JACKET</em><b>${j.name}</b><p>${j.text}</p><span class="tag">${tagFor(j, own, sel)}</span></button>`;
+  }).join('') + Object.entries(TRAILS).map(([k, t]) => {
+    const own = t.supporter ? SAVE.supporter : t.cost ? SAVE.trails[k] : true, sel = SAVE.cos.trail === k;
+    const c = t.col ? `rgb(${t.col.map(v => Math.round(v * 255)).join(',')})` : '#8a93a8';
+    return `<button class="hcard sm${sel ? ' sel' : ''}${own ? '' : ' locked'}" data-trail="${k}" style="--lc:${c}"><em>TRAIL</em><b>${t.name}</b><p>${t.text}</p><span class="tag">${tagFor(t, own, sel)}</span></button>`;
+  }).join('');
+  $('supBox').classList.toggle('owned', SAVE.supporter);
+  $('supState').textContent = SAVE.supporter ? '★ SUPPORTER · thank you!' : 'Supporter Pack: 2 jackets + 2 trails. Looks only, no extra power.';
+  $('supLink').classList.toggle('hidden', !SUPPORTER_URL || SAVE.supporter); if (SUPPORTER_URL) $('supLink').href = SUPPORTER_URL;
+  $('supBadge').classList.toggle('hidden', !SAVE.supporter);
 }
+function supNudge() { Sfx.click(); const el = $('supBox'); el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); el.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
+async function redeem() {
+  const msg = $('codeMsg'), val = $('codeIn').value;
+  if (SAVE.supporter) { msg.textContent = 'Already unlocked.'; return; }
+  let ok = false;
+  try { ok = await checkCode(val); } catch (e) { ok = false; }
+  if (!ok) { msg.textContent = 'That code is not valid.'; msg.className = 'bad'; Sfx.click(); return; }
+  SAVE.supporter = true; const saved = storeSave(SAVE);
+  msg.textContent = saved ? 'Supporter Pack unlocked!' : 'Unlocked for this session (this browser blocks saving).'; msg.className = 'good';
+  $('codeIn').value = ''; Sfx.constellation(); renderHub();
+}
+$('codeIn').addEventListener('keydown', e => { if (e.key === 'Enter') redeem(); });
 function spend(cost) { if (SAVE.dust < cost) { Sfx.click(); $('hubDust').parentElement.classList.remove('shake'); void $('hubDust').offsetWidth; $('hubDust').parentElement.classList.add('shake'); return false; } SAVE.dust -= cost; Sfx.pickup(); return true; }
 $('hub').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || b.disabled) return;
@@ -1884,10 +1913,18 @@ $('hub').addEventListener('click', e => {
   else if (d.buy) { if (spend(ARMORY[d.buy].cost)) { SAVE.weapons[d.buy].own = true; if (!SAVE.sel.secondary) SAVE.sel.secondary = d.buy; } }
   else if (d.up) { const a = SAVE.weapons[d.up]; if (a.lvl < MAX_UP && spend(upCost(d.up, a.lvl))) a.lvl++; }
   else if (d.eq) { SAVE.sel.secondary = SAVE.sel.secondary === d.eq ? null : d.eq; Sfx.click(); }
+  else if (d.jacket) { const j = JACKETS[d.jacket]; if (!j.supporter || SAVE.supporter) { SAVE.cos.jacket = d.jacket; Sfx.click(); } else { supNudge(); return; } }
+  else if (d.trail) {
+    const t = TRAILS[d.trail];
+    if (t.supporter && !SAVE.supporter) { supNudge(); return; }
+    if (t.cost && !SAVE.trails[d.trail]) { if (!spend(t.cost)) return; SAVE.trails[d.trail] = true; }
+    SAVE.cos.trail = d.trail; Sfx.click();
+  }
+  else if (b.id === 'codeBtn') { redeem(); return; }
   else if (b.id === 'musicBtn') { SAVE.music = !SAVE.music; Sfx.click(); }
   else if (b.id === 'hubGo') {
     storeSave(SAVE);
-    if (JSON.stringify(SAVE.sel) === LOADED_SEL) start();
+    if (selKey() === LOADED_SEL) start();
     else { try { location.hash = goHash(); } catch (err) {} location.reload(); }
     return;
   } else return;
@@ -1928,6 +1965,8 @@ function updatePlayer(dt) {
   const spd = (sprint ? 7.2 : 4.6) * stat.speed() * (fieldAt(P.x, P.z) ? 0.8 : 1);
   P.stamina = sprint ? Math.max(0, P.stamina - dt * 30 * Math.pow(0.7, pk('adrenal'))) : Math.min(100, P.stamina + dt * 16);
   P.lastMove = len > 0.2 ? [mx / len, mz / len] : null;
+  const trail = TRAILS[SAVE.cos.trail];
+  if (trail && trail.col && len > 0.2 && Math.random() < dt * 28) stardust(P.x - mx * 0.3, rand(0.15, 0.7), P.z - mz * 0.3, 1, 0.5, 0.25, trail.col);
   if (P.dashT > 0) {
     const step = Math.min(P.dashT, dt); P.dashT -= dt;
     P.x += P.dashDir[0] * 34 * step; P.z += P.dashDir[1] * 34 * step; resolveCircle(P, 0.4);

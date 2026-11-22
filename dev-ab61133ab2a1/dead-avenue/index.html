@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Dead Avenue (dev)</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=da9f2f7a">
+<link rel="stylesheet" href="style.css?v=010a62a4">
 <script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
 </head>
 <body>
@@ -64,13 +64,21 @@
 </div>
 
 <div id="hub" class="screen hidden">
-  <div class="hubTop"><h2>STARFALL HUB</h2><div class="dustBox"><span>✦</span><b id="hubDust">0</b><small>stardust</small></div></div>
+  <div class="hubTop"><h2>STARFALL HUB</h2><span id="supBadge" class="hidden">★ SUPPORTER</span><div class="dustBox"><span>✦</span><b id="hubDust">0</b><small>stardust</small></div></div>
   <h3 class="hsec">1 · FIGHTER</h3>
   <div id="hubChars" class="hrow"></div>
   <h3 class="hsec">2 · ARMORY <small>upgrades are permanent · equip one weapon to start with</small></h3>
   <div id="hubArms"></div>
   <h3 class="hsec">3 · MAP &amp; MODE</h3>
   <div id="hubMaps" class="hrow"></div>
+  <h3 class="hsec">4 · STYLE <small>looks only · never changes your power</small></h3>
+  <div id="hubStyle" class="hrow sm"></div>
+  <div id="supBox">
+    <span id="supState"></span>
+    <a id="supLink" class="hidden" target="_blank" rel="noopener">GET THE PACK</a>
+    <span class="codeRow"><input id="codeIn" type="text" maxlength="24" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ENTER CODE" aria-label="Supporter code"><button id="codeBtn">REDEEM</button></span>
+    <span id="codeMsg"></span>
+  </div>
   <div class="hubBottom"><button id="musicBtn">MUSIC ON</button><button id="hubGo" class="big">DEPLOY</button></div>
   <p class="hint">Earn stardust ✦ from kills, objectives and wins. It is banked when a run ends.</p>
 </div>
@@ -113,6 +121,6 @@
 
 <div id="sticks" class="hidden"><div id="stickL" class="stick"><i></i></div><div id="stickR" class="stick"><i></i></div></div>
 
-<script type="module" src="game.js?v=da9f2f7a"></script>
+<script type="module" src="game.js?v=010a62a4"></script>
 </body>
 </html>

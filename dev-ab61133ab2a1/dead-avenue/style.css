@@ -195,3 +195,21 @@ body.mode-survival [data-act=retry]{display:none}
 .ptext.sm{font-size:12px;letter-spacing:0;opacity:.9}
 @media (max-width:640px){.hubBottom{flex-direction:column-reverse}.abtns button{min-width:120px}#bossBar{bottom:150px}}
 @media (max-width:640px){.hubBottom{position:sticky;bottom:-28px;background:linear-gradient(180deg,transparent,rgba(4,2,14,.96) 30%);padding:18px 0 28px;z-index:2}.hubBottom button{width:100%}}
+
+/* ---------- style + supporter pack ---------- */
+.hrow.sm{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}
+.hcard.sm{padding:8px 10px}.hcard.sm b{font-size:14px;letter-spacing:1px}.hcard.sm p{font-size:11px}.hcard.sm em{font-size:9px}
+.hubTop{gap:10px}.hubTop h2{flex:1;text-align:left}
+#supBadge{color:var(--gold);font-size:12px;letter-spacing:2px;text-shadow:0 0 8px var(--gold)}
+#supBox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:1px solid rgba(255,179,71,.45);background:rgba(40,24,6,.45);padding:10px 12px;text-align:left;font-size:13px}
+#supBox.owned{border-color:var(--gold);box-shadow:0 0 14px rgba(255,179,71,.3)}
+#supBox.owned .codeRow{display:none}
+#supBox.shake{animation:shake .3s}
+#supState{flex:1;min-width:200px;color:#ffe0a0}
+#supLink{color:#fff;border:1px solid var(--gold);padding:6px 12px;text-decoration:none;letter-spacing:2px;font-size:12px;background:rgba(255,179,71,.2)}
+.codeRow{display:flex;gap:6px}
+#codeIn{font-family:var(--font);font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(0,0,0,.45);border:1px solid rgba(255,179,71,.5);padding:6px 10px;width:190px;user-select:text;-webkit-user-select:text;touch-action:auto}
+#codeIn:focus{outline:none;border-color:var(--gold)}
+#codeBtn{min-width:0;font-size:12px;padding:6px 14px}
+#codeMsg{width:100%;font-size:12px;min-height:14px}
+#codeMsg.bad{color:var(--red)}#codeMsg.good{color:var(--green)}
