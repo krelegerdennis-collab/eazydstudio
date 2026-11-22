@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="robots" content="noindex,nofollow">
 <title>Dead Avenue (dev)</title>
-<link rel="stylesheet" href="style.css?v=a59140d6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css?v=3badc675">
+<script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
 </head>
 <body>
 <canvas id="c"></canvas>
@@ -39,21 +41,24 @@
 <div id="popup"></div>
 
 <div id="title" class="screen">
+  <svg class="ed" viewBox="0 0 120 120"><defs><radialGradient id="pg" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#9ff4ff"/><stop offset="1" stop-color="#147a9a"/></radialGradient><clipPath id="fr"><rect x="-10" y="66" width="140" height="60" transform="rotate(-14 60 66)"/></clipPath></defs><ellipse cx="60" cy="66" rx="56" ry="15" transform="rotate(-14 60 66)" fill="none" stroke="#ffb347" stroke-width="6"/><circle cx="60" cy="60" r="36" fill="url(#pg)"/><ellipse cx="60" cy="66" rx="56" ry="15" transform="rotate(-14 60 66)" fill="none" stroke="#ffb347" stroke-width="6" clip-path="url(#fr)"/><text x="60" y="72" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Bahnschrift,Arial">ED</text><path d="M104 14l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#ffb347"/></svg>
+  <p class="runes">ᛖᚨᛉᛃᛞ · ᛋᛏᚨᚱᚠᚨᛚᛚ</p>
   <h1>DEAD<br>AVENUE</h1>
-  <p class="sub">CHAPTER 1 · <b>LAST CALL</b></p>
-  <p class="brief">The power is out. Find <b>5 generator parts</b> along the avenue, then reach the <b>evac van</b> before the clock runs out.</p>
+  <p class="sub">CHAPTER 1 · <b>STARFALL</b></p>
+  <p class="brief">A meteor split the sky. The stardust turned the city into <b>Hollows</b>, but you are <b>Starborn</b>. Find <b>5 generator parts</b>, then reach the <b>evac van</b> before the clock runs out.</p>
   <div class="keys">
     <span><b>WASD</b> move</span><span><b>Mouse</b> aim</span><span><b>Click</b> shoot</span>
     <span><b>Shift</b> sprint</span><span><b>R</b> reload</span><span><b>1 2 3 / Q</b> weapon</span><span><b>Esc</b> pause</span>
   </div>
   <p class="keys touchOnly">Left thumb: move · Right thumb: aim + fire</p>
   <button id="startBtn" class="big">START MISSION</button>
-  <p class="credits">EazyD Studio · dev prototype · code written with AI (Claude) · Three.js (MIT)</p>
+  <p class="credits">EazyD Studio · dev build · code written with AI (Claude) · Three.js (MIT)</p>
 </div>
 
 <div id="pause" class="screen hidden menu">
   <p class="sub">CHAPTER 1</p>
-  <h2>LAST CALL</h2>
+  <h2>STARFALL</h2>
+  <p class="runes">ᛖᚨᛉᛃᛞ</p>
   <button data-act="resume">Resume</button>
   <button data-act="retry">Retry Checkpoint</button>
   <button data-act="restart">Restart Mission</button>
@@ -75,6 +80,6 @@
 
 <div id="sticks" class="hidden"><div id="stickL" class="stick"><i></i></div><div id="stickR" class="stick"><i></i></div></div>
 
-<script type="module" src="game.js?v=a59140d6"></script>
+<script type="module" src="game.js?v=3badc675"></script>
 </body>
 </html>
