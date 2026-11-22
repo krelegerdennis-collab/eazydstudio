@@ -22,11 +22,14 @@ const MISSION_TIME = 15 * 60;
 const GEAR_SPOTS = [[-9.5, -38], [4.5, -84], [-3, -128], [10, -170], [-8.5, -213]];
 const EVAC = { x: 0, z: -244 };
 const WEAPONS = {
-  pistol:  { name: 'PISTOL',  dmg: 38, rate: 0.24, mag: 12, reserve: Infinity, pellets: 1, spread: 0.025, reload: 1.0, shake: 0.12, knock: 0.15 },
-  smg:     { name: 'SMG',     dmg: 21, rate: 0.075, mag: 32, reserve: 96, pellets: 1, spread: 0.075, reload: 1.4, shake: 0.07, knock: 0.07 },
-  shotgun: { name: 'SHOTGUN', dmg: 24, rate: 0.85, mag: 6, reserve: 18, pellets: 8, spread: 0.2, reload: 1.8, shake: 0.4, knock: 0.45 },
+  pistol:  { name: 'PULSE PISTOL', short: 'PULSE', dmg: 38, rate: 0.24, mag: 12, reserve: Infinity, pellets: 1, spread: 0.025, reload: 1.0, shake: 0.12, knock: 0.15, col: 0x9ff4ff, rune3: 'Pulses pierce +1 Hollow' },
+  smg:     { name: 'COMET SMG', short: 'COMET', dmg: 21, rate: 0.075, mag: 32, reserve: 96, pellets: 1, spread: 0.075, reload: 1.4, shake: 0.07, knock: 0.07, col: 0xffb347, rune3: 'Comet rounds ignite Hollows' },
+  shotgun: { name: 'NOVA SHOTGUN', short: 'NOVA', dmg: 24, rate: 0.85, mag: 6, reserve: 18, pellets: 8, spread: 0.2, reload: 1.8, shake: 0.4, knock: 0.45, col: 0xff5ad0, rune3: '+3 plasma pellets' },
+  rail:    { name: 'RAIL LANCE', short: 'RAIL', dmg: 150, rate: 1.0, mag: 4, reserve: 12, pellets: 1, spread: 0.004, reload: 1.9, shake: 0.5, knock: 0.6, col: 0xe8ffff, rail: true, rune3: 'Kills burst into mini novas' },
 };
-const ORDER = ['pistol', 'smg', 'shotgun'];
+const ORDER = ['pistol', 'smg', 'shotgun', 'rail'];
+const RUNES = [0, 30, 90];   // weapon kills needed for rune I, II, III
+const runeLvl = w => (P.wkills[w] >= RUNES[2] ? 3 : P.wkills[w] >= RUNES[1] ? 2 : 1);
 
 // ---------------------------------------------------------------- renderer / scene
 const canvas = $('c');
@@ -727,6 +730,7 @@ function addPickup(type, x, z, extra = {}) {
     const strip = new THREE.Mesh(new THREE.BoxGeometry(1.12, 0.08, 0.62), new THREE.MeshBasicMaterial({ color: 0xffd23f }));
     mesh.add(crate, strip); glowCol = 0xffd23f;
   } else if (type === 'ammo') { mesh = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.28, 0.3), mat(0x9a8a2a, { emissive: 0x443a00 })); glowCol = 0xffd23f; }
+  else if (type === 'nade') { mesh = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 8), mat(0x1a0d2a, { emissive: 0xb36bff, emissiveIntensity: 1.2 })); const r = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.03, 6, 20), new THREE.MeshBasicMaterial({ color: 0xc46bff })); r.rotation.x = 1.2; mesh.add(r); glowCol = 0xb36bff; }
   else { mesh = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.3, 0.32), mat(0xeeeeee, { emissive: 0x330000 })); const c = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.08, 0.08), new THREE.MeshBasicMaterial({ color: 0xff2020 })); mesh.add(c); glowCol = 0xff4040; }
   mesh.position.y = type === 'weapon' ? 0.35 : 0.9; g.add(mesh);
   const ring = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), poolMat(glowCol)); ring.rotation.x = -Math.PI / 2; ring.position.y = 0.06; ring.scale.setScalar(type === 'gear' ? 3.5 : 1.8); ring.material.opacity = 0.5; g.add(ring);
@@ -801,11 +805,30 @@ for (let i = 0; i < 24; i++) {
   l.frustumCulled = false; scene.add(l); tracers.push({ l, t: 0 });
 }
 let trI = 0;
-function tracer(x0, z0, x1, z1) {
+function tracer(x0, z0, x1, z1, col = 0x9ff4ff, life = 0.06) {
   const tr = tracers[trI++ % tracers.length];
   const a = tr.l.geometry.attributes.position;
   a.setXYZ(0, x0, 1.3, z0); a.setXYZ(1, x1, 1.2, z1); a.needsUpdate = true;
-  tr.t = 0.06; tr.l.material.opacity = 0.9;
+  tr.t = life; tr.max = life; tr.l.material.opacity = 0.9; tr.l.material.color.setHex(col);
+}
+const beams = [];
+const beamMat = new THREE.MeshBasicMaterial({ color: 0xe8ffff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+function railBeam(x0, z0, x1, z1) {
+  const len = Math.hypot(x1 - x0, z1 - z0);
+  const g = new THREE.Group();
+  const core = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, len), beamMat.clone());
+  const halo = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, len), beamMat.clone()); halo.material.color.setHex(0x3fd0ff); halo.material.opacity = 0.35;
+  g.add(core, halo); g.position.set((x0 + x1) / 2, 1.25, (z0 + z1) / 2); g.rotation.y = Math.atan2(x1 - x0, z1 - z0);
+  scene.add(g); beams.push({ g, t: 0.3 });
+  for (let k = 0; k < len; k += 1.5) stardust(x0 + (x1 - x0) * k / len, 1.25, z0 + (z1 - z0) * k / len, 1, 1, 0.6);
+}
+function updateBeams(dt) {
+  for (let i = beams.length - 1; i >= 0; i--) {
+    const b = beams[i]; b.t -= dt;
+    const k = Math.max(0, b.t / 0.3);
+    b.g.children[0].material.opacity = k; b.g.children[1].material.opacity = k * 0.35; b.g.scale.x = b.g.scale.y = 0.4 + k * 0.6;
+    if (b.t <= 0) { scene.remove(b.g); b.g.children.forEach(c => { c.geometry.dispose(); c.material.dispose(); }); beams.splice(i, 1); }
+  }
 }
 
 // ---------------------------------------------------------------- audio (synthesised)
@@ -838,10 +861,13 @@ const Sfx = {
     o.connect(g).connect(this.out); o.start(t); o.stop(t + dur + 0.05);
   },
   shot(w) {
-    if (w === 'shotgun') { this.noise(0.45, 900, 0.9); this.tone(120, 40, 0.25, 0.5, 'triangle'); }
-    else if (w === 'smg') { this.noise(0.09, 2600, 0.45); this.tone(200, 60, 0.06, 0.25, 'square'); }
-    else { this.noise(0.18, 1800, 0.6); this.tone(180, 50, 0.12, 0.35, 'triangle'); }
+    if (w === 'shotgun') { this.noise(0.4, 1400, 0.7); this.tone(420, 60, 0.3, 0.35, 'sawtooth'); this.tone(90, 40, 0.25, 0.4, 'sine'); }
+    else if (w === 'smg') { this.noise(0.07, 3200, 0.35); this.tone(1200, 300, 0.06, 0.18, 'square'); }
+    else if (w === 'rail') { this.tone(200, 2400, 0.12, 0.25, 'sawtooth'); this.noise(0.5, 4000, 0.5, 'highpass'); this.tone(80, 30, 0.6, 0.6, 'sine'); }
+    else { this.noise(0.14, 2200, 0.45); this.tone(900, 180, 0.1, 0.3, 'square'); }
   },
+  nadeThrow() { this.tone(300, 700, 0.2, 0.12, 'triangle'); },
+  hum() { this.tone(60, 40, 1.5, 0.35, 'sawtooth'); this.tone(120, 30, 1.5, 0.2, 'sine'); },
   groan(vol = 0.12) {
     if (!this.ctx) return; const c = this.ctx, t = c.currentTime, dur = rand(0.7, 1.3);
     const o = c.createOscillator(); o.type = 'sawtooth'; o.frequency.setValueAtTime(rand(70, 110), t); o.frequency.linearRampToValueAtTime(rand(50, 80), t + dur);
@@ -878,7 +904,8 @@ addEventListener('keydown', e => {
   keys[e.code] = true;
   if (G.state === 'play') {
     if (e.code === 'KeyR') startReload();
-    if (e.code === 'Digit1') switchTo('pistol'); if (e.code === 'Digit2') switchTo('smg'); if (e.code === 'Digit3') switchTo('shotgun');
+    if (e.code === 'Digit1') switchTo('pistol'); if (e.code === 'Digit2') switchTo('smg'); if (e.code === 'Digit3') switchTo('shotgun'); if (e.code === 'Digit4') switchTo('rail');
+    if (e.code === 'KeyG') throwNade();
     if (e.code === 'KeyQ') cycleWeapon(1);
     if (e.code === 'Space') { e.preventDefault(); starDash(); }
     if (e.code === 'KeyF') lionRoar();
@@ -929,7 +956,7 @@ const endTouch = e => {
 canvas.addEventListener('touchend', endTouch); canvas.addEventListener('touchcancel', endTouch);
 $('weapon').addEventListener('click', () => { if (G.state === 'play') cycleWeapon(1); });
 $('pauseBtn').addEventListener('click', () => { if (G.state === 'play') pause(); });
-for (const [id, fn] of [['abDash', () => starDash()], ['abRoar', () => lionRoar()]]) {
+for (const [id, fn] of [['abDash', () => starDash()], ['abRoar', () => lionRoar()], ['abNade', () => throwNade()]]) {
   $(id).addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); fn(); }, { passive: false });
   $(id).addEventListener('mousedown', e => { e.stopPropagation(); fn(); });
 }
@@ -941,7 +968,8 @@ const G = { state: 'title', time: MISSION_TIME, gears: 0, kills: 0, spawnT: 4, s
 const ROAR_NEED = 160;
 function resetPlayer() {
   Object.assign(P, { x: 0, z: 2, hp: 100, maxHp: 100, stamina: 100, lvl: 1, xp: 0, aim: Math.PI, owned: ['pistol'], cur: 'pistol',
-    ammo: { pistol: { mag: 12, reserve: Infinity }, smg: { mag: 0, reserve: 0 }, shotgun: { mag: 0, reserve: 0 } },
+    ammo: { pistol: { mag: 12, reserve: Infinity }, smg: { mag: 0, reserve: 0 }, shotgun: { mag: 0, reserve: 0 }, rail: { mag: 0, reserve: 0 } },
+    wkills: { pistol: 0, smg: 0, shotgun: 0, rail: 0 }, nades: 2, aimX: 0, aimZ: -10,
     fireT: 0, reloadT: 0, walk: 0, dead: false, perks: {}, bonus: [], secondUsed: false, invT: 0, dashT: 0, dashCharges: 1, dashCd: 0, dashDir: [0, -1] });
   pm.body.rotation.set(0, 0, 0); pm.body.position.y = 0;
 }
@@ -950,12 +978,12 @@ const xpNeed = () => 120 + (P.lvl - 1) * 70;
 const pk = id => P.perks[id] || 0;
 const hasBonus = line => P.bonus.includes(line);
 const stat = {
-  dmg: () => 1 + 0.15 * pk('hollow'),
-  rate: w => w.rate / (1 + 0.12 * pk('trigger')),
+  dmg: () => (1 + 0.15 * pk('hollow')) * (1 + 0.2 * (runeLvl(P.cur) - 1)),
+  rate: w => w.rate / ((1 + 0.12 * pk('trigger')) * (1 + 0.15 * (runeLvl(P.cur) - 1))),
   reload: w => w.reload * Math.pow(0.75, pk('hands')),
   mag: w => Math.round(w.mag * (1 + 0.3 * pk('pockets'))),
   speed: () => 1 + 0.1 * pk('fleet'),
-  pellets: (key, w) => w.pellets + (key === 'shotgun' ? 3 * pk('buckshot') : 0),
+  pellets: (key, w) => w.pellets + (key === 'shotgun' ? 3 * pk('buckshot') + (runeLvl('shotgun') >= 3 ? 3 : 0) : 0),
   crit: () => 0.1 * pk('headhunt'),
   taken: () => (hasBonus('aegis') ? 0.8 : 1),
   pickR: () => 1.4,
@@ -966,14 +994,14 @@ const stat = {
 function saveCheckpoint() {
   P.secondUsed = false;
   G.cp = structuredClone({ x: P.x, z: P.z, hp: Math.max(P.hp, P.maxHp * 0.6), maxHp: P.maxHp, lvl: P.lvl, xp: P.xp, owned: P.owned, cur: P.cur, ammo: P.ammo, gears: G.gears, time: G.time, kills: G.kills,
-    perks: P.perks, bonus: P.bonus, rerolls: G.rerolls, novaKills: G.novaKills, roar: G.roar });
+    perks: P.perks, bonus: P.bonus, rerolls: G.rerolls, novaKills: G.novaKills, roar: G.roar, wkills: P.wkills, nades: P.nades });
   G.cpTaken = pickups.map(p => p.taken);
 }
 function loadCheckpoint() {
   const c = structuredClone(G.cp);
   Object.assign(P, { x: c.x, z: c.z, hp: c.hp, maxHp: c.maxHp, lvl: c.lvl, xp: c.xp, owned: c.owned, cur: c.cur, ammo: c.ammo, stamina: 100, fireT: 0, reloadT: 0, dead: false,
     perks: c.perks, bonus: c.bonus, secondUsed: false, invT: 1, dashT: 0, dashCharges: maxDash(), dashCd: 0 });
-  G.roar = c.roar || 0;
+  G.roar = c.roar || 0; P.wkills = c.wkills; P.nades = c.nades; clearNades();
   clearMotes();
   G.gears = c.gears; G.time = c.time; G.kills = c.kills; G.rerolls = c.rerolls; G.novaKills = c.novaKills; G.pendingCards = 0; G.slowT = 0;
   for (let i = pickups.length - 1; i >= 0; i--) {
@@ -1016,7 +1044,8 @@ function shoot() {
   a.mag--; P.fireT = stat.rate(w);
   const sx = Math.sin(P.aim), sz = Math.cos(P.aim);
   const mx = P.x + sx * 0.9 + Math.cos(P.aim) * 0.1, mz = P.z + sz * 0.9 - Math.sin(P.aim) * 0.1;
-  const pellets = stat.pellets(P.cur, w), dm = stat.dmg(), maxHits = 1 + pk('pierce');
+  const rl = runeLvl(P.cur);
+  const pellets = stat.pellets(P.cur, w), dm = stat.dmg(), maxHits = w.rail ? 99 : 1 + pk('pierce') + (P.cur === 'pistol' && rl >= 3 ? 1 : 0);
   for (let k = 0; k < pellets; k++) {
     const ang = P.aim + rand(-w.spread, w.spread), dx = Math.sin(ang), dz = Math.cos(ang);
     let wall = 42, wallHit = false;
@@ -1026,19 +1055,23 @@ function shoot() {
     hits.sort((a, b) => a[0] - b[0]);
     const n = Math.min(hits.length, maxHits);
     const end = n === maxHits ? hits[n - 1][0] : wall;
-    tracer(mx, mz, P.x + dx * end, P.z + dz * end);
+    if (w.rail) railBeam(mx, mz, P.x + dx * end, P.z + dz * end);
+    else tracer(mx, mz, P.x + dx * end, P.z + dz * end, w.col, P.cur === 'smg' ? 0.1 : 0.06);
     for (let i = 0; i < n; i++) {
       const [t, zb] = hits[i];
-      let d = w.dmg * dm * (t > 18 ? 0.7 : 1) * (i ? 0.8 : 1);
+      let d = w.dmg * dm * (t > 18 && !w.rail ? 0.7 : 1) * (i && !w.rail ? 0.8 : 1);
+      zb.lastHit = P.cur;
       const crit = Math.random() < stat.crit();
       if (crit) { d *= 3; stardust(zb.x, 1.6, zb.z, 8, 3, 1); popText('CRIT', zb.x, zb.z, '#ffb347'); }
-      if (pk('incend')) zb.burn = 3;
+      if (pk('incend') || (P.cur === 'smg' && rl >= 3)) zb.burn = 3;
+      if (P.cur === 'rail' && rl >= 3) zb.railMark = true;
       damageZombie(zb, d, dx, dz, w.knock);
     }
     if (n < maxHits && wallHit) burst(P.x + dx * wall, 1.1, P.z + dz * wall, -dx, -dz, 4, [1, 0.8, 0.4], 2);
   }
   muzzleLight.position.set(mx, 1.4, mz); muzzleLight.intensity = 60;
-  muzzleFlash.position.set(mx, 1.3, mz); muzzleFlash.material.opacity = 1; muzzleFlash.scale.setScalar(P.cur === 'shotgun' ? 2.2 : 1.4);
+  muzzleFlash.position.set(mx, 1.3, mz); muzzleFlash.material.opacity = 1; muzzleFlash.scale.setScalar(P.cur === 'shotgun' || w.rail ? 2.2 : 1.4);
+  muzzleFlash.material.color.setHex(w.col); muzzleLight.color.setHex(w.col);
   G.shake = Math.max(G.shake, w.shake);
   Sfx.shot(P.cur);
   for (const zb of zombies) if (zb.state === 'idle' && Math.hypot(zb.x - P.x, zb.z - P.z) < 26) zb.state = 'chase';
@@ -1067,6 +1100,14 @@ function killZombie(zb, dx, dz) {
   burst(zb.x, 1.0, zb.z, dx, dz, 10, [0.4, 0.02, 0.16], 5);
   stardust(zb.x, 1.0, zb.z, zb.type === 'brute' ? 40 : 16);
   G.kills++;
+  const wk = zb.lastHit;
+  if (wk && P.wkills[wk] !== undefined) {
+    const before = runeLvl(wk); P.wkills[wk]++;
+    const after = runeLvl(wk);
+    if (after > before) { popup(`${WEAPONS[wk].name} · RUNE ${'I'.repeat(after)}`, '#ffb347'); Sfx.ready(); stardust(P.x, 1.4, P.z, 30, 3, 2); if (after === 3) setTimeout(() => popup(WEAPONS[wk].rune3.toUpperCase(), '#ffb347'), 1200); }
+  }
+  if (zb.railMark) G.blasts.push({ x: zb.x, z: zb.z, r: 2.2, dmg: 50, col: 0x3fd0ff, t: 0.05 });
+  if (Math.random() < (zb.type === 'brute' ? 0.5 : 0.03)) addPickup('nade', zb.x + rand(-0.5, 0.5), zb.z + rand(-0.5, 0.5));
   if (pk('vampire')) P.hp = Math.min(P.maxHp, P.hp + 2 * pk('vampire'));
   if (pk('adrenal')) P.stamina = Math.min(100, P.stamina + 10 * pk('adrenal'));
   if (pk('volatile') && Math.random() < 0.15 * pk('volatile')) G.blasts.push({ x: zb.x, z: zb.z, r: 3.2, dmg: 70, col: 0xff5ad0, t: 0.12 });
@@ -1145,6 +1186,73 @@ function updateMotes(dt) {
     mCol[i * 3] = m.c[0] * tw * fade; mCol[i * 3 + 1] = m.c[1] * tw * fade; mCol[i * 3 + 2] = m.c[2] * tw * fade;
   }
   mGeo.attributes.position.needsUpdate = true; mGeo.attributes.color.needsUpdate = true;
+}
+
+// ---------------------------------------------------------------- Gravity Grenade
+const nades = [];
+const swirlTex = canvasTex(256, 256, (g) => {
+  g.translate(128, 128);
+  for (let arm = 0; arm < 4; arm++) for (let i = 0; i < 90; i++) {
+    const t = i / 90, a = arm * Math.PI / 2 + t * 5, r = t * 120;
+    g.fillStyle = `rgba(${180 + t * 60},${90 + t * 60},255,${(1 - t) * 0.6})`;
+    g.beginPath(); g.arc(Math.cos(a) * r, Math.sin(a) * r, 6 * (1 - t) + 2, 0, TAU); g.fill();
+  }
+});
+const nadeGeo = new THREE.SphereGeometry(0.18, 12, 8), nadeMat = mat(0x1a0d2a, { emissive: 0xb36bff, emissiveIntensity: 1.4 });
+const coreMat = new THREE.MeshBasicMaterial({ color: 0x050008 });
+function throwNade() {
+  if (G.state !== 'play' || P.dead || P.nades <= 0) return;
+  P.nades--; Sfx.nadeThrow();
+  let tx = P.aimX, tz = P.aimZ;
+  if (touch.on || Math.hypot(tx - P.x, tz - P.z) < 1) { tx = P.x + Math.sin(P.aim) * 9; tz = P.z + Math.cos(P.aim) * 9; }
+  let dx = tx - P.x, dz = tz - P.z; const d = Math.hypot(dx, dz) || 1;
+  if (d > 14) { tx = P.x + dx / d * 14; tz = P.z + dz / d * 14; }
+  const T = 0.6, y0 = 1.4;
+  const m = new THREE.Mesh(nadeGeo, nadeMat); m.position.set(P.x, y0, P.z); scene.add(m);
+  nades.push({ m, x: P.x, y: y0, z: P.z, vx: (tx - P.x) / T, vz: (tz - P.z) / T, vy: (-y0 + 10 * T * T) / T, phase: 'fly', t: 0 });
+}
+function clearNades() { for (const n of nades) { scene.remove(n.m); if (n.fx) scene.remove(n.fx); } nades.length = 0; }
+function updateNades(dt) {
+  for (let i = nades.length - 1; i >= 0; i--) {
+    const n = nades[i];
+    if (n.phase === 'fly') {
+      n.vy -= 20 * dt; n.x += n.vx * dt; n.y += n.vy * dt; n.z += n.vz * dt;
+      n.m.position.set(n.x, n.y, n.z); n.m.rotation.x += dt * 10;
+      if (Math.random() < 0.5) stardust(n.x, n.y, n.z, 1, 0.3, 0.2);
+      if (n.y <= 0.25) {
+        n.phase = 'pull'; n.t = 1.6; n.y = 0.6; Sfx.hum();
+        const fx = new THREE.Group();
+        const disc = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: swirlTex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+        disc.scale.setScalar(12); disc.position.y = 0.12; fx.add(disc);
+        const core = new THREE.Mesh(new THREE.SphereGeometry(0.5, 16, 12), coreMat); core.position.y = 0.9; fx.add(core);
+        const halo = new THREE.Mesh(new THREE.TorusGeometry(0.75, 0.06, 8, 32), new THREE.MeshBasicMaterial({ color: 0xc46bff })); halo.position.y = 0.9; halo.rotation.x = Math.PI / 2; fx.add(halo);
+        fx.position.set(n.x, 0, n.z); scene.add(fx); n.fx = fx; n.disc = disc; n.core = core; n.halo = halo;
+        scene.remove(n.m);
+        n.spot = { pos: new THREE.Vector3(n.x, 2, n.z), color: new THREE.Color(0xb36bff), intensity: 90, dist: 12, flicker: true };
+        lightSpots.push(n.spot);
+      }
+    } else {
+      n.t -= dt;
+      const k = 1 - n.t / 1.6;
+      n.disc.rotation.y -= dt * 4; n.disc.material.opacity = 0.5 + k * 0.5;
+      n.core.scale.setScalar(0.6 + k * 0.9); n.halo.scale.setScalar(0.8 + Math.sin(G.t * 20) * 0.08 + k * 0.6); n.halo.rotation.z += dt * 6;
+      for (let j = 0; j < 3; j++) { const a = rand(0, TAU), r = rand(3, 6.5); stardust(n.x + Math.cos(a) * r, rand(0.3, 1.5), n.z + Math.sin(a) * r, 1, 0.2, 0); }
+      for (const zb of [...zombies]) {
+        const dx = n.x - zb.x, dz = n.z - zb.z, d = Math.hypot(dx, dz);
+        if (d < 6.5 && d > 0.3) {
+          const sp = (zb.type === 'brute' ? 2 : 5) * (1.2 - d / 6.5) + 1;
+          zb.x += dx / d * sp * dt; zb.z += dz / d * sp * dt; resolveCircle(zb, zb.r); zb.state = 'chase';
+          damageZombie(zb, 28 * dt * stat.dmg(), 0, 0, 0, true);
+        }
+      }
+      if (n.t <= 0) {
+        scene.remove(n.fx); n.fx.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material && o.material !== coreMat) o.material.dispose(); });
+        const si = lightSpots.indexOf(n.spot); if (si >= 0) lightSpots.splice(si, 1);
+        novaBlast({ x: n.x, z: n.z, r: 4.2, dmg: 130, col: 0xb36bff, big: true });
+        nades.splice(i, 1);
+      }
+    }
+  }
 }
 
 // ---------------------------------------------------------------- Star Dash
@@ -1441,7 +1549,7 @@ function updatePlayer(dt) {
   } else {
     ndc.set(mouse.x / innerWidth * 2 - 1, -(mouse.y / innerHeight) * 2 + 1);
     ray.setFromCamera(ndc, camera);
-    if (ray.ray.intersectPlane(aimPlane, hitPt)) P.aim = Math.atan2(hitPt.x - P.x, hitPt.z - P.z);
+    if (ray.ray.intersectPlane(aimPlane, hitPt)) { P.aim = Math.atan2(hitPt.x - P.x, hitPt.z - P.z); P.aimX = hitPt.x; P.aimZ = hitPt.z; }
     firing = mouse.down;
   }
   pm.root.position.set(P.x, 0, P.z); pm.root.rotation.y = P.aim;
@@ -1576,7 +1684,10 @@ function updatePickups(dt) {
       setTaken(p, true); Sfx.click();
       if (P.owned.includes('smg')) P.ammo.smg.reserve += 32;
       if (P.owned.includes('shotgun')) P.ammo.shotgun.reserve += 6;
+      if (P.owned.includes('rail')) P.ammo.rail.reserve += 2;
       popup('+AMMO', '#ffd23f');
+    } else if (p.type === 'nade' && P.nades < 5) {
+      setTaken(p, true); Sfx.pickup(); P.nades++; popup('+GRAVITY GRENADE', '#c46bff');
     } else if (p.type === 'med' && P.hp < P.maxHp) {
       setTaken(p, true); Sfx.pickup(); P.hp = Math.min(P.maxHp, P.hp + 35); popup('+35 HP', '#ff6060');
     }
@@ -1585,7 +1696,7 @@ function updatePickups(dt) {
 }
 function updateFx(dt) {
   updateParticles(dt);
-  for (const tr of tracers) if (tr.t > 0) { tr.t -= dt; tr.l.material.opacity = Math.max(0, tr.t / 0.06) * 0.9; }
+  for (const tr of tracers) if (tr.t > 0) { tr.t -= dt; tr.l.material.opacity = Math.max(0, tr.t / (tr.max || 0.06)) * 0.9; }
   muzzleLight.intensity *= Math.pow(0.0005, dt); muzzleFlash.material.opacity *= Math.pow(0.00001, dt);
   for (const f of fires) {
     f.t += dt;
@@ -1645,9 +1756,14 @@ function updateHUD() {
   setText('gearTxt', `${G.gears}/5`); $('gears').classList.toggle('full', G.gears >= 5);
   const w = WEAPONS[P.cur], a = P.ammo[P.cur];
   setText('wname', P.reloadT > 0 ? 'RELOADING' : w.name);
+  const rl = runeLvl(P.cur), nextK = RUNES[rl] ?? null;
+  const runes = `<b>${'ᚱ'.repeat(rl)}</b>${'ᚱ'.repeat(3 - rl)}`;
+  if (hudCache.runes !== runes) { hudCache.runes = runes; $('runes').innerHTML = runes; }
+  $('runeFill').style.width = (nextK === null ? 100 : ((P.wkills[P.cur] - RUNES[rl - 1]) / (nextK - RUNES[rl - 1]) * 100)) + '%';
+  setText('nadeCount', String(P.nades)); $('abNade').classList.toggle('ready', P.nades > 0);
   setText('ammo', `${a.mag} / ${a.reserve === Infinity ? '∞' : a.reserve}`);
   $('ammo').classList.toggle('empty', a.mag === 0);
-  const slots = ORDER.map((k, i) => P.owned.includes(k) ? `<span class="${k === P.cur ? 'on' : ''}">${i + 1} ${WEAPONS[k].name}</span>` : '').join('');
+  const slots = ORDER.map((k, i) => P.owned.includes(k) ? `<span class="${k === P.cur ? 'on' : ''}">${i + 1} ${WEAPONS[k].short}</span>` : '').join('');
   if (hudCache.slots !== slots) { hudCache.slots = slots; $('slots').innerHTML = slots; }
   setText('kills', `${G.kills} KILLS`);
   // crosshair + objective arrow
@@ -1677,6 +1793,8 @@ buildStreet(); buildProps(); buildEvac(); buildSkyTraffic();
 GEAR_SPOTS.forEach(([x, z]) => { const p = addPickup('gear', x, z); });
 addPickup('weapon', 9.5, -58, { weapon: 'smg' });
 addPickup('weapon', -10, -150, { weapon: 'shotgun' });
+addPickup('weapon', 9, -198, { weapon: 'rail' });
+addPickup('nade', -9, -70); addPickup('nade', 8.5, -160);
 addPickup('med', 9, -105); addPickup('med', -9.5, -190);
 resetPlayer();
 for (let i = 0; i < 26; i++) {
@@ -1703,7 +1821,7 @@ function tick(dt) {
     G.time -= dt;
     if (G.time <= 0) { G.time = 0; die('TIME UP', 'The power never came back.'); }
     P.invT = Math.max(0, P.invT - dt); G.shockCd = Math.max(0, G.shockCd - dt);
-    updatePlayer(dt); updateZombies(dt); updateSpawner(dt); updatePickups(dt); updateDrones(dt); updateBlasts(dt); updateMotes(dt);
+    updatePlayer(dt); updateZombies(dt); updateSpawner(dt); updatePickups(dt); updateDrones(dt); updateBlasts(dt); updateMotes(dt); updateNades(dt); updateBeams(dt);
   } else if (G.state === 'dying') {
     G.deadT += dt; const t = Math.min(1, G.deadT / 0.6);
     pm.body.rotation.x = -Math.PI / 2 * t * t; pm.body.position.y = 0.14 * t;
@@ -1720,4 +1838,4 @@ function tick(dt) {
 }
 frame();
 // debug/test hook: step the simulation without requestAnimationFrame
-window.__game = { G, P, zombies, pickups, corpses, spawnZombie, keys, mouse, gainXp, chooseCard, rerollCards, CARD, motes, starDash, lionRoar, ROAR_NEED, step(n = 60, dt = 1 / 60) { for (let i = 0; i < n; i++) tick(dt); } };
+window.__game = { G, P, zombies, pickups, corpses, spawnZombie, keys, mouse, gainXp, chooseCard, rerollCards, CARD, motes, starDash, lionRoar, ROAR_NEED, throwNade, nades, runeLvl, WEAPONS, obstacles, aimAt(x, z) { const v = new THREE.Vector3(x, 1.2, z).project(camera); mouse.x = (v.x + 1) / 2 * innerWidth; mouse.y = (1 - v.y) / 2 * innerHeight; }, step(n = 60, dt = 1 / 60) { for (let i = 0; i < n; i++) tick(dt); } };

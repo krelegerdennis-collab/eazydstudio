@@ -142,3 +142,13 @@ body.touch #abilities{left:auto;right:18px;bottom:72px;transform:none;flex-direc
 body.touch .ab{width:76px;height:76px}
 body.touch .ab .abk{display:none}
 @media (max-width:640px){#abilities{bottom:62px}}
+
+/* ---------- runes + grenade ---------- */
+#runes{font-family:'Segoe UI Historic','Noto Sans Runic',var(--font);font-size:13px;letter-spacing:3px;color:rgba(255,255,255,.25)}
+#runes b{color:var(--gold);text-shadow:0 0 6px var(--gold);font-weight:400}
+#runeBar{width:100%;height:2px;background:rgba(255,255,255,.12);margin-top:2px}
+#runeBar i{display:block;height:100%;width:0;background:var(--gold);box-shadow:0 0 6px var(--gold)}
+.ab.nade{border-color:rgba(196,107,255,.45)}
+.ab.nade svg{stroke:#e2c4ff}
+.ab.nade .abp{color:#e2c4ff;font-size:11px;font-weight:700}
+.ab.nade.ready{border-color:#c46bff;box-shadow:0 0 14px rgba(196,107,255,.6)}
