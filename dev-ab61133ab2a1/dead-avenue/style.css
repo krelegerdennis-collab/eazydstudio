@@ -123,3 +123,22 @@ button.big{font-size:22px;border-color:var(--gold);background:linear-gradient(90
   #cards{padding:16px 8px}#hand{gap:6px;flex-wrap:nowrap}.card{min-width:0;width:calc((100vw - 28px) / 3);min-height:230px;padding:14px 5px 10px}.card h3{font-size:15px}.card p{font-size:11px}
   .cicon svg{width:56px;height:48px}.crar{display:none}.lines.mini{display:none}
 }
+
+/* ---------- abilities ---------- */
+#flash{position:fixed;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse at center,rgba(255,200,110,.9),rgba(255,140,40,.3) 60%,transparent)}
+#abilities{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:12px;pointer-events:auto}
+.ab{position:relative;width:62px;height:62px;border-radius:50%;border:2px solid rgba(63,208,255,.45);background:rgba(10,8,32,.6);overflow:hidden;display:grid;place-items:center;cursor:pointer;touch-action:none}
+.ab i{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(0deg,rgba(63,208,255,.55),rgba(63,208,255,.15))}
+.ab svg{position:relative;width:28px;height:28px;fill:none;stroke:#bfefff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ab .abk{position:absolute;bottom:4px;left:0;right:0;font-size:8px;letter-spacing:1px;text-align:center;opacity:.8}
+.ab .abp{position:absolute;top:3px;left:0;right:0;font-size:9px;text-align:center;color:var(--cyan)}
+.ab.ready{border-color:var(--cyan);box-shadow:0 0 14px rgba(63,208,255,.6)}
+.ab.roar{border-color:rgba(255,179,71,.45)}
+.ab.roar i{background:linear-gradient(0deg,rgba(255,179,71,.7),rgba(255,140,40,.2))}
+.ab.roar svg{stroke:#ffe0a0}
+.ab.roar.ready{border-color:var(--gold);box-shadow:0 0 22px rgba(255,179,71,.85);animation:roarPulse 1s ease-in-out infinite}
+@keyframes roarPulse{50%{box-shadow:0 0 34px rgba(255,179,71,1);transform:scale(1.07)}}
+body.touch #abilities{left:auto;right:18px;bottom:72px;transform:none;flex-direction:column-reverse;gap:14px}
+body.touch .ab{width:76px;height:76px}
+body.touch .ab .abk{display:none}
+@media (max-width:640px){#abilities{bottom:62px}}

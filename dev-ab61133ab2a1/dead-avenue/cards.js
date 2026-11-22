@@ -1,10 +1,10 @@
 // Star cards (constellation perks): data + draw logic. No game state in here.
 
 export const LINES = {
-  leo:     { name: 'LEO',     color: '#ffb347', bonus: 'PRIDE',    bonusText: '+20% damage on every weapon' },
-  comet:   { name: 'COMET',   color: '#3fd0ff', bonus: 'TAILWIND', bonusText: '+15% move speed and fire rate' },
+  leo:     { name: 'LEO',     color: '#ffb347', bonus: 'PRIDE',    bonusText: 'Lion Roar charges 2× faster' },
+  comet:   { name: 'COMET',   color: '#3fd0ff', bonus: 'TAILWIND', bonusText: 'Star Dash gets 2 charges' },
   aegis:   { name: 'AEGIS',   color: '#38ffc8', bonus: 'BULWARK',  bonusText: 'Take 20% less damage' },
-  polaris: { name: 'POLARIS', color: '#c46bff', bonus: 'NORTH STAR', bonusText: 'Pickup range ×2' },
+  polaris: { name: 'POLARIS', color: '#c46bff', bonus: 'NORTH STAR', bonusText: 'Stardust magnet range ×2' },
   nova:    { name: 'NOVA',    color: '#ff5ad0', bonus: 'SUPERNOVA', bonusText: 'Every 10th kill triggers a Nova blast' },
 };
 

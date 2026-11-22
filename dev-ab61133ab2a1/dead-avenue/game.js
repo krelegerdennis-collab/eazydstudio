@@ -4,7 +4,7 @@ import { EffectComposer } from './lib/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from './lib/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from './lib/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from './lib/addons/postprocessing/OutputPass.js';
-import { CARD, LINES, drawCards, lineCount } from './cards.js?v=1';
+import { CARD, LINES, drawCards, lineCount } from './cards.js?v=2';
 
 // ---------------------------------------------------------------- helpers
 const rand = (a, b) => a + Math.random() * (b - a);
@@ -858,6 +858,14 @@ const Sfx = {
   level() { [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => this.tone(f, f, 0.18, 0.18, 'triangle'), i * 90)); },
   boom(big) { this.noise(big ? 0.9 : 0.6, 380, big ? 1 : 0.7); this.tone(big ? 90 : 120, 30, 0.5, 0.5, 'sine'); },
   zap() { this.tone(1800, 600, 0.08, 0.1, 'square'); },
+  mote() { if (this.moteT > (this.ctx?.currentTime ?? 0)) return; this.moteT = (this.ctx?.currentTime ?? 0) + 0.04; this.tone(rand(1500, 2100), 2400, 0.05, 0.04, 'sine'); },
+  ready() { this.tone(440, 880, 0.3, 0.2, 'triangle'); setTimeout(() => this.tone(660, 1320, 0.35, 0.18, 'triangle'), 120); },
+  dash() { this.noise(0.22, 2400, 0.35, 'bandpass', 1.5); this.tone(900, 2400, 0.14, 0.12, 'sine'); },
+  roar() {
+    if (!this.ctx) return;
+    this.tone(160, 38, 1.4, 0.8, 'sawtooth'); this.tone(80, 30, 1.6, 0.7, 'sine'); this.noise(1.2, 600, 0.9);
+    [261.6, 329.6, 392, 523.2].forEach((f, i) => setTimeout(() => this.tone(f, f, 1.2, 0.12, 'sawtooth'), 120 + i * 30));
+  },
   card() { this.tone(880, 1320, 0.12, 0.15, 'triangle'); setTimeout(() => this.tone(1320, 1760, 0.2, 0.12, 'triangle'), 80); },
   constellation() { [659, 880, 1046, 1318, 1760].forEach((f, i) => setTimeout(() => this.tone(f, f * 1.01, 0.4, 0.12, 'sine'), i * 120)); },
 };
@@ -872,6 +880,8 @@ addEventListener('keydown', e => {
     if (e.code === 'KeyR') startReload();
     if (e.code === 'Digit1') switchTo('pistol'); if (e.code === 'Digit2') switchTo('smg'); if (e.code === 'Digit3') switchTo('shotgun');
     if (e.code === 'KeyQ') cycleWeapon(1);
+    if (e.code === 'Space') { e.preventDefault(); starDash(); }
+    if (e.code === 'KeyF') lionRoar();
   }
   if (G.state === 'cards') {
     const i = { Digit1: 0, Digit2: 1, Digit3: 2, Numpad1: 0, Numpad2: 1, Numpad3: 2 }[e.code];
@@ -919,15 +929,20 @@ const endTouch = e => {
 canvas.addEventListener('touchend', endTouch); canvas.addEventListener('touchcancel', endTouch);
 $('weapon').addEventListener('click', () => { if (G.state === 'play') cycleWeapon(1); });
 $('pauseBtn').addEventListener('click', () => { if (G.state === 'play') pause(); });
+for (const [id, fn] of [['abDash', () => starDash()], ['abRoar', () => lionRoar()]]) {
+  $(id).addEventListener('touchstart', e => { e.preventDefault(); e.stopPropagation(); fn(); }, { passive: false });
+  $(id).addEventListener('mousedown', e => { e.stopPropagation(); fn(); });
+}
 const cross = $('cross');
 
 // ---------------------------------------------------------------- game state
 const G = { state: 'title', time: MISSION_TIME, gears: 0, kills: 0, spawnT: 4, shake: 0, hurt: 0, cp: null, t: 0, popupT: 0, deadT: 0,
-  pendingCards: 0, slowT: 0, rerolls: 1, novaKills: 0, blasts: [], shockCd: 0, hand: [] };
+  pendingCards: 0, slowT: 0, rerolls: 1, novaKills: 0, blasts: [], shockCd: 0, hand: [], roar: 0, roarSlow: 0, flash: 0 };
+const ROAR_NEED = 160;
 function resetPlayer() {
   Object.assign(P, { x: 0, z: 2, hp: 100, maxHp: 100, stamina: 100, lvl: 1, xp: 0, aim: Math.PI, owned: ['pistol'], cur: 'pistol',
     ammo: { pistol: { mag: 12, reserve: Infinity }, smg: { mag: 0, reserve: 0 }, shotgun: { mag: 0, reserve: 0 } },
-    fireT: 0, reloadT: 0, walk: 0, dead: false, perks: {}, bonus: [], secondUsed: false, invT: 0 });
+    fireT: 0, reloadT: 0, walk: 0, dead: false, perks: {}, bonus: [], secondUsed: false, invT: 0, dashT: 0, dashCharges: 1, dashCd: 0, dashDir: [0, -1] });
   pm.body.rotation.set(0, 0, 0); pm.body.position.y = 0;
 }
 const xpNeed = () => 120 + (P.lvl - 1) * 70;
@@ -935,27 +950,31 @@ const xpNeed = () => 120 + (P.lvl - 1) * 70;
 const pk = id => P.perks[id] || 0;
 const hasBonus = line => P.bonus.includes(line);
 const stat = {
-  dmg: () => (1 + 0.15 * pk('hollow')) * (hasBonus('leo') ? 1.2 : 1),
-  rate: w => w.rate / ((1 + 0.12 * pk('trigger')) * (hasBonus('comet') ? 1.15 : 1)),
+  dmg: () => 1 + 0.15 * pk('hollow'),
+  rate: w => w.rate / (1 + 0.12 * pk('trigger')),
   reload: w => w.reload * Math.pow(0.75, pk('hands')),
   mag: w => Math.round(w.mag * (1 + 0.3 * pk('pockets'))),
-  speed: () => (1 + 0.1 * pk('fleet')) * (hasBonus('comet') ? 1.15 : 1),
+  speed: () => 1 + 0.1 * pk('fleet'),
   pellets: (key, w) => w.pellets + (key === 'shotgun' ? 3 * pk('buckshot') : 0),
   crit: () => 0.1 * pk('headhunt'),
   taken: () => (hasBonus('aegis') ? 0.8 : 1),
-  pickR: () => (hasBonus('polaris') ? 2.8 : 1.4),
+  pickR: () => 1.4,
+  magnet: () => (hasBonus('polaris') ? 6.4 : 3.2),
+  roarGain: () => (hasBonus('leo') ? 2 : 1),
   drop: () => Math.pow(1.5, pk('scavenger')),
 };
 function saveCheckpoint() {
   P.secondUsed = false;
   G.cp = structuredClone({ x: P.x, z: P.z, hp: Math.max(P.hp, P.maxHp * 0.6), maxHp: P.maxHp, lvl: P.lvl, xp: P.xp, owned: P.owned, cur: P.cur, ammo: P.ammo, gears: G.gears, time: G.time, kills: G.kills,
-    perks: P.perks, bonus: P.bonus, rerolls: G.rerolls, novaKills: G.novaKills });
+    perks: P.perks, bonus: P.bonus, rerolls: G.rerolls, novaKills: G.novaKills, roar: G.roar });
   G.cpTaken = pickups.map(p => p.taken);
 }
 function loadCheckpoint() {
   const c = structuredClone(G.cp);
   Object.assign(P, { x: c.x, z: c.z, hp: c.hp, maxHp: c.maxHp, lvl: c.lvl, xp: c.xp, owned: c.owned, cur: c.cur, ammo: c.ammo, stamina: 100, fireT: 0, reloadT: 0, dead: false,
-    perks: c.perks, bonus: c.bonus, secondUsed: false, invT: 1 });
+    perks: c.perks, bonus: c.bonus, secondUsed: false, invT: 1, dashT: 0, dashCharges: maxDash(), dashCd: 0 });
+  G.roar = c.roar || 0;
+  clearMotes();
   G.gears = c.gears; G.time = c.time; G.kills = c.kills; G.rerolls = c.rerolls; G.novaKills = c.novaKills; G.pendingCards = 0; G.slowT = 0;
   for (let i = pickups.length - 1; i >= 0; i--) {
     if (i >= G.cpTaken.length) { scene.remove(pickups[i].g); pickups.splice(i, 1); }
@@ -1052,7 +1071,7 @@ function killZombie(zb, dx, dz) {
   if (pk('adrenal')) P.stamina = Math.min(100, P.stamina + 10 * pk('adrenal'));
   if (pk('volatile') && Math.random() < 0.15 * pk('volatile')) G.blasts.push({ x: zb.x, z: zb.z, r: 3.2, dmg: 70, col: 0xff5ad0, t: 0.12 });
   if (hasBonus('nova') && ++G.novaKills % 10 === 0) G.blasts.push({ x: zb.x, z: zb.z, r: 4.5, dmg: 110, col: 0xffb347, t: 0.12, big: true });
-  gainXp(zb.type === 'brute' ? 60 : zb.type === 'runner' ? 18 : 10);
+  dropMotes(zb.x, zb.z, zb.type === 'brute' ? 12 : zb.type === 'runner' ? 6 : 5, zb.type === 'brute' ? 5 : 3, 2);
   const r = Math.random(), dm = stat.drop();
   if (P.owned.length > 1 && r < 0.14 * dm) addPickup('ammo', zb.x, zb.z);
   else if (r > 1 - 0.05 * dm || (zb.type === 'brute' && r > 0.5)) addPickup('med', zb.x, zb.z);
@@ -1077,6 +1096,131 @@ function hurtPlayer(dmg) {
   }
   if (P.hp <= 0) { P.hp = 0; die('YOU DIED', 'The avenue claimed another one.'); }
 }
+// ---------------------------------------------------------------- stardust XP motes (magnet)
+const MN = 400;
+const mGeo = new THREE.BufferGeometry(), mPos = new Float32Array(MN * 3), mCol = new Float32Array(MN * 3);
+for (let i = 0; i < MN; i++) mPos[i * 3 + 1] = -50;
+mGeo.setAttribute('position', new THREE.BufferAttribute(mPos, 3)); mGeo.setAttribute('color', new THREE.BufferAttribute(mCol, 3));
+const moteTex = canvasTex(32, 32, (g) => { const gr = g.createRadialGradient(16, 16, 0, 16, 16, 16); gr.addColorStop(0, '#fff'); gr.addColorStop(0.35, 'rgba(255,255,255,.8)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, 32, 32); });
+const moteMesh = new THREE.Points(mGeo, new THREE.PointsMaterial({ size: 0.42, map: moteTex, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }));
+moteMesh.frustumCulled = false; scene.add(moteMesh);
+const motes = [];
+function dropMotes(x, z, n, val, spread) {
+  for (let i = 0; i < n; i++) {
+    if (motes.length >= MN) { gainMote(motes.shift().val); }
+    const a = rand(0, TAU), sp = rand(1.5, 4) * spread / 2;
+    const gold = Math.random() < 0.35;
+    motes.push({ x, y: 1, z, vx: Math.cos(a) * sp, vy: rand(3, 6), vz: Math.sin(a) * sp, val, life: 28, pull: false, ph: rand(0, TAU), c: gold ? [1, 0.72, 0.3] : [0.35, 0.88, 1] });
+  }
+}
+function gainMote(val) {
+  gainXp(val);
+  if (G.roar < ROAR_NEED) { G.roar = Math.min(ROAR_NEED, G.roar + val * stat.roarGain()); if (G.roar >= ROAR_NEED) { popup('LION ROAR READY · F', '#ffb347'); Sfx.ready(); } }
+}
+function clearMotes() { motes.length = 0; }
+function updateMotes(dt) {
+  const mr = stat.magnet();
+  for (let i = motes.length - 1; i >= 0; i--) {
+    const m = motes[i];
+    m.life -= dt;
+    const dx = P.x - m.x, dz = P.z - m.z, d = Math.hypot(dx, dz);
+    if (!m.pull && d < mr && !P.dead) m.pull = true;
+    if (m.pull) {
+      const sp = 9 + (mr - Math.min(d, mr)) * 4;
+      m.vx = lerp(m.vx, dx / (d || 1) * sp, Math.min(1, dt * 8)); m.vz = lerp(m.vz, dz / (d || 1) * sp, Math.min(1, dt * 8));
+      m.vy = lerp(m.vy, (1.1 - m.y) * 6, Math.min(1, dt * 8));
+      if (d < 0.55) { gainMote(m.val); motes.splice(i, 1); Sfx.mote(); continue; }
+    } else {
+      m.vy -= 14 * dt; m.vx *= Math.pow(0.15, dt); m.vz *= Math.pow(0.15, dt);
+      if (m.y < 0.45) { m.y = 0.45; m.vy = Math.abs(m.vy) * 0.3; }
+    }
+    m.x += m.vx * dt; m.y += m.vy * dt; m.z += m.vz * dt;
+    if (m.life <= 0) motes.splice(i, 1);
+  }
+  for (let i = 0; i < MN; i++) {
+    const m = motes[i];
+    if (!m) { mPos[i * 3 + 1] = -50; continue; }
+    const tw = 0.75 + 0.25 * Math.sin(G.t * 8 + m.ph), fade = Math.min(1, m.life / 3);
+    mPos[i * 3] = m.x; mPos[i * 3 + 1] = m.y + (m.pull ? 0 : Math.sin(G.t * 3 + m.ph) * 0.08); mPos[i * 3 + 2] = m.z;
+    mCol[i * 3] = m.c[0] * tw * fade; mCol[i * 3 + 1] = m.c[1] * tw * fade; mCol[i * 3 + 2] = m.c[2] * tw * fade;
+  }
+  mGeo.attributes.position.needsUpdate = true; mGeo.attributes.color.needsUpdate = true;
+}
+
+// ---------------------------------------------------------------- Star Dash
+const DASH_CD = 3;
+const maxDash = () => (hasBonus('comet') ? 2 : 1);
+const ghosts = [];
+const ghostMat = new THREE.MeshBasicMaterial({ color: 0x5fe8ff, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false });
+const ghostGeo = new THREE.CapsuleGeometry(0.3, 1.1, 4, 8);
+let ghostT = 0;
+function ghostFx() {
+  ghostT -= 1; if (ghostT > 0) return; ghostT = 2;
+  const m = new THREE.Mesh(ghostGeo, ghostMat.clone()); m.position.set(P.x, 0.9, P.z); scene.add(m); ghosts.push({ m, t: 0.3 });
+}
+function starDash() {
+  if (G.state !== 'play' || P.dead || P.dashT > 0 || P.dashCharges <= 0) return;
+  P.dashCharges--; if (P.dashCd <= 0) P.dashCd = DASH_CD;
+  P.dashDir = P.lastMove || [Math.sin(P.aim), Math.cos(P.aim)];
+  P.dashT = 0.16; P.invT = Math.max(P.invT, 0.3);
+  ringFx(P.x, P.z, 1.6, 0x3fd0ff); Sfx.dash(); stardust(P.x, 1, P.z, 14, 2, 2);
+}
+
+// ---------------------------------------------------------------- Lion Roar
+const lionTex = canvasTex(512, 512, (g, w, h) => {
+  g.translate(256, 256);
+  const col = 'rgba(255,190,90,1)';
+  g.strokeStyle = col; g.fillStyle = col; g.lineCap = 'round'; g.lineJoin = 'round';
+  for (let i = 0; i < 28; i++) { // sun rays / mane
+    const a = i / 28 * TAU, r0 = 120, r1 = i % 2 ? 200 : 245;
+    g.beginPath(); g.moveTo(Math.cos(a - 0.07) * r0, Math.sin(a - 0.07) * r0); g.lineTo(Math.cos(a) * r1, Math.sin(a) * r1); g.lineTo(Math.cos(a + 0.07) * r0, Math.sin(a + 0.07) * r0); g.fill();
+  }
+  g.lineWidth = 9; g.beginPath(); g.arc(0, 8, 112, 0, TAU); g.stroke();
+  g.lineWidth = 8;
+  g.beginPath(); g.moveTo(-70, -95); g.lineTo(-88, -128); g.lineTo(-45, -108); g.stroke(); // ears
+  g.beginPath(); g.moveTo(70, -95); g.lineTo(88, -128); g.lineTo(45, -108); g.stroke();
+  g.beginPath(); g.moveTo(-62, -22); g.lineTo(-22, -10); g.moveTo(62, -22); g.lineTo(22, -10); g.stroke(); // brows/eyes
+  g.beginPath(); g.ellipse(-40, -6, 14, 6, 0.25, 0, TAU); g.ellipse(40, -6, 14, 6, -0.25, 0, TAU); g.fill();
+  g.beginPath(); g.moveTo(-18, 10); g.lineTo(0, 50); g.lineTo(18, 10); g.stroke(); // nose bridge
+  g.beginPath(); g.moveTo(-22, 52); g.lineTo(22, 52); g.lineTo(0, 66); g.closePath(); g.fill();
+  g.beginPath(); g.moveTo(0, 66); g.lineTo(0, 78); g.moveTo(-36, 92); g.quadraticCurveTo(0, 74, 36, 92); g.stroke(); // mouth
+  g.lineWidth = 4; for (const sx of [-1, 1]) for (let k = 0; k < 3; k++) { g.beginPath(); g.moveTo(sx * 30, 64 + k * 8); g.lineTo(sx * 74, 56 + k * 14); g.stroke(); }
+});
+const lionMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ map: lionTex, color: 0xffc070, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false }));
+lionMesh.position.y = 0.4; scene.add(lionMesh);
+const lionGlow = addGlow(0xffb347, 1, 0, -20, 0, 0);
+const roarLight = new THREE.PointLight(0xffb347, 0, 30, 1.5); scene.add(roarLight);
+let roarT = 1;
+function lionRoar() {
+  if (G.state !== 'play' || P.dead || G.roar < ROAR_NEED) return;
+  G.roar = 0; G.roarSlow = 0.7; roarT = 0; G.flash = 1; P.invT = Math.max(P.invT, 1);
+  lionMesh.position.x = P.x; lionMesh.position.z = P.z; lionGlow.position.set(P.x, 2, P.z);
+  roarLight.position.set(P.x, 3, P.z); roarLight.intensity = 400;
+  ringFx(P.x, P.z, 10, 0xffb347); setTimeout(() => ringFx(P.x, P.z, 7, 0xffe0a0), 90);
+  stardust(P.x, 1, P.z, 140, 6, 8); G.shake = 0.8; Sfx.roar();
+  for (const zb of [...zombies]) {
+    const dx = zb.x - P.x, dz = zb.z - P.z, d = Math.hypot(dx, dz) || 1;
+    if (d < 10) {
+      const push = (10 - d) * 0.45;
+      zb.x += dx / d * push; zb.z += dz / d * push; resolveCircle(zb, zb.r);
+      zb.state = 'chase';
+      damageZombie(zb, 160 * stat.dmg(), dx / d, dz / d, 0.5);
+    }
+  }
+}
+function updateRoarFx(dt) {
+  if (roarT < 1) {
+    roarT = Math.min(1, roarT + dt / 1.1);
+    const e = 1 - Math.pow(1 - roarT, 3);
+    lionMesh.scale.setScalar(3 + e * 15); lionMesh.material.opacity = roarT < 0.15 ? roarT / 0.15 : (1 - roarT) * 1.1;
+    lionGlow.scale.setScalar(4 + e * 18); lionGlow.material.opacity = (1 - roarT) * 0.35;
+  } else { lionMesh.material.opacity = 0; lionGlow.material.opacity = 0; }
+  roarLight.intensity *= Math.pow(0.02, dt);
+  G.flash = Math.max(0, G.flash - dt * 2.5); $('flash').style.opacity = G.flash * 0.55;
+  for (let i = ghosts.length - 1; i >= 0; i--) { const gh = ghosts[i]; gh.t -= dt; gh.m.material.opacity = Math.max(0, gh.t / 0.3) * 0.5; if (gh.t <= 0) { scene.remove(gh.m); gh.m.material.dispose(); ghosts.splice(i, 1); } }
+  goldMat.emissiveIntensity = 0.8 + Math.min(1, G.roar / ROAR_NEED) * (G.roar >= ROAR_NEED ? 1.6 + Math.sin(G.t * 6) * 0.8 : 0.6);
+}
+
 // ---------------------------------------------------------------- card effects: blasts, shockwave, burn, drones
 const rings = [];
 for (let i = 0; i < 8; i++) {
@@ -1279,7 +1423,14 @@ function updatePlayer(dt) {
   const sprint = (keys.ShiftLeft || keys.ShiftRight || (touch.move && Math.hypot(touch.move.x - touch.move.sx, touch.move.y - touch.move.sy) > 70)) && P.stamina > 1 && len > 0.2;
   const spd = (sprint ? 7.2 : 4.6) * stat.speed();
   P.stamina = sprint ? Math.max(0, P.stamina - dt * 30 * Math.pow(0.7, pk('adrenal'))) : Math.min(100, P.stamina + dt * 16);
-  P.x += mx * spd * dt; P.z += mz * spd * dt; resolveCircle(P, 0.4);
+  P.lastMove = len > 0.2 ? [mx / len, mz / len] : null;
+  if (P.dashT > 0) {
+    const step = Math.min(P.dashT, dt); P.dashT -= dt;
+    P.x += P.dashDir[0] * 34 * step; P.z += P.dashDir[1] * 34 * step; resolveCircle(P, 0.4);
+    stardust(P.x, rand(0.5, 1.6), P.z, 4, 0.8, 0.6);
+    ghostFx();
+  } else { P.x += mx * spd * dt; P.z += mz * spd * dt; resolveCircle(P, 0.4); }
+  if (P.dashCharges < maxDash()) { P.dashCd -= dt; if (P.dashCd <= 0) { P.dashCharges++; P.dashCd = P.dashCharges < maxDash() ? DASH_CD : 0; } }
   // aim
   let firing = false;
   if (touch.on) {
@@ -1477,6 +1628,12 @@ function moonFollow() {
 let hudCache = {};
 function setText(id, v) { if (hudCache[id] !== v) { hudCache[id] = v; $(id).textContent = v; } }
 function updateHUD() {
+  const dashFrac = P.dashCharges >= maxDash() ? 1 : P.dashCharges > 0 ? 1 : 1 - P.dashCd / DASH_CD;
+  $('dashFill').style.height = (dashFrac * 100) + '%';
+  $('abDash').classList.toggle('ready', P.dashCharges > 0);
+  setText('dashPips', maxDash() > 1 ? '●'.repeat(P.dashCharges) + '○'.repeat(maxDash() - P.dashCharges) : '');
+  $('roarFill').style.height = Math.min(100, G.roar / ROAR_NEED * 100) + '%';
+  $('abRoar').classList.toggle('ready', G.roar >= ROAR_NEED);
   $('hpFill').style.width = (P.hp / P.maxHp * 100) + '%';
   $('stFill').style.width = P.stamina + '%';
   $('xpFill').style.width = (P.xp / xpNeed() * 100) + '%';
@@ -1537,6 +1694,7 @@ function frame() {
 }
 function tick(dt) {
   G.t += dt;
+  if (G.state === 'play' && G.roarSlow > 0) { G.roarSlow -= dt; dt *= 0.3; }
   if (G.state === 'play') {
     if (G.slowT > 0) { G.slowT -= dt; dt *= 0.25; if (G.slowT <= 0 && G.pendingCards > 0) openCards(); }
     else if (G.pendingCards > 0) openCards();
@@ -1545,7 +1703,7 @@ function tick(dt) {
     G.time -= dt;
     if (G.time <= 0) { G.time = 0; die('TIME UP', 'The power never came back.'); }
     P.invT = Math.max(0, P.invT - dt); G.shockCd = Math.max(0, G.shockCd - dt);
-    updatePlayer(dt); updateZombies(dt); updateSpawner(dt); updatePickups(dt); updateDrones(dt); updateBlasts(dt);
+    updatePlayer(dt); updateZombies(dt); updateSpawner(dt); updatePickups(dt); updateDrones(dt); updateBlasts(dt); updateMotes(dt);
   } else if (G.state === 'dying') {
     G.deadT += dt; const t = Math.min(1, G.deadT / 0.6);
     pm.body.rotation.x = -Math.PI / 2 * t * t; pm.body.position.y = 0.14 * t;
@@ -1554,7 +1712,7 @@ function tick(dt) {
   } else if (G.state === 'title') {
     P.aim += dt * 0.3; pm.root.rotation.y = P.aim;
   }
-  if (G.state !== 'pause' && G.state !== 'cards') { updateFx(dt); updateCosmic(dt, camLook); updateRings(dt); }
+  if (G.state !== 'pause' && G.state !== 'cards') { updateFx(dt); updateCosmic(dt, camLook); updateRings(dt); updateRoarFx(dt); }
   updateCamera(dt);
   updateLights(camLook, G.t);
   if (G.state !== 'title') updateHUD();
@@ -1562,4 +1720,4 @@ function tick(dt) {
 }
 frame();
 // debug/test hook: step the simulation without requestAnimationFrame
-window.__game = { G, P, zombies, pickups, corpses, spawnZombie, keys, mouse, gainXp, chooseCard, rerollCards, CARD, step(n = 60, dt = 1 / 60) { for (let i = 0; i < n; i++) tick(dt); } };
+window.__game = { G, P, zombies, pickups, corpses, spawnZombie, keys, mouse, gainXp, chooseCard, rerollCards, CARD, motes, starDash, lionRoar, ROAR_NEED, step(n = 60, dt = 1 / 60) { for (let i = 0; i < n; i++) tick(dt); } };
