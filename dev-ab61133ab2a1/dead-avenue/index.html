@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Dead Avenue (dev)</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=3badc675">
+<link rel="stylesheet" href="style.css?v=cde4ee02">
 <script type="importmap">{"imports":{"three":"./lib/three.module.min.js"}}</script>
 </head>
 <body>
@@ -19,6 +19,7 @@
     <div class="bar hp"><i id="hpFill"></i></div>
     <div class="bar st"><i id="stFill"></i></div>
     <div class="row"><div class="bar xp"><i id="xpFill"></i></div><span id="lvl">LV.1</span></div>
+    <div id="hudLines" class="lines mini"></div>
   </div>
   <div id="tc">
     <div id="timer">15:00</div>
@@ -78,8 +79,17 @@
   <button data-act="restart">Play Again</button>
 </div>
 
+<div id="cards" class="screen hidden">
+  <p class="sub" id="cardsTitle">LEVEL 2 · CHOOSE A STAR CARD</p>
+  <div id="hand"></div>
+  <div id="lines" class="lines"></div>
+  <button id="rerollBtn">Reroll (1)</button>
+  <p class="hint">Three cards from one constellation unlock its bonus · keys 1 2 3 · R reroll</p>
+</div>
+<div id="constel" class="hidden"></div>
+
 <div id="sticks" class="hidden"><div id="stickL" class="stick"><i></i></div><div id="stickR" class="stick"><i></i></div></div>
 
-<script type="module" src="game.js?v=3badc675"></script>
+<script type="module" src="game.js?v=cde4ee02"></script>
 </body>
 </html>
