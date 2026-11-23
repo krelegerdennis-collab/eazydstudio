@@ -48,7 +48,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#05040d;color:var(--
 #title{background:linear-gradient(180deg,rgba(4,2,14,.15) 0%,rgba(4,2,14,.25) 45%,rgba(4,2,14,.85) 100%)}
 .ed{width:84px;height:84px;filter:drop-shadow(0 0 14px rgba(63,208,255,.6))}
 .runes{font-family:'Segoe UI Historic','Noto Sans Runic',var(--font);letter-spacing:6px;color:var(--gold);opacity:.75;font-size:14px;text-shadow:0 0 8px var(--gold)}
-h1{font-size:clamp(54px,12vw,120px);line-height:.85;letter-spacing:6px;color:#fff;text-shadow:0 0 24px rgba(63,208,255,.8),0 0 60px rgba(255,90,208,.45),0 4px 0 #1a0a40}
+h1{font-size:clamp(44px,11vw,112px);line-height:.85;letter-spacing:6px;color:#fff;text-shadow:0 0 24px rgba(63,208,255,.8),0 0 60px rgba(255,90,208,.45),0 4px 0 #1a0a40}
 h2{font-size:clamp(36px,7vw,64px);letter-spacing:5px;text-shadow:0 0 20px rgba(63,208,255,.6)}
 .red{color:var(--red)}.green{color:var(--green)}
 .sub{letter-spacing:4px;font-size:15px;opacity:.9}.sub b{color:var(--gold);text-shadow:0 0 10px var(--gold)}

@@ -1,11 +1,11 @@
-// Dead Avenue — top-down zombie shooter prototype (EazyD Studio). Three.js r170.
+// Stardust Avenue (project folder: dead-avenue) — top-down zombie shooter (EazyD Studio). Three.js r170.
 import * as THREE from 'three';
 import { EffectComposer } from './lib/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from './lib/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from './lib/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from './lib/addons/postprocessing/OutputPass.js';
 import { CARD, LINES, drawCards, lineCount } from './cards.js?v=3';
-import { CHARS, ARMORY, MAPS, MAX_UP, upCost, upDmg, upMag, loadSave, storeSave, JACKETS, TRAILS, SUPPORTER_URL, checkCode } from './meta.js?v=4';
+import { CHARS, ARMORY, MAPS, MAX_UP, upCost, upDmg, upMag, loadSave, storeSave, JACKETS, TRAILS, SUPPORTER_URL, checkCode } from './meta.js?v=5';
 
 // ---------------------------------------------------------------- run config (character, map, loadout)
 const LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname), QS = new URLSearchParams(location.search), DEV = LOCAL && QS.has('dev');
@@ -2369,7 +2369,7 @@ function runShot(name) {
     for (let i = 0; i < 90; i++) tick(1 / 30);
     if (name === 'cover') {
       const el = document.createElement('div'); el.id = 'shotText';
-      el.innerHTML = '<small>DEAD AVENUE</small><b>SUPPORTER PACK</b><span>2 JACKETS · 2 TRAILS · +10% STARDUST · +1 REROLL</span>';
+      el.innerHTML = '<small>STARDUST AVENUE</small><b>SUPPORTER PACK</b><span>2 JACKETS · 2 TRAILS · +10% STARDUST · +1 REROLL</span>';
       document.body.appendChild(el);
     }
   } else if (name === 'hub') {

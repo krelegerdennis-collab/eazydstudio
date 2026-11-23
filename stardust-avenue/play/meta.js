@@ -89,7 +89,7 @@ export const TRAILS = {
   nebula: { name: 'NEBULA TRAIL', text: 'Violet and pink stardust.', supporter: true, col: [0.85, 0.45, 1] },
 };
 // where the Supporter Pack is sold; empty = no "get it" link shown in the hub
-export const SUPPORTER_URL = 'https://eazyd667.gumroad.com/l/dead-avenue-supporter';
+export const SUPPORTER_URL = 'https://eazyd667.gumroad.com/l/stardust-avenue-supporter';
 // SHA-256 of valid codes (uppercase, dashes and spaces removed). The codes themselves are not in the source.
 const CODE_HASHES = ['783ff210cfce3181fc6a217a812c256fb6b6ec53e15dd638fffb5d2fd529827c'];
 export async function checkCode(code) {
