@@ -1,0 +1,11 @@
+Sapientia-RPG web export (local Godot 4.3-stable release export)
+Repository: https://github.com/krelegerdennis-collab/Sapientia-RPG
+Branch: coop/easy
+Commit: f6b51fc7c584c5f4619cd150a1a044f35dcc6847
+Godot: 4.3.stable.official (preset Web Co-op, custom_features=coop_only, thread_support=false)
+Built: agent cloud export (import + --export-release "Web Co-op")
+Content hash prefix: f6b51fc7 (commit prefix; folder play-coop/sapientia-coop-f6b51fc7/)
+index.pck: 74795648 bytes
+index.wasm: 35376909 bytes
+index.js: 331495 bytes
+index.html: 7181 bytes
