@@ -572,6 +572,14 @@ body.gravity-floating .gravity-star { pointer-events: auto; }
 .play-card__meta { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: .4rem; flex: 1; min-height: 4.75rem; padding: .55rem .35rem .75rem; text-align: center; }
 .play-card__name { font-family: var(--font-head); font-size: clamp(.68rem, 2.35vw, .9rem); font-weight: 600; line-height: 1.28; max-width: 100%; overflow-wrap: anywhere; }
 .play-card .pill { margin: 0; margin-top: auto; padding: .18rem .6rem; font-size: .7rem; }
+.play-card__badge, .coop-badge { position: absolute; top: .45rem; left: .45rem; z-index: 1; padding: .18rem .5rem; font-family: var(--font-head); font-size: .68rem; font-weight: 800; letter-spacing: .1em; line-height: 1.2; color: #1a0d00; background: var(--orange); border-radius: 4px; pointer-events: none; }
+.hh__art .coop-badge { top: .75rem; left: .75rem; font-size: .8rem; padding: .28rem .65rem; }
+.play-card--split { cursor: default; }
+.play-card--split .play-card__cover { color: inherit; text-decoration: none; }
+.play-card--split .play-card__cover:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.play-card--split .play-card__name { color: inherit; text-decoration: none; }
+.play-card--split .play-card__name:hover, .play-card--split .play-card__name:focus-visible { color: var(--orange-hi); }
+.play-card--split:hover .play-card__play, .play-card--split:focus-within .play-card__play { background: rgba(255, 140, 26, .22); transform: scale(1.04); }
 .portal-main .play-card::before { opacity: .38; animation: none; background-position: 0 0; }
 .portal-main .play-card::after { display: none; }
 .portal-main #play.section > .sweep { display: none !important; }
