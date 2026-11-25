@@ -3,36 +3,36 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SAPIENTIA Co-op | early browser build | EazyD Studio</title>
-    <meta name="description" content="SAPIENTIA Co-op is an early playable web build from coop/easy: a 16-bit style action co-op RPG. Host or join in your browser on EazyD Studio (Godot 4)." />
+    <title>SAPIENTIA Multiplayer | early browser build | EazyD Studio</title>
+    <meta name="description" content="SAPIENTIA Multiplayer is an early playable web build from coop/easy: a 16-bit style action multiplayer RPG. Host or join in your browser on EazyD Studio (Godot 4)." />
     <link rel="canonical" href="https://eazydstudio.com/sapientia-coop/" />
     <meta name="theme-color" content="#0a1e4a" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="EazyD Studio" />
-    <meta property="og:title" content="SAPIENTIA Co-op | early browser build" />
-    <meta property="og:description" content="Early online co-op web build from Sapientia-RPG coop/easy. Host or join in your browser. The solo game stays at /play/." />
+    <meta property="og:title" content="SAPIENTIA Multiplayer | early browser build" />
+    <meta property="og:description" content="Early online multiplayer web build from Sapientia-RPG coop/easy. Host or join in your browser. The solo game stays at /play/." />
     <meta property="og:url" content="https://eazydstudio.com/sapientia-coop/" />
-    <meta property="og:image" content="https://eazydstudio.com/sapientia/img/og.jpg" />
+    <meta property="og:image" content="https://eazydstudio.com/sapientia-coop/img/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Sapientia key art (temporary co-op listing image): Dax, Vesper and Seren battle moss creatures" />
+    <meta property="og:image:alt" content="SAPIENTIA Multiplayer: Dax and Vesper face a stone golem in a ruined pixel-art library" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@EazyDstudio" />
-    <meta name="twitter:title" content="SAPIENTIA Co-op | early browser build" />
-    <meta name="twitter:description" content="Early online co-op web build from Sapientia-RPG coop/easy. Host or join in your browser." />
-    <meta name="twitter:image" content="https://eazydstudio.com/sapientia/img/og.jpg" />
+    <meta name="twitter:title" content="SAPIENTIA Multiplayer | early browser build" />
+    <meta name="twitter:description" content="Early online multiplayer web build from Sapientia-RPG coop/easy. Host or join in your browser." />
+    <meta name="twitter:image" content="https://eazydstudio.com/sapientia-coop/img/og.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
-    <link rel="preload" as="image" href="../img/sapientia-poster.webp" type="image/webp" />
-    <link rel="stylesheet" href="../styles.css?v=sa20261125coop" />
+    <link rel="preload" as="image" href="../img/sapientia-coop-poster.webp" type="image/webp" />
+    <link rel="stylesheet" href="../styles.css?v=sa20261125mp" />
     <link rel="icon" href="../favicon-v2.ico" sizes="any" />
     <link rel="icon" type="image/png" href="../favicon-v2.png" sizes="64x64" />
     <link rel="manifest" href="../site.webmanifest" />
     <link rel="apple-touch-icon" href="../apple-touch-icon-v2.png" />
     <script type="application/ld+json">
-    {"@context":"https://schema.org","@type":"VideoGame","name":"SAPIENTIA: The Forgotten Archives (Co-op)","url":"https://eazydstudio.com/sapientia-coop/","description":"Early browser co-op build from coop/easy: 16-bit style action co-op RPG in active development, built in Godot 4.","genre":["Action RPG","Co-op"],"image":"https://eazydstudio.com/sapientia/img/og.jpg","author":{"@type":"Organization","name":"EazyD Studio","url":"https://eazydstudio.com/"}}
+    {"@context":"https://schema.org","@type":"VideoGame","name":"SAPIENTIA Multiplayer","url":"https://eazydstudio.com/sapientia-coop/","description":"Early browser multiplayer build from coop/easy: 16-bit style action multiplayer RPG in active development, built in Godot 4.","genre":["Action RPG","Multiplayer"],"image":"https://eazydstudio.com/sapientia-coop/img/og.jpg","author":{"@type":"Organization","name":"EazyD Studio","url":"https://eazydstudio.com/"}}
     </script>
     <style>
       .hh { max-width: 68rem; margin: 0 auto; padding: var(--s4) var(--s3) var(--s5); }
@@ -74,7 +74,7 @@
       <nav class="nav" id="primary-nav" aria-label="Primary">
         <a href="../">Home</a>
         <a href="../sapientia/">Sapientia</a>
-        <a href="../sapientia-coop/" aria-current="page">Sapientia Co-op</a>
+        <a href="../sapientia-coop/" aria-current="page">Sapientia Multiplayer</a>
         <a href="../hoshimi-haven/">Hoshimi Haven</a>
         <a href="../scrap-rider/">Scrap Rider</a>
         <a href="../orbit-dash/">Orbit Dash</a>
@@ -91,21 +91,20 @@
     <main id="main" class="hh">
       <section class="hh__hero" aria-labelledby="sap-coop-title">
         <figure class="hh__art hh__art--sap">
-          <img src="../img/sapientia-poster.webp" alt="Sapientia battle scene (temporary co-op listing image): Dax, Vesper and Seren fight moss creatures in a pixel-art library" width="540" height="676" fetchpriority="high" decoding="async" />
-          <span class="coop-badge" aria-hidden="true">CO-OP</span>
+          <img src="../img/sapientia-coop-poster.webp" alt="SAPIENTIA Multiplayer poster: Dax and Vesper face a stone golem, with portraits of Dax and Vesper below" width="540" height="676" fetchpriority="high" decoding="async" />
         </figure>
         <p class="hh__kicker">Early version · coop/easy · EazyD Studio</p>
-        <h1 id="sap-coop-title">SAPIENTIA Co-op</h1>
-        <p class="hh__lead">This is an early <strong>online co-op</strong> web build from <strong>coop/easy</strong>: playable in your browser, with host and join over a public relay. The solo game stays on <a href="../play/">/play/</a>. Netcode, dungeons, and balance are still changing.</p>
+        <h1 id="sap-coop-title">SAPIENTIA Multiplayer</h1>
+        <p class="hh__lead">This is an early <strong>online multiplayer</strong> web build from <strong>coop/easy</strong>: playable in your browser, with host and join over a public relay. The solo game stays on <a href="../play/">/play/</a>. Netcode, dungeons, and balance are still changing.</p>
         <div class="hero__actions">
-          <a class="btn btn--primary" href="../play-coop/" data-goatcounter-click="play-sapientia-coop" data-goatcounter-title="from sapientia-coop">▶ Play co-op in browser</a>
+          <a class="btn btn--primary" href="../play-coop/" data-goatcounter-click="play-sapientia-coop" data-goatcounter-title="from sapientia-coop">▶ Play multiplayer in browser</a>
           <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join the Discord</a>
         </div>
       </section>
 
       <ul class="hh__features" aria-label="Highlights">
-        <li><h2>Online co-op</h2><p>Host a game or join a friend in the browser. The early build talks to the public Sapientia co-op relay.</p></li>
-        <li><h2>Action co-op combat</h2><p>An action co-op RPG: team up and fight side by side through pixel-art dungeons.</p></li>
+        <li><h2>Online multiplayer</h2><p>Host a game or join a friend in the browser. The early build talks to the public Sapientia multiplayer relay.</p></li>
+        <li><h2>Action multiplayer combat</h2><p>An action multiplayer RPG: team up and fight side by side through pixel-art dungeons.</p></li>
         <li><h2>16-bit style pixel art</h2><p>Hand-made 16-bit style pixel art for every hero, monster and dungeon.</p></li>
         <li><h2>Browser early version</h2><p>Play the current <strong>coop/easy</strong> export in your browser. Expect rough edges, missing polish, and frequent updates.</p></li>
       </ul>
@@ -131,9 +130,9 @@
       </section>
 
       <section class="hh__cta" aria-labelledby="demo-title" style="margin-bottom:var(--s4)">
-        <h2 id="demo-title" class="section__title">Play the co-op early version</h2>
+        <h2 id="demo-title" class="section__title">Play the multiplayer early version</h2>
         <p>The browser build tracks Sapientia-RPG <strong>coop/easy</strong>. The solo finish/wm1 build stays at <a href="../play/">/play/</a>. Saves and content may change between updates.</p>
-        <a class="btn btn--primary" href="../play-coop/" data-goatcounter-click="play-sapientia-coop" data-goatcounter-title="from sapientia-coop">▶ Play co-op in browser</a>
+        <a class="btn btn--primary" href="../play-coop/" data-goatcounter-click="play-sapientia-coop" data-goatcounter-title="from sapientia-coop">▶ Play multiplayer in browser</a>
       </section>
 
       <section class="hh__cta" aria-labelledby="dc-title">
