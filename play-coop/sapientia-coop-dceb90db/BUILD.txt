@@ -1,0 +1,11 @@
+Sapientia-RPG web export (local Godot 4.3-stable release export)
+Repository: https://github.com/krelegerdennis-collab/Sapientia-RPG
+Branch: coop/easy
+Commit: ab6c81d1ca6831921f6beb875132713b7ea6dfcc
+Godot: 4.3.stable.official (preset Web, thread_support=false)
+Built: agent cloud export (same steps as CI build-web import + --export-release Web)
+Content hash prefix: dceb90db (sha256 of index.pck+index.wasm+index.js+index.html)
+index.pck: 74783168 bytes
+index.wasm: 35376909 bytes
+index.js: 331495 bytes
+index.html: 7181 bytes

@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://eazydstudio.com/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://eazydstudio.com/privacy/</loc>
@@ -15,6 +15,10 @@
   <url>
     <loc>https://eazydstudio.com/sapientia/</loc>
     <lastmod>2026-11-02</lastmod>
+  </url>
+  <url>
+    <loc>https://eazydstudio.com/sapientia-coop/</loc>
+    <lastmod>2026-11-25</lastmod>
   </url>
   <url>
     <loc>https://eazydstudio.com/orbit-dash/</loc>
