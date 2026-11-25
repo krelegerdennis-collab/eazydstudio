@@ -121,8 +121,8 @@
 
   /* ---------- Card flips ---------- */
   var BLURB = {
-    "Halloween Shoulder Ghost (FREE)": "Free VRChat PhysBone pet for PC and Quest, with setup README included.",
-    "Puffy Fish Plush": "Free BOOTH plush accessory sized for Kipfel-style avatars; Quest-compatible.",
+    "Gothic Bundle - Vesper & Corvus, Chill Hoodies, Moon + Raven Jewelry + Gothic Weapon Pack for VRChat (PC)": "PC VRChat bundle: Vesper and Corvus avatars, hoodie variants, jewelry, and modular weapons.",
+    "【4色】スノードームベーカリー ふわふわおとも【キプフェル想定・Quest対応】": "Snow globe bakery companion in four colours for Kipfel-style VRChat avatars.",
     "Fantasy RPG Icons - 240 Items, 24 Drops, 48 Status, 28 Animated, 48 Magic & Spell, 55 Crafting (16x16 & 32x32, Godot 4)": "Loot, status, spell, and crafting icons bundled for Godot 4 projects.",
     "Slice & Swatch": "Palette and swatch helper for pixel art colour work.",
     "Halloween Combat VFX Free": "Six animated combat strips for Halloween-flavoured Godot games."
