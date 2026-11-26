@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://eazydstudio.com/</loc>
-    <lastmod>2026-11-25</lastmod>
+    <lastmod>2026-11-26</lastmod>
   </url>
   <url>
     <loc>https://eazydstudio.com/privacy/</loc>
@@ -43,5 +43,9 @@
   <url>
     <loc>https://eazydstudio.com/stardust-avenue/</loc>
     <lastmod>2026-11-23</lastmod>
+  </url>
+  <url>
+    <loc>https://eazydstudio.com/star-zero/</loc>
+    <lastmod>2026-11-26</lastmod>
   </url>
 </urlset>

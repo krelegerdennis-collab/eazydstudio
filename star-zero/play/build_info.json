@@ -1,0 +1,65 @@
+{
+  "naam": "Star Zero",
+  "commit": "0394e964acd140c801033f816e8318798acb45cd",
+  "commit_datum": "2026-11-26T04:21:33+01:00",
+  "gebouwd_op": "2026-11-26T03:22:16Z",
+  "werkboom_schoon": true,
+  "preset": "Web publiek",
+  "engine": "versie 4.3-stable (official) onderdelen 83 licenties 15",
+  "opties": {
+    "noindex": false,
+    "gz": false
+  },
+  "notitievelden_weggehaald": 23,
+  "bestanden_in_pck": 195,
+  "afspeelcontrole": [
+    "PUBLIEK_HASH start eiland kamers 3 wapens 5",
+    "PUBLIEK_HASH eiland tick 1200 hash 3804046602 opslag 4225919471",
+    "PUBLIEK_HASH simulatie tick 1200 hash 2785131771 opslag 2309114729",
+    "PUBLIEK_HASH proefkamer tick 1200 hash 3254546132 opslag 1154000949",
+    "PUBLIEK_HASH klaar"
+  ],
+  "totaal_bytes": 47481991,
+  "bestanden": [
+    {
+      "naam": "index.apple-touch-icon.png",
+      "bytes": 7131,
+      "sha256": "b3689f290fe82062cdd2621b563a31d421c27f67fe114b0b20888f6406977b94"
+    },
+    {
+      "naam": "index.audio.worklet.js",
+      "bytes": 7298,
+      "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+    },
+    {
+      "naam": "index.html",
+      "bytes": 4074,
+      "sha256": "1d36bf332d22d47444a29a0106e43a9dd569dd071783566e372f0485e8503505"
+    },
+    {
+      "naam": "index.icon.png",
+      "bytes": 6102,
+      "sha256": "874e1b61e0e716f51a02d088973d2fc4ecdb1848d956c584bd71317d120275a2"
+    },
+    {
+      "naam": "index.js",
+      "bytes": 331495,
+      "sha256": "8b649683883a8be172e229a0479503d50cd5245ebf87aa71fda70bf720824075"
+    },
+    {
+      "naam": "index.pck",
+      "bytes": 11659312,
+      "sha256": "d318777e193844b9c7cf6a38e8f36cf5af658c1aa6d6b2b27dbe4e805b0d1fa4"
+    },
+    {
+      "naam": "index.wasm",
+      "bytes": 35376909,
+      "sha256": "fe5cebc590758c10bc4469be5a591e28edbde5ec8f458f21baeb83db50d028b9"
+    },
+    {
+      "naam": "licenses.txt",
+      "bytes": 89670,
+      "sha256": "b34017ccd59dea691c353f0883c3f7ad2e491b0a900f7778373f380908de1dfa"
+    }
+  ]
+}
