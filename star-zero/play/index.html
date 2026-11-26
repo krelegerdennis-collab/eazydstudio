@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+
+<title>Star Zero</title>
+<style>
+html, body, #canvas { margin: 0; padding: 0; border: 0; }
+body { color: #f2f2f2; background-color: #0a0a0f; overflow: hidden; touch-action: none; font-family: sans-serif; }
+#canvas { display: block; }
+#canvas:focus { outline: none; }
+#laden { position: absolute; left: 0; top: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #0a0a0f; }
+#laden-naam { font-size: 12vmin; font-weight: bold; letter-spacing: 0.08em; white-space: nowrap; }
+#laden-balk { width: 60vmin; height: 1.6vmin; margin-top: 5vmin; border: 2px solid #19ecf6; box-sizing: border-box; }
+#laden-vulling { width: 0; height: 100%; background-color: #19ecf6; }
+#laden-melding { min-height: 3em; margin-top: 4vmin; padding: 0 1em; font-size: 16px; text-align: center; color: #b8b8c4; white-space: pre-line; }
+#laden-licenties { position: absolute; bottom: 14px; font-size: 13px; color: #8d8d97; }
+#laden-licenties a { color: #8d8d97; }
+</style>
+<link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+<link rel="apple-touch-icon" href="index.apple-touch-icon.png"/>
+
+</head>
+<body>
+<canvas id="canvas">Your browser does not support the canvas tag.</canvas>
+<noscript>Your browser does not support JavaScript.</noscript>
+<div id="laden">
+<div id="laden-naam">STAR ZERO</div>
+<div id="laden-balk"><div id="laden-vulling"></div></div>
+<div id="laden-melding">Loading...</div>
+<div id="laden-licenties">Made with Godot Engine. <a href="licenses.txt" target="_blank" rel="noopener">Licenses</a></div>
+</div>
+<script>
+// Files that sit gzip-compressed next to this page are unpacked here.
+// Empty: everything is fetched as is. All addresses are relative, so the folder can live anywhere.
+const STAR_ZERO_GZ = {};
+(function () {
+	const names = Object.keys(STAR_ZERO_GZ);
+	if (names.length === 0) {
+		return;
+	}
+	const realFetch = window.fetch.bind(window);
+	window.fetch = function (input, init) {
+		const url = typeof input === 'string' ? input : input.url;
+		for (const name of names) {
+			const at = url.lastIndexOf(name);
+			if (at !== -1 && (at + name.length === url.length || url[at + name.length] === '?')) {
+				return realFetch(url.slice(0, at) + STAR_ZERO_GZ[name], init).then(function (res) {
+					if (!res.ok) {
+						return res;
+					}
+					const body = res.body.pipeThrough(new DecompressionStream('gzip'));
+					return new Response(body, { status: 200, headers: { 'Content-Type': name.endsWith('.wasm') ? 'application/wasm' : 'application/octet-stream' } });
+				});
+			}
+		}
+		return realFetch(input, init);
+	};
+}());
+</script>
+<script src="index.js"></script>
+<script>
+const GODOT_CONFIG = {"args":[],"canvasResizePolicy":2,"ensureCrossOriginIsolationHeaders":true,"executable":"index","experimentalVK":false,"fileSizes":{"index.pck":11659312,"index.wasm":35376909},"focusCanvas":true,"gdextensionLibs":[]};
+const GODOT_THREADS_ENABLED = false;
+const engine = new Engine(GODOT_CONFIG);
+
+(function () {
+	const laden = document.getElementById('laden');
+	const balk = document.getElementById('laden-balk');
+	const vulling = document.getElementById('laden-vulling');
+	const melding = document.getElementById('laden-melding');
+
+	function fout(err) {
+		const tekst = err && err.message ? err.message : String(err);
+		console.error(tekst);
+		balk.style.display = 'none';
+		melding.textContent = 'Star Zero could not start.\n' + tekst;
+	}
+
+	const missing = Engine.getMissingFeatures({ threads: GODOT_THREADS_ENABLED });
+	if (missing.length !== 0) {
+		fout(new Error('Your browser is missing: ' + missing.join(', ')));
+		return;
+	}
+	engine.startGame({
+		'onProgress': function (current, total) {
+			if (current > 0 && total > 0) {
+				vulling.style.width = Math.min(100, Math.round(100 * current / total)) + '%';
+			}
+		},
+	}).then(function () {
+		laden.style.display = 'none';
+	}, fout);
+}());
+</script>
+</body>
+</html>
+

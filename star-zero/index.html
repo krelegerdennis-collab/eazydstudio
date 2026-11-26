@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Zoekmachines: de pagina is openbaar. Verbergen = de regel hieronder uit het commentaar halen. -->
+    <!-- <meta name="robots" content="noindex" /> -->
+    <title>Star Zero — 3D action game in your browser | EazyD Studio</title>
+    <meta name="description" content="Star Zero is a 3D action game by EazyD Studio. Chain your strikes, dodge, charge heavy blows and level up. Early version, playable in your browser." />
+    <link rel="canonical" href="https://eazydstudio.com/star-zero/" />
+    <meta name="theme-color" content="#05050f" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="EazyD Studio" />
+    <meta property="og:title" content="Star Zero — 3D action game in your browser" />
+    <meta property="og:description" content="Chain your strikes, dodge, charge heavy blows and level up. Early version, playable in your browser." />
+    <meta property="og:url" content="https://eazydstudio.com/star-zero/" />
+    <meta property="og:image" content="https://eazydstudio.com/star-zero/img/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Screenshot of Star Zero: the hero seen from behind in a courtyard at night, with rings of light on the ground and damage numbers above" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@EazyDstudio" />
+    <meta name="twitter:title" content="Star Zero — 3D action game in your browser" />
+    <meta name="twitter:description" content="Chain your strikes, dodge, charge heavy blows and level up. Early version, playable in your browser." />
+    <meta name="twitter:image" content="https://eazydstudio.com/star-zero/img/og.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Inter:wght@400;600&display=swap" /></noscript>
+    <link rel="stylesheet" href="../styles.css?v=sa20261125" />
+    <link rel="icon" href="../favicon-v2.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="../favicon-v2.png" sizes="64x64" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="apple-touch-icon" href="../apple-touch-icon-v2.png" />
+    <script type="application/ld+json">
+    {"@context":"https://schema.org","@type":"VideoGame","name":"Star Zero","url":"https://eazydstudio.com/star-zero/","description":"A 3D action game for the browser: chain your strikes, dodge, charge heavy blows and level up. Early version.","genre":["Action","Action RPG"],"gamePlatform":"Web browser","inLanguage":["en"],"image":"https://eazydstudio.com/star-zero/img/og.jpg","author":{"@type":"Organization","name":"EazyD Studio","url":"https://eazydstudio.com/"}}
+    </script>
+    <style>
+      .sz { max-width: 68rem; margin: 0 auto; padding: var(--s4) var(--s3) var(--s5); }
+      .sz__hero { text-align: center; }
+      .sz__art { margin: 0 0 var(--s4); border-radius: 18px; overflow: hidden; border: 1px solid rgba(62,230,255,.35); box-shadow: 0 0 40px rgba(62,230,255,.18), 0 18px 50px rgba(0,0,0,.45); }
+      .sz__art img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+      .sz__kicker { margin: 0 0 var(--s1); color: var(--orange-hi); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .85rem; }
+      .sz h1 { font-family: var(--font-head); font-weight: 800; font-size: clamp(2rem, 7vw, 3.4rem); line-height: 1.1; margin: 0 0 var(--s2); color: var(--orange); }
+      .sz__lead { max-width: 40rem; margin: 0 auto var(--s3); font-size: 1.15rem; }
+      .sz .hero__actions { justify-content: center; }
+      .sz__note { margin: var(--s2) 0 0; color: var(--text-muted); font-size: .9rem; }
+      .sz__early { max-width: 44rem; margin: var(--s5) auto 0; padding: var(--s3); border-radius: 16px; border: 1px solid rgba(255,140,26,.55); background: rgba(10,30,74,.8); }
+      .sz__early h2 { font-family: var(--font-head); color: var(--orange); font-size: 1.15rem; margin: 0 0 var(--s1); }
+      .sz__early ul { margin: 0; padding-left: 1.2rem; }
+      .sz__early li { margin: .35rem 0; }
+      .sz__features { list-style: none; padding: 0; margin: var(--s5) 0; display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+      .sz__features li { padding: var(--s3); border-radius: 16px; background: rgba(10,30,74,.75); border: 1px solid rgba(62,230,255,.25); }
+      .sz__features h2 { font-family: var(--font-head); color: var(--orange); font-size: 1.05rem; margin: 0 0 var(--s1); }
+      .sz__features p { margin: 0; }
+      .sz h2.section__title { text-align: center; }
+      .sz h2.section__title::after { margin-left: auto; margin-right: auto; }
+      .sz .section__lead { text-align: center; margin-left: auto; margin-right: auto; }
+      .sz__shots { list-style: none; padding: 0; margin: var(--s3) 0 var(--s5); display: grid; gap: var(--s3); grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr)); }
+      .sz__shots li { border-radius: 16px; overflow: hidden; background: rgba(10,30,74,.75); border: 1px solid rgba(62,230,255,.25); }
+      .sz__shots img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+      .sz__shots div { padding: var(--s2) var(--s3) var(--s3); }
+      .sz__shots h3 { font-family: var(--font-head); color: var(--orange); font-size: 1.05rem; margin: 0 0 .35rem; }
+      .sz__shots p { margin: 0; }
+      .sz__tablewrap { max-width: 46rem; margin: var(--s3) auto var(--s5); overflow-x: auto; }
+      .sz__table { width: 100%; border-collapse: collapse; border-radius: 16px; overflow: hidden; background: rgba(10,30,74,.75); }
+      .sz__table th, .sz__table td { padding: .7rem var(--s2); text-align: left; border-bottom: 1px solid rgba(62,230,255,.18); }
+      .sz__table tr:last-child td { border-bottom: 0; }
+      .sz__table th { color: var(--orange-hi); font-weight: 600; }
+      .sz__table td:nth-child(n+2), .sz__table th:nth-child(n+2) { color: var(--text-muted); }
+      @media (max-width: 639px) { .sz__table th, .sz__table td { padding: .5rem .35rem; font-size: .8rem; } }
+      .sz__cta { text-align: center; padding: var(--s4) var(--s3); border-radius: 18px; border: 1px solid rgba(255,140,26,.55); background: rgba(10,30,74,.8); }
+      .sz__cta h2 { font-family: var(--font-head); color: var(--orange); margin: 0 0 var(--s1); }
+      .sz__cta p { max-width: 34rem; margin: 0 auto var(--s3); }
+    </style>
+    <script data-goatcounter="https://eazydstudio.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <div class="starfield" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="EazyD Studio home">
+        <img src="../img/logo-holo-v4-64.webp" alt="" width="32" height="32" />
+        <span>EazyD Studio</span>
+      </a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="primary-nav"><span class="nav-toggle__bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="vh">Menu</span></button>
+      <nav class="nav" id="primary-nav" aria-label="Primary">
+        <a href="../">Home</a>
+        <a href="../sapientia/">Sapientia</a>
+        <a href="../sapientia-coop/">Sapientia Multiplayer</a>
+        <a href="../hoshimi-haven/">Hoshimi Haven</a>
+        <a href="../scrap-rider/">Scrap Rider</a>
+        <a href="../orbit-dash/">Orbit Dash</a>
+        <a href="../farm-house/">Farm House</a>
+        <a href="../pocket-drift/">Pocket Drift</a>
+        <a href="../neuropolis/">Neuropolis</a>
+        <a href="../stardust-avenue/">Stardust Avenue</a>
+        <a href="./" aria-current="page">Star Zero</a>
+        <a href="../#packs">Packs</a>
+        <a href="../#extensions">Extensions</a>
+        <a href="../#godot">Godot</a>
+        <a href="../#community">Community</a>
+      </nav>
+    </header>
+    <main id="main" class="sz">
+      <section class="sz__hero" aria-labelledby="sz-title">
+        <figure class="sz__art">
+          <img src="img/hero-1344.webp" srcset="img/hero-640.webp 640w, img/hero-1344.webp 1344w" sizes="(min-width: 1100px) 1040px, 94vw" alt="Screenshot of Star Zero: the hero seen from behind in a courtyard at night, with rings of light on the ground and damage numbers above" width="1344" height="756" fetchpriority="high" decoding="async" />
+        </figure>
+        <p class="sz__kicker">Early version · EazyD Studio</p>
+        <h1 id="sz-title">Star Zero</h1>
+        <p class="sz__lead">A 3D action game that runs in your browser. Chain your strikes into a finisher, roll out of the way, charge a heavy blow, and level up as you go.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary btn--lg" href="play/" data-goatcounter-click="play-star-zero" data-goatcounter-title="from star-zero">▶ Play in your browser</a>
+          <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Join the Discord</a>
+        </div>
+        <p class="sz__note">Nothing to install. Plays with a keyboard, a gamepad or a touchscreen. On a phone, hold it sideways. The first load is about 20 MB. The game is in English and has no sound yet.</p>
+      </section>
+
+      <section class="sz__early" aria-labelledby="early-title">
+        <h2 id="early-title">This is an early version</h2>
+        <ul>
+          <li><strong>The art is placeholder.</strong> The hero is a test model, and the trainers and opponents are plain shapes. Menus and buttons are bare text.</li>
+          <li><strong>It is short.</strong> There is one island, one courtyard called the Simulation and one test room. You get three drills, a final test and three combat rounds, plus a few opponents and a mini-boss in the test room.</li>
+          <li><strong>Your save can be wiped.</strong> Progress is stored in your browser only, and a later version may not be able to read it.</li>
+          <li><strong>There is no sound.</strong></li>
+          <li><strong>Expect rough edges.</strong> It has not been tested on many phones or browsers.</li>
+        </ul>
+      </section>
+
+      <ul class="sz__features" aria-label="Highlights">
+        <li><h2>Chains and finishers</h2><p>String light attacks together and end the chain with a finisher. Lock on to keep one opponent in front of you.</p></li>
+        <li><h2>Dodge</h2><p>Opponents show an attack before it lands. Roll out of the way, then strike back.</p></li>
+        <li><h2>Heavy blows</h2><p>Hold the attack button to charge a heavy blow. Hit hard enough and an opponent staggers.</p></li>
+        <li><h2>Levels and stat points</h2><p>Opponents and rounds give EXP. Every level gives you three points to spend on Power, Vitality, Impact and Reflex, up to level 10. Taking the points back is free.</p></li>
+        <li><h2>Techniques</h2><p>Levelling unlocks four techniques and up to three slots to equip them in: a longer chain, a finisher that hits all around you, and a strike out of a roll.</p></li>
+        <li><h2>Bigger finishers</h2><p>The longer the chain, the bigger the finisher and the light effect that comes with it.</p></li>
+        <li><h2>Combat rounds</h2><p>Three rounds with waves of opponents that hit back. Go down and the round is lost. You can replay every round.</p></li>
+        <li><h2>Weapons</h2><p>You start with your fists, and a trainer hands you a training sword. A blade, a pair of knuckles and a lance lie in the test room, behind a temporary passage in the Simulation. Each of those three handles differently and gives its own stat bonus.</p></li>
+      </ul>
+
+      <section aria-labelledby="shots-title">
+        <h2 id="shots-title" class="section__title">Screenshots</h2>
+        <p class="section__lead">Taken from the game as it is now, placeholder art included.</p>
+        <ul class="sz__shots">
+          <li><img src="img/shot-island.webp" alt="The hero on the island, with two trainers standing next to a gate" width="960" height="540" loading="lazy" decoding="async" /><div><h3>The island</h3><p>You start here. The trainers set up drills and combat rounds.</p></div></li>
+          <li><img src="img/shot-round.webp" alt="The hero swinging a blade at an opponent in a courtyard at night during a combat round" width="960" height="540" loading="lazy" decoding="async" /><div><h3>A combat round</h3><p>Rounds are fought in the Simulation, wave after wave.</p></div></li>
+          <li><img src="img/shot-finisher.webp" alt="The hero seen from behind as a finisher lands: rings of light on the ground, a burst of light and damage numbers above" width="960" height="540" loading="lazy" decoding="async" /><div><h3>A finisher</h3><p>The end of a five-strike chain.</p></div></li>
+          <li><img src="img/shot-status.webp" alt="The Status screen with the level, four stats and the equipped weapon" width="960" height="540" loading="lazy" decoding="async" /><div><h3>Status</h3><p>Spend stat points and switch techniques on or off.</p></div></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="controls-title">
+        <h2 id="controls-title" class="section__title">Controls</h2>
+        <div class="sz__tablewrap">
+          <table class="sz__table">
+            <thead><tr><th scope="col">Action</th><th scope="col">Keyboard</th><th scope="col">Gamepad</th><th scope="col">Touch</th></tr></thead>
+            <tbody>
+              <tr><td>Move</td><td>W A S D</td><td>Left stick</td><td>Stick on the left</td></tr>
+              <tr><td>Sprint</td><td>Shift</td><td>RB</td><td>Push the stick all the way</td></tr>
+              <tr><td>Attack (hold to charge)</td><td>J</td><td>X</td><td>ATK</td></tr>
+              <tr><td>Dodge</td><td>K</td><td>B</td><td>DODGE</td></tr>
+              <tr><td>Lock on</td><td>L</td><td>LB</td><td>LOCK</td></tr>
+              <tr><td>Switch weapon</td><td>R</td><td>Y</td><td>SWAP</td></tr>
+              <tr><td>Talk</td><td>F</td><td>A</td><td>TALK</td></tr>
+              <tr><td>Camera</td><td>Q and E</td><td>Right stick</td><td>Swipe</td></tr>
+              <tr><td>Status screen</td><td>Tab</td><td>Start</td><td>MENU</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sz__cta" aria-labelledby="cta-title">
+        <h2 id="cta-title">Try it and tell us what you think</h2>
+        <p>Star Zero is built by EazyD Studio, a solo dev game studio. This early version is here to find out what works and what does not.</p>
+        <div class="hero__actions" style="justify-content:center">
+          <a class="btn btn--primary btn--lg" href="play/" data-goatcounter-click="play-star-zero" data-goatcounter-title="from star-zero">▶ Play in your browser</a>
+          <a class="btn btn--secondary" href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Share feedback on Discord</a>
+        </div>
+      </section>
+      <p class="sz__note" style="text-align:center">Parts of this game were made with AI tools. The code and the scripts that build the models were written with Claude (Anthropic) as an AI assistant. The weapon models and the Simulation courtyard were built by script; the weapons follow AI-generated concept images. The hero is a placeholder made from the built-in parts of VRoid Studio, and some designs made for its decorations were AI-generated. The animations are from the Universal Animation Library by Quaternius (CC0). Made with <a href="https://godotengine.org/license/" target="_blank" rel="noopener noreferrer">Godot Engine</a>. Full credits and licences: <a href="play/licenses.txt">licenses.txt</a>. The game stores your progress in your browser only: see the <a href="../privacy/#star-zero">privacy policy</a>.</p>
+    </main>
+    <footer class="site-footer">
+      <div class="site-footer__cols">
+        <div class="site-footer__brand">
+          <img src="../img/logo-holo-v4-64.webp" alt="" width="40" height="40" loading="lazy" />
+          <p>Games, pixel art packs &amp; tools from a solo dev game studio.</p>
+
+        <ul class="site-footer__socials" aria-label="Social links">
+          <li><a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer" aria-label="EazyD Studio on Discord"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9.25 9.1c.6-.12 1.2-.18 1.85-.18 2.35 0 4.3 1.05 5.25 1.05.95 0 2.9-1.05 5.25-1.05.62 0 1.22.06 1.82.18M8.2 7 6.85 11.35c1.9.58 3.75 1.45 5.15 2.75 1.85-1.2 3.85-1.85 6-2.25L16.8 6.35c-1.9-.52-3.9-.52-5.8 0-1.9-.52-3.9-.52-5.8 0z"/><path d="M10.1 13.85v1.9M13.9 13.85v1.9"/></svg></a></li>
+          <li><a href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer" aria-label="EazyD Studio on X"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 5l14 14M19 5 5 19"/></svg></a></li>
+          <li><a href="https://www.reddit.com/user/EazyDStudio" target="_blank" rel="noopener noreferrer" aria-label="EazyD Studio on Reddit"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="9.25" cy="13.25" r="1.15" class="social-fill"/><circle cx="14.75" cy="13.25" r="1.15" class="social-fill"/><path d="M12 15.75c1.45 0 2.65-.55 2.95-1.85M6.1 15.1c.25 1.05 1.85 1.85 3.6 1.95 1.1.08 2.15-.05 3-.35"/><path d="M12 7.5l1.15-2.35M20.5 13c0 2.85-3.8 5.15-8.5 5.15S3.5 15.85 3.5 13s3.8-5.15 8.5-5.15 8.5 2.3 8.5 5.15z"/><circle cx="17.75" cy="8.25" r="1" class="social-fill"/></svg></a></li>
+          <li><a href="https://youtube.com/shorts/LQTdJgvWLTM" target="_blank" rel="noopener noreferrer" aria-label="EazyD Studio on YouTube"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3" y="7.25" width="18" height="9.5" rx="2.75"/><path d="M11.25 10.5l4.75 2.75-4.75 2.75z" class="social-fill"/></svg></a></li>
+          <li><a href="https://www.instagram.com/eazydstudio.dev/" target="_blank" rel="noopener" data-goatcounter-click="out-instagram" data-goatcounter-title="from star-zero" aria-label="EazyD Studio on Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.25" y="3.25" width="17.5" height="17.5" rx="5"/><circle cx="12" cy="12" r="4.1"/><circle cx="17.35" cy="6.65" r="1.05" class="social-fill"/></svg></a></li>
+        </ul>
+
+        </div>
+        <nav aria-label="Products">
+          <h2>Products</h2>
+          <ul>
+            <li><a href="https://eazydstudio.itch.io" target="_blank" rel="noopener noreferrer" data-goatcounter-click="out-itch" data-goatcounter-title="from star-zero">itch.io packs</a></li>
+            <li><a href="https://jinxxy.com/EazyDStudio" target="_blank" rel="noopener noreferrer" data-goatcounter-click="out-jinxxy" data-goatcounter-title="from star-zero">Jinxxy (VRChat)</a></li>
+            <li><a href="https://godotengine.org/asset-library/asset?user=EazyDStudio" target="_blank" rel="noopener noreferrer">Godot Asset Library</a></li>
+            <li><a href="../#extensions">Chrome extensions</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Community">
+          <h2>Community</h2>
+          <ul>
+            <li><a href="https://discord.gg/VTkpUGW4gw" target="_blank" rel="noopener noreferrer">Discord</a></li>
+            <li><a href="https://x.com/EazyDstudio" target="_blank" rel="noopener noreferrer">X</a></li>
+            <li><a href="https://www.reddit.com/user/EazyDStudio" target="_blank" rel="noopener noreferrer">Reddit</a></li>
+            <li><a href="https://youtube.com/shorts/LQTdJgvWLTM" target="_blank" rel="noopener noreferrer">YouTube</a></li>
+            <li><a href="https://www.instagram.com/eazydstudio.dev/" target="_blank" rel="noopener noreferrer" data-goatcounter-click="out-instagram" data-goatcounter-title="from star-zero">Instagram</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Legal">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="../privacy/">Privacy policy</a></li>
+            <li><a href="mailto:hello@eazydstudio.com">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <p class="site-footer__copy">&copy; <span id="year">2026</span> EazyD Studio. Made with pixels and patience.</p>
+    </footer>
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+    <script>
+      (function () {
+        var btn = document.getElementById("nav-toggle"), nav = document.getElementById("primary-nav"), hdr = document.querySelector(".site-header");
+        if (!btn || !nav) return;
+        var mq = window.matchMedia("(max-width: 639px)");
+        function set(open, focusBtn) {
+          hdr.classList.toggle("nav-open", open);
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          btn.querySelector(".vh").textContent = open ? "Close menu" : "Menu";
+          if (mq.matches) { if (open) nav.removeAttribute("inert"); else nav.setAttribute("inert", ""); }
+          if (open) { var f = nav.querySelector("a"); if (f) f.focus(); } else if (focusBtn) btn.focus();
+        }
+        function sync() { if (mq.matches) { if (!hdr.classList.contains("nav-open")) nav.setAttribute("inert", ""); } else { hdr.classList.remove("nav-open"); btn.setAttribute("aria-expanded", "false"); nav.removeAttribute("inert"); } }
+        sync(); if (mq.addEventListener) mq.addEventListener("change", sync);
+        btn.addEventListener("click", function (e) { e.stopPropagation(); set(btn.getAttribute("aria-expanded") !== "true", false); });
+        nav.addEventListener("click", function (e) { if (e.target.closest("a") && mq.matches) set(false, false); });
+        document.addEventListener("keydown", function (e) { if (e.key === "Escape" && hdr.classList.contains("nav-open")) set(false, true); });
+        document.addEventListener("click", function (e) { if (hdr.classList.contains("nav-open") && !hdr.contains(e.target)) set(false, false); });
+      })();
+    </script>
+  </body>
+</html>
